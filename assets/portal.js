@@ -121,7 +121,7 @@ function renderVersions(){
     if (v.products && v.products.length) bits.push(v.products.map(label).join(', '));
     if (v.states && v.states.length) bits.push(v.states.join(', '));
     if (v.max_ltv_pct != null) bits.push('up to ' + v.max_ltv_pct + '% LTV');
-    const sub = bits.join(' - ');
+    const sub = bits.join(', ');
     return `<div class="v-row">
       <span class="v-num">v${esc(v.version)}</span>
       <div class="v-main"><b>${esc(fmtDate(v.created_at))}</b> ${i === 0 ? '<span class="badge cur">Current</span>' : ''}
