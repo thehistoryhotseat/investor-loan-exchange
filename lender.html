@@ -6,6 +6,9 @@
 <title>Investor Loan Exchange - For lenders: join the panel</title>
 <meta name="description" content="Lenders: tell us the box you price in. Test mode - nothing is sent yet.">
 <meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,420;9..144,560&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#101820; --ink-2:#2a3542; --paper:#f6f4ee; --card:#fffdf8;
@@ -281,8 +284,6 @@
   html.js-reveal .reveal{opacity:0;transform:translateY(9px);transition:opacity .45s ease,transform .45s cubic-bezier(.22,.61,.21,1)}
   html.js-reveal .reveal.on{opacity:1;transform:none}
 
-  .l-back{display:inline-block;margin-bottom:18px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none}
-  .l-back:hover{color:var(--ink)}
   .pills input[type="checkbox"]{position:absolute;opacity:0}
   @media print{
     section#lender-intake{display:block !important;border:none;padding:0}
@@ -295,13 +296,13 @@
 
 <nav>
   <div class="wrap nav-in">
-    <a class="brand" href="/investor-loan-exchange/">
+    <a class="brand" href="./">
       <img class="mark-img" src="assets/logo-mark.svg" alt="" width="30" height="30">
       <span class="brand-name">Investor Loan Exchange</span>
     </a>
     <div class="nav-links">
-      <a href="/investor-loan-exchange/#lenders">For lenders</a>
-      <a href="/investor-loan-exchange/#intake">Submit a scenario</a>
+      <a href="./#lenders">For lenders</a>
+      <a href="./#intake">Submit a scenario</a>
     </div>
   </div>
 </nav>
@@ -344,6 +345,21 @@
             <input type="tel" id="phone" name="phone" autocomplete="tel">
             <p class="f-msg" style="display:none"></p>
           </div>
+          <div class="f-field full">
+            <span class="f-label" id="lbl-ltype">Lender type <span class="opt">(optional)</span></span>
+            <div class="pills" role="radiogroup" aria-labelledby="lbl-ltype" data-group="lender_type">
+              <input type="radio" name="lender_type" id="lt-direct" value="direct_lender"><label for="lt-direct">Direct lender</label>
+              <input type="radio" name="lender_type" id="lt-bank" value="bank"><label for="lt-bank">Bank</label>
+              <input type="radio" name="lender_type" id="lt-cu" value="credit_union"><label for="lt-cu">Credit union</label>
+              <input type="radio" name="lender_type" id="lt-fund" value="private_fund"><label for="lt-fund">Private fund</label>
+              <input type="radio" name="lender_type" id="lt-other" value="other"><label for="lt-other">Other</label>
+            </div>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="nmls_id">Company NMLS ID <span class="opt">(optional)</span></label>
+            <input type="text" inputmode="numeric" id="nmls_id" name="nmls_id" placeholder="e.g. 123456">
+            <p class="f-msg" style="display:none"></p>
+          </div>
         </div>
       </fieldset>
 
@@ -353,13 +369,26 @@
         <div class="f-field full">
           <span class="f-label" id="lbl-products">Products you price <span class="req">*</span></span>
           <div class="pills" role="group" aria-labelledby="lbl-products" data-group="products">
-            <input type="checkbox" name="products" id="lp-dscr" value="DSCR rental"><label for="lp-dscr">DSCR rental</label>
-            <input type="checkbox" name="products" id="lp-flip" value="Fix &amp; flip"><label for="lp-flip">Fix &amp; flip</label>
-            <input type="checkbox" name="products" id="lp-bridge" value="Bridge"><label for="lp-bridge">Bridge</label>
-            <input type="checkbox" name="products" id="lp-guc" value="Ground-up construction"><label for="lp-guc">Ground-up construction</label>
-            <input type="checkbox" name="products" id="lp-cashout" value="Cash-out refi"><label for="lp-cashout">Cash-out refi</label>
-            <input type="checkbox" name="products" id="lp-conf" value="Conforming (agency)"><label for="lp-conf">Conforming (agency)</label>
-            <input type="checkbox" name="products" id="lp-he" value="Home equity"><label for="lp-he">Home equity</label>
+            <input type="checkbox" name="products" id="lp-dscr" value="dscr_rental"><label for="lp-dscr">DSCR rental</label>
+            <input type="checkbox" name="products" id="lp-flip" value="fix_flip"><label for="lp-flip">Fix &amp; flip</label>
+            <input type="checkbox" name="products" id="lp-bridge" value="bridge"><label for="lp-bridge">Bridge</label>
+            <input type="checkbox" name="products" id="lp-guc" value="ground_up_construction"><label for="lp-guc">Ground-up construction</label>
+            <input type="checkbox" name="products" id="lp-cashout" value="cash_out_refi"><label for="lp-cashout">Cash-out refi</label>
+            <input type="checkbox" name="products" id="lp-conf" value="conforming_agency"><label for="lp-conf">Conforming (agency)</label>
+            <input type="checkbox" name="products" id="lp-he" value="home_equity"><label for="lp-he">Home equity</label>
+          </div>
+          <p class="pills-msg" style="display:none"></p>
+        </div>
+        <div class="f-field full" style="margin-top:18px">
+          <span class="f-label" id="lbl-ptypes">Property types <span class="req">*</span></span>
+          <div class="pills" role="group" aria-labelledby="lbl-ptypes" data-group="property_types">
+            <input type="checkbox" name="property_types" id="pt-sf" value="single_family"><label for="pt-sf">Single family</label>
+            <input type="checkbox" name="property_types" id="pt-24" value="2_4_unit"><label for="pt-24">2-4 unit</label>
+            <input type="checkbox" name="property_types" id="pt-condo" value="condo"><label for="pt-condo">Condo</label>
+            <input type="checkbox" name="property_types" id="pt-th" value="townhome"><label for="pt-th">Townhome</label>
+            <input type="checkbox" name="property_types" id="pt-smf" value="small_multifamily_5"><label for="pt-smf">Small multifamily (5+)</label>
+            <input type="checkbox" name="property_types" id="pt-mu" value="mixed_use"><label for="pt-mu">Mixed use</label>
+            <input type="checkbox" name="property_types" id="pt-other" value="other"><label for="pt-other">Other</label>
           </div>
           <p class="pills-msg" style="display:none"></p>
         </div>
@@ -384,12 +413,18 @@
             <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="max_loan" name="max_loan_usd" placeholder="e.g. 5,000,000"></div>
             <p class="f-msg" style="display:none"></p>
           </div>
+          <div class="f-field">
+            <label class="f-label" for="min_fico">Minimum FICO <span class="opt">(optional)</span></label>
+            <input type="text" inputmode="numeric" id="min_fico" name="min_fico" placeholder="e.g. 660">
+            <p class="f-msg" style="display:none"></p>
+          </div>
           <div class="f-field full">
             <label class="f-label" for="notes">Anything else about your box <span class="opt">(optional)</span></label>
-            <textarea id="notes" name="notes" placeholder="Niches, property types you avoid, turnaround time."></textarea>
+            <textarea id="notes" name="notes" placeholder="Per-product exceptions, property types you avoid, turnaround time."></textarea>
             <p class="f-msg" style="display:none"></p>
           </div>
         </div>
+        <p class="sub" style="margin-top:14px">One range across the products you picked; use the notes for per-product exceptions.</p>
       </fieldset>
 
       <fieldset class="f-step" data-name="Review">
@@ -407,8 +442,8 @@
       <fieldset class="f-step" data-name="Done">
         <div class="f-done">
           <span class="f-badge">Test mode - not sent</span>
-          <h3 tabindex="-1" id="l-done-h">Noted. Here is your record.</h3>
-          <p>When lender onboarding opens, records like this one get the first invitation. Nothing was sent; this stayed in your browser.</p>
+          <h3 tabindex="-1" id="l-done-h">Checked. Here is your record.</h3>
+          <p>Nothing was sent; this stayed in your browser. In live mode an entry like this is stored, and stored entries get the first invitation when lender onboarding opens.</p>
           <p>Guideline documents come later: the invite leads to the lender portal, where you sign in and upload or replace your guideline sheets anytime.</p>
           <div class="f-review f-sheet" id="l-sheet" style="margin-top:8px"></div>
           <details class="load-json" style="margin-top:22px">
@@ -448,33 +483,56 @@
   var stepNo = document.getElementById('l-stepno');
   var current = 0;
   var DRAFT_KEY = 'ilx-lender-draft';
+  var recId = '';
+
+  var productLabels = {dscr_rental:'DSCR rental', fix_flip:'Fix & flip', bridge:'Bridge', ground_up_construction:'Ground-up construction', cash_out_refi:'Cash-out refi', conforming_agency:'Conforming (agency)', home_equity:'Home equity'};
+  var ptypeLabels = {single_family:'Single family', '2_4_unit':'2-4 unit', condo:'Condo', townhome:'Townhome', small_multifamily_5:'Small multifamily (5+)', mixed_use:'Mixed use', other:'Other'};
+  var ltypeLabels = {direct_lender:'Direct lender', bank:'Bank', credit_union:'Credit union', private_fund:'Private fund', other:'Other'};
 
   function esc(x){ return String(x == null ? '' : x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function val(n){
     var el = form.querySelector('[name="' + n + '"]');
     return el ? el.value.trim() : '';
   }
+  function numOrNull(s){
+    var v = parseFloat(String(s || '').replace(/[^\d.]/g, ''));
+    return isNaN(v) ? null : v;
+  }
   function moneyRaw(s){ return String(s || '').replace(/[^\d.]/g, ''); }
   function moneyFmt(s){
-    var v = parseFloat(moneyRaw(s));
-    return isNaN(v) ? '' : '$' + v.toLocaleString('en-US');
+    var v = numOrNull(s);
+    return v === null ? '' : '$' + v.toLocaleString('en-US');
   }
-  function products(){
-    return Array.prototype.map.call(form.querySelectorAll('input[name="products"]:checked'), function(c){ return c.value; });
+  function checkedVals(n){
+    return Array.prototype.map.call(form.querySelectorAll('input[name="' + n + '"]:checked'), function(c){ return c.value; });
+  }
+  function radioVal(n){
+    var c = form.querySelector('input[name="' + n + '"]:checked');
+    return c ? c.value : '';
+  }
+  function statesList(){
+    var s = val('states');
+    if (/^nationwide$/i.test(s)) return ['Nationwide'];
+    return s.split(',').map(function(x){ return x.trim().toUpperCase(); }).filter(Boolean);
   }
   function record(){
     return {
+      version: 1,
       type: 'lender_interest',
       mode: 'test',
       company: val('company'),
       contact_name: val('contact_name'),
       email: val('email'),
       phone: val('phone'),
-      products: products(),
-      states: val('states'),
-      max_ltv_pct: moneyRaw(val('max_ltv_pct')),
-      min_loan_usd: moneyRaw(val('min_loan_usd')),
-      max_loan_usd: moneyRaw(val('max_loan_usd')),
+      lender_type: radioVal('lender_type') || null,
+      nmls_id: val('nmls_id') || null,
+      products: checkedVals('products'),
+      property_types: checkedVals('property_types'),
+      states: statesList(),
+      max_ltv_pct: numOrNull(val('max_ltv_pct')),
+      min_loan_usd: numOrNull(val('min_loan_usd')),
+      max_loan_usd: numOrNull(val('max_loan_usd')),
+      min_fico: numOrNull(val('min_fico')),
       notes: val('notes')
     };
   }
@@ -496,43 +554,65 @@
     }
     if (e.target.id === 'l-consent' && e.target.checked) document.getElementById('l-consent-msg').style.display = 'none';
   }
+  function pillGroupOk(name){
+    var pg = form.querySelector('.pills[data-group="' + name + '"]');
+    var none = checkedVals(name).length === 0;
+    pg.classList.toggle('f-invalid', none);
+    pg.setAttribute('aria-invalid', none ? 'true' : 'false');
+    var pm = pg.parentNode.querySelector('.pills-msg');
+    if (pm) { pm.textContent = 'Pick at least one.'; pm.style.display = none ? 'block' : 'none'; }
+    return !none;
+  }
   function validate(i){
     var ok = true;
-    var step = steps[i];
     if (i === 0) {
-      [['company'],['contact_name'],['email']].forEach(function(k){
-        var f = form.querySelector('[name="' + k[0] + '"]');
-        var bad = !f.value.trim() || (k[0] === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value.trim()));
+      ['company','contact_name','email'].forEach(function(n){
+        var f = form.querySelector('[name="' + n + '"]');
+        var bad = !f.value.trim() || (n === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value.trim()));
         f.classList.toggle('f-invalid', bad);
-        fieldMsg(f, bad ? (k[0] === 'email' && f.value.trim() ? 'Enter a valid email.' : 'Needed to continue.') : '');
+        fieldMsg(f, bad ? (n === 'email' && f.value.trim() ? 'Enter a valid email.' : 'Needed to continue.') : '');
         if (bad) ok = false;
       });
+      var nm = form.querySelector('[name="nmls_id"]');
+      var badNm = nm.value.trim() && !/^\d{1,10}$/.test(nm.value.trim());
+      nm.classList.toggle('f-invalid', !!badNm);
+      fieldMsg(nm, badNm ? 'Digits only.' : '');
+      if (badNm) ok = false;
     }
     if (i === 1) {
-      var pg = form.querySelector('.pills[data-group="products"]');
-      var noProd = products().length === 0;
-      pg.classList.toggle('f-invalid', noProd);
-      pg.setAttribute('aria-invalid', noProd ? 'true' : 'false');
-      var pm = pg.parentNode.querySelector('.pills-msg');
-      if (pm) { pm.textContent = 'Pick at least one.'; pm.style.display = noProd ? 'block' : 'none'; }
-      if (noProd) ok = false;
+      if (!pillGroupOk('products')) ok = false;
+      if (!pillGroupOk('property_types')) ok = false;
       var st = form.querySelector('[name="states"]');
-      var badSt = !st.value.trim();
+      var sv = st.value.trim();
+      var badSt = !sv || !/^(nationwide|[A-Za-z]{2}(\s*,\s*[A-Za-z]{2})*)$/i.test(sv);
       st.classList.toggle('f-invalid', badSt);
-      fieldMsg(st, badSt ? 'Needed to continue.' : '');
+      fieldMsg(st, badSt ? 'Two-letter codes, comma separated, or Nationwide.' : '');
       if (badSt) ok = false;
       var lt = form.querySelector('[name="max_ltv_pct"]');
-      var lv = moneyRaw(lt.value);
-      var badLt = lv && (isNaN(parseFloat(lv)) || parseFloat(lv) <= 0 || parseFloat(lv) > 100);
+      var lv = lt.value.trim();
+      var badLt = lv && (!/^\d{1,3}(\.\d{1,2})?$/.test(lv) || parseFloat(lv) <= 0 || parseFloat(lv) > 100);
       lt.classList.toggle('f-invalid', !!badLt);
-      fieldMsg(lt, badLt ? 'A percentage from 1 to 100.' : '');
+      fieldMsg(lt, badLt ? 'A number from 1 to 100.' : '');
       if (badLt) ok = false;
+      var mn = numOrNull(val('min_loan_usd')), mx = numOrNull(val('max_loan_usd'));
+      var maxF = form.querySelector('[name="max_loan_usd"]');
+      var badOrder = mn !== null && mx !== null && mn > mx;
+      maxF.classList.toggle('f-invalid', badOrder);
+      fieldMsg(maxF, badOrder ? 'Below the minimum.' : '');
+      if (badOrder) ok = false;
+      var fc = form.querySelector('[name="min_fico"]');
+      var fv = fc.value.trim();
+      var badFc = fv && (!/^\d{3}$/.test(fv) || parseInt(fv, 10) < 300 || parseInt(fv, 10) > 850);
+      fc.classList.toggle('f-invalid', !!badFc);
+      fieldMsg(fc, badFc ? 'A score from 300 to 850.' : '');
+      if (badFc) ok = false;
     }
     if (i === 2) {
       if (!document.getElementById('l-consent').checked) { ok = false; document.getElementById('l-consent-msg').style.display = ''; }
     }
     return ok;
   }
+  function label(map, v){ return map[v] || v || '-'; }
   function rows(){
     var r = record();
     var out = [
@@ -540,10 +620,14 @@
       ['Contact', r.contact_name],
       ['Email', r.email],
       ['Phone', r.phone || '-'],
-      ['Products', r.products.join(', ') || '-'],
-      ['States', r.states],
-      ['Max LTV', r.max_ltv_pct ? r.max_ltv_pct + '%' : '-'],
-      ['Loan size', (r.min_loan_usd || r.max_loan_usd) ? (moneyFmt(r.min_loan_usd) || 'No min') + ' to ' + (moneyFmt(r.max_loan_usd) || 'no max') : '-'],
+      ['Lender type', r.lender_type ? label(ltypeLabels, r.lender_type) : '-'],
+      ['NMLS ID', r.nmls_id || '-'],
+      ['Products', r.products.map(function(p){ return label(productLabels, p); }).join(', ') || '-'],
+      ['Property types', r.property_types.map(function(p){ return label(ptypeLabels, p); }).join(', ') || '-'],
+      ['States', r.states.join(', ') || '-'],
+      ['Max LTV', r.max_ltv_pct !== null ? r.max_ltv_pct + '%' : '-'],
+      ['Loan size', (r.min_loan_usd !== null || r.max_loan_usd !== null) ? (moneyFmt(r.min_loan_usd) || 'No min') + ' to ' + (moneyFmt(r.max_loan_usd) || 'no max') : '-'],
+      ['Min FICO', r.min_fico !== null ? String(r.min_fico) : '-'],
       ['Notes', r.notes || '-']
     ];
     return out.map(function(pair){
@@ -563,18 +647,21 @@
     if (moved) { s.classList.remove('step-in'); void s.offsetWidth; s.classList.add('step-in'); }
     stepName.textContent = s.getAttribute('data-name');
     stepNo.textContent = (i >= steps.length - 1) ? '' : ('Step ' + (i + 1) + ' of ' + (steps.length - 1));
-    backBtn.disabled = (i === 0);
     var last = (i === steps.length - 1);
+    backBtn.disabled = (i === 0);
+    backBtn.style.display = last ? 'none' : '';
     var review = (i === steps.length - 2);
     nextBtn.textContent = review ? 'Check my entry' : 'Continue';
     nextBtn.style.display = last ? 'none' : '';
     if (review) document.getElementById('l-review').innerHTML = rows();
-    form.scrollIntoView({behavior:'smooth', block:'start'});
+    var fr = form.getBoundingClientRect();
+    if (moved && (fr.top < 0 || fr.top > (window.innerHeight || 800))) form.scrollIntoView({behavior:'smooth', block:'start'});
   }
   function saveDraft(){
     try {
       var d = record();
       d.consent = document.getElementById('l-consent').checked;
+      d.rec_id = recId;
       localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
     } catch(e) {}
   }
@@ -584,14 +671,21 @@
     if (!raw) return;
     var d;
     try { d = JSON.parse(raw); } catch(e) { return; }
-    ['company','contact_name','email','phone','states','max_ltv_pct','min_loan_usd','max_loan_usd','notes'].forEach(function(n){
+    ['company','contact_name','email','phone','nmls_id','states','max_ltv_pct','min_loan_usd','max_loan_usd','min_fico','notes'].forEach(function(n){
       var el = form.querySelector('[name="' + n + '"]');
-      if (el && d[n] != null) el.value = d[n];
+      if (el && d[n] != null) el.value = (n === 'states' && Array.isArray(d[n])) ? d[n].join(', ') : d[n];
     });
-    (d.products || []).forEach(function(v){
-      var c = Array.prototype.find.call(form.querySelectorAll('input[name="products"]'), function(x){ return x.value === v; });
-      if (c) c.checked = true;
+    ['products','property_types'].forEach(function(n){
+      (d[n] || []).forEach(function(v){
+        var c = Array.prototype.find.call(form.querySelectorAll('input[name="' + n + '"]'), function(x){ return x.value === v; });
+        if (c) c.checked = true;
+      });
     });
+    if (d.lender_type) {
+      var r = Array.prototype.find.call(form.querySelectorAll('input[name="lender_type"]'), function(x){ return x.value === d.lender_type; });
+      if (r) r.checked = true;
+    }
+    if (d.rec_id) recId = d.rec_id;
   }
   backBtn.addEventListener('click', function(){ show(current - 1); });
   nextBtn.addEventListener('click', function(){
@@ -602,7 +696,9 @@
     }
     if (current === steps.length - 2) {
       document.getElementById('l-sheet').innerHTML = rows();
+      if (!recId) recId = 'li-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
       var r = record();
+      r.id = recId;
       r.consent = {given: true, given_at: new Date().toISOString(), mode: 'test'};
       document.getElementById('l-json').textContent = JSON.stringify(r, null, 2);
       saveDraft();
@@ -626,7 +722,11 @@
   form.addEventListener('change', function(e){ clearInvalid(e); saveDraft(); });
   form.addEventListener('submit', function(e){ e.preventDefault(); });
   form.addEventListener('keydown', function(e){
-    if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+    if (e.key !== 'Enter') return;
+    var t = e.target;
+    if (t.tagName !== 'INPUT') return;
+    var ty = (t.type || '').toLowerCase();
+    if (ty === 'checkbox' || ty === 'radio' || ty === 'button' || ty === 'submit') return;
     e.preventDefault();
     nextBtn.click();
   });
@@ -640,6 +740,7 @@
   document.getElementById('l-print').addEventListener('click', function(){ window.print(); });
   document.getElementById('l-restart').addEventListener('click', function(){
     form.reset();
+    recId = '';
     try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
     show(0);
   });

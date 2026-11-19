@@ -1060,7 +1060,8 @@
     nextBtn.textContent = review ? 'Check my entry' : (last ? 'Done' : 'Continue');
     nextBtn.style.display = last ? 'none' : '';
     if (review) renderReview();
-    form.scrollIntoView({behavior:'smooth', block:'start'});
+    var fr = form.getBoundingClientRect();
+    if (moved && (fr.top < 0 || fr.top > (window.innerHeight || 800))) form.scrollIntoView({behavior:'smooth', block:'start'});
   }
   function fieldMsg(f, text){
     var box = f.closest('.f-field');
