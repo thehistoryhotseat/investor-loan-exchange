@@ -1532,6 +1532,10 @@
     setField('under_limit', cf.under_county_limit);
     setField('role', d.role);
     setField('notes', d.notes);
+    var droppedPrefs = [];
+    if (pf.structure && !form.querySelector('input[name="structure"]:checked')) droppedPrefs.push(pf.structure);
+    if (pf.rate_type && !val('rate_type')) droppedPrefs.push(pf.rate_type);
+    if (pf.prepay_tolerance && !form.querySelector('input[name="prepay"]:checked')) droppedPrefs.push(pf.prepay_tolerance);
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     saveDraft();
     show(0);
@@ -1553,9 +1557,10 @@
           if (!d.rehab_budget_usd) laneMissing.push('rehab budget');
         }
         if (d.product === 'dscr_rental' && !d.monthly_rent_usd) laneMissing.push('monthly rent');
-        status.textContent = laneMissing.length
+        var dropNote = droppedPrefs.length ? ' Preferences that do not fit this lane were dropped: ' + droppedPrefs.join(', ') + '.' : '';
+        status.textContent = (laneMissing.length
           ? 'Loaded, but the file has no ' + laneMissing.join(' or ') + ' - the lane screen will ask for ' + (laneMissing.length > 1 ? 'them' : 'it') + '.'
-          : 'Loaded. Review each screen; contact and consent stay yours to fill.';
+          : 'Loaded. Review each screen; contact and consent stay yours to fill.') + dropNote;
       }
   });
   document.getElementById('f-download').addEventListener('click', function(){
