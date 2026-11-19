@@ -409,6 +409,9 @@
             <label for="state">State <span class="req">*</span></label>
             <input type="text" id="state" name="state" maxlength="2" placeholder="NJ" required>
           </div>
+          <div class="f-field full" id="oo-warn" style="display:none">
+            <span class="f-label" style="color:#b3432e">Owner-occupied deals are consumer-purpose mortgages. Only the conforming lane routes those today; an owner-occupied DSCR or bridge deal will not price.</span>
+          </div>
           <div class="f-field">
             <label for="zip">ZIP</label>
             <input type="text" id="zip" name="zip" maxlength="10" placeholder="Optional">
@@ -537,6 +540,9 @@
               <option>Refinance into DSCR</option>
               <option>Undecided</option>
             </select>
+          </div>
+          <div class="f-field full">
+            <span class="f-label" id="ltc-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass)">Loan-to-cost and loan-to-ARV appear once price, loan and ARV are in</span>
           </div>
           <div class="f-field">
             <label for="flips">Completed flips</label>
@@ -721,13 +727,19 @@
   "purpose": "purchase",
   "property": {
     "type": "single_family",
+    "occupancy": "investment",
     "state": "NJ",
     "est_value_usd": 450000
   },
   "loan_amount_usd": 337500,
   "credit_band": "740-779",
+  "citizenship": "us_person",
   "monthly_rent_usd": 3200,
-  "vesting": "LLC"
+  "vesting": "LLC",
+  "consent": {
+    "share_with_lenders": true,
+    "contact_withheld_until_engaged": true
+  }
 }</pre>
     <div class="callout"><strong>For your agent:</strong> fetch <a class="inline" href="/investor-loan-exchange/llms.txt">/investor-loan-exchange/llms.txt</a> and <a class="inline" href="/investor-loan-exchange/scenario.schema.json">/investor-loan-exchange/scenario.schema.json</a>, validate against the schema, and present the result for review. Never include SSNs, account numbers, or documents.</div>
   </div>
@@ -737,7 +749,7 @@
   <div class="wrap foot">
     <div>
       <div class="brandline">Investor Loan Exchange</div>
-      <p class="small">A scenario-routing desk for investment-property lending. Not a lender and not a broker; quotes come from panel lenders, and any loan is between you and the lender you choose.</p>
+      <p class="small">A scenario-routing desk for investment-property lending. Quotes come from panel lenders, and any loan is between you and the lender you choose.</p>
     </div>
     <p class="small">Sample figures on this page are illustrative, not rates or offers.</p>
   </div>
@@ -801,6 +813,12 @@
     step.querySelectorAll('[required]').forEach(function(f){
       if (!f.value || (f.type === 'number' && isNaN(parseFloat(f.value)))) ok = false;
     });
+    if (ok) {
+      var st = step.querySelector('#state');
+      if (st && st.value && !/^(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])$/.test(st.value.toUpperCase())) ok = false;
+      var ct = step.querySelector('#contact');
+      if (ct && ct.value && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ct.value) || /^[+()\-.\s\d]{7,}$/.test(ct.value))) ok = false;
+    }
     if (name === 'Review' && !document.getElementById('consent').checked) ok = false;
     if (!ok) {
       step.style.outline = '2px solid #b3432e';
@@ -823,7 +841,37 @@
   function updateLtv(){
     var v = num('est_value_usd'), a = num('loan_amount_usd');
     var el = document.getElementById('ltv-line');
-    el.textContent = (v > 0 && a > 0) ? 'LTV: ' + (a / v * 100).toFixed(1) + '%' : 'LTV: enter value and loan amount';
+    var flip = product() === 'fix_flip';
+    if (v > 0 && a > 0) {
+      el.textContent = flip
+        ? 'Loan-to-price: ' + (a / v * 100).toFixed(1) + '%  (loan-to-cost and loan-to-ARV come with the rehab numbers)'
+        : 'LTV: ' + (a / v * 100).toFixed(1) + '%';
+    } else {
+      el.textContent = flip ? 'Loan-to-price: enter price and loan amount' : 'LTV: enter value and loan amount';
+    }
+  }
+  function updateFlip(){
+    var el = document.getElementById('ltc-line');
+    if (!el) return;
+    var loan = num('loan_amount_usd'), price = num('est_value_usd'), arv = num('arv_usd'), rehab = num('rehab_budget_usd');
+    if (loan > 0 && price > 0 && arv > 0) {
+      var parts = [];
+      if ((price + rehab) > 0) parts.push('Loan-to-cost: ' + (loan / (price + rehab) * 100).toFixed(1) + '%');
+      parts.push('Loan-to-ARV: ' + (loan / arv * 100).toFixed(1) + '%');
+      el.textContent = parts.join('    ');
+      el.setAttribute('data-ltc', (loan / (price + rehab)).toFixed(3));
+      el.setAttribute('data-ltarv', (loan / arv).toFixed(3));
+    } else {
+      el.textContent = 'Loan-to-cost and loan-to-ARV appear once price, loan and ARV are in';
+      el.removeAttribute('data-ltc');
+      el.removeAttribute('data-ltarv');
+    }
+  }
+  function updateOoWarn(){
+    var w = document.getElementById('oo-warn');
+    if (!w) return;
+    var show = val('occupancy') === 'owner_occupied' && product() !== 'conforming_agency' && product() !== '';
+    w.style.display = show ? '' : 'none';
   }
   function piMonthly(principal, annualRate, years){
     var r = annualRate / 12, n = years * 12;
@@ -845,8 +893,10 @@
   }
   form.addEventListener('input', function(e){
     var n = e.target.name || '';
-    if (['est_value_usd','loan_amount_usd'].indexOf(n) >= 0) updateLtv();
+    if (['est_value_usd','loan_amount_usd'].indexOf(n) >= 0) { updateLtv(); updateFlip(); }
     if (['monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','loan_amount_usd'].indexOf(n) >= 0) updateDscr();
+    if (['arv_usd','rehab_budget_usd'].indexOf(n) >= 0) updateFlip();
+    if (n === 'occupancy' || n === 'product') updateOoWarn();
   });
   function money(n){
     var v = parseFloat(n);
@@ -933,6 +983,9 @@
     if (product() === 'fix_flip') {
       obj.arv_usd = parseFloat(val('arv_usd')) || null;
       obj.rehab_budget_usd = parseFloat(val('rehab_budget_usd')) || null;
+      var _ll = document.getElementById('ltc-line');
+      if (_ll && _ll.getAttribute('data-ltc')) obj.loan_to_cost = parseFloat(_ll.getAttribute('data-ltc'));
+      if (_ll && _ll.getAttribute('data-ltarv')) obj.loan_to_arv = parseFloat(_ll.getAttribute('data-ltarv'));
       if (val('exit_strategy')) obj.exit_strategy = val('exit_strategy');
       if (val('flip_experience')) obj.flip_experience = val('flip_experience');
     }
@@ -1005,6 +1058,8 @@
   backBtn.addEventListener('click', function(){ show(current - 1); });
   form.addEventListener('change', function(e){
     if (e.target.name === 'product') { show(0); }
+    if (e.target.name === 'product' || e.target.name === 'occupancy') updateOoWarn();
+    if (e.target.name === 'product') { updateLtv(); updateFlip(); }
   });
   form.addEventListener('submit', function(e){ e.preventDefault(); });
 
@@ -1021,9 +1076,10 @@
   });
   var mcta = document.querySelector('.mobile-cta');
   if (mcta && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function(es){
-      mcta.style.display = es[0].isIntersecting ? 'none' : '';
-    }).observe(document.getElementById('intake'));
+    var heroOn = false, intakeOn = false;
+    var syncBar = function(){ mcta.style.display = (heroOn || intakeOn) ? 'none' : ''; };
+    new IntersectionObserver(function(es){ heroOn = es[0].isIntersecting; syncBar(); }).observe(document.querySelector('header.hero'));
+    new IntersectionObserver(function(es){ intakeOn = es[0].isIntersecting; syncBar(); }).observe(document.getElementById('intake'));
   }
   show(0);
 })();

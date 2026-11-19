@@ -10,6 +10,7 @@ Schema version: 1.1 (scenario.schema.json)
 - Intake is the multi-step form at the site (anchor #intake). It currently runs in test mode: it validates the entry and shows the exact JSON record, but does not transmit it. When live intake is switched on, submissions will go to an endpoint named on this page.
 - The scenario record is lender-facing. The submitter's contact details are collected separately in the form and withheld from lenders until the submitter chooses to engage.
 - Name the preparing agent in prepared_by. Never put the borrower's or broker's name in notes.
+- Agents prepare and prefill. The human submitter personally reviews the scenario and checks the consent box; never mark consent on a person's behalf.
 - Quotes and questions always go back to the person on the scenario. The agent prepares; the broker decides.
 
 ## Never include in a scenario
