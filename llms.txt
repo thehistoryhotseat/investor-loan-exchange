@@ -39,6 +39,8 @@ Formats that trip validators:
 - property.type: one of single_family, 2_4_unit, condo, townhome, small_multifamily_5, mixed_use, other.
 - liquidity_band: 3_months, 6_months, 12_plus_months. vesting: llc, personal_name, trust, other_entity.
 
+Optional base fields: role (broker or borrower), target_close (ISO date, "2026-12-15"), experience (free string: the investor's track record), notes (free text for lenders; never names or identifiers).
+
 ## Lane-specific fields
 
 - dscr_rental: monthly_rent_usd (required); monthly_taxes_usd, monthly_insurance_usd, monthly_hoa_usd sharpen the DSCR estimate.
