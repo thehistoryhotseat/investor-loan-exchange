@@ -1,6 +1,6 @@
 # Investor Loan Exchange
 
-> A loan scenario exchange for investment-property lending. A broker submits one loan scenario; it is checked against each lender's niche (product, state, property type, loan size); every fitting lender receives one structured rate request; quotes come back to one place and the strongest goes back to the broker. People and AI agents use the same intake.
+> A loan scenario exchange for investment-property lending. A broker submits one loan scenario; it is checked against each lender's niche (product, state, property type, loan size); every fitting lender receives one structured rate request; quotes come back to one place, side by side, and the broker chooses who to engage. People and AI agents use the same intake.
 
 ## What agents can do here
 
