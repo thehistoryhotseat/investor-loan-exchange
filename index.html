@@ -26,7 +26,7 @@
   "@type": "WebSite",
   "name": "Investor Loan Exchange",
   "url": "https://thehistoryhotseat.github.io/investor-loan-exchange/",
-  "description": "A loan scenario exchange for investment-property lending. One scenario in; fitting lenders price it; quotes come back side by side."
+  "description": "A loan scenario exchange for investment property and home equity. Send one deal; the lenders who fit it compete for it; quotes come back side by side."
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -333,8 +333,8 @@
 <header class="hero" id="top">
   <div class="wrap hero-grid">
    <div>
-    <span class="eyebrow">A loan scenario exchange for investment property</span>
-    <h1>One scenario in. Fitting lenders price&nbsp;it.</h1>
+    <span class="eyebrow">A loan scenario exchange for investment property and home equity</span>
+    <h1>Send one deal. The lenders who fit it compete for&nbsp;it.</h1>
     <p>Send the deal once. Every fitting panel lender gets one rate request. Quotes come back side by side; you choose.</p>
     <div class="hero-cta">
       <a class="btn" href="#intake">Submit a scenario</a>
@@ -752,6 +752,10 @@
         <p class="sub">Line or lump sum, on a primary home or an investment property.</p>
         <div class="f-grid">
           <div class="f-field">
+            <label for="first-bal">First mortgage balance <span class="opt">(second liens price on combined LTV)</span></label>
+            <div class="money"><span>$</span><input type="text" inputmode="numeric" class="money-in" id="first-bal" name="first_mortgage_balance" placeholder="e.g. 240,000"></div>
+          </div>
+          <div class="f-field">
             <span class="f-label" id="lbl-hetype">Product type <span class="req">*</span></span>
             <div class="pills" role="radiogroup" aria-labelledby="lbl-hetype" data-group="home_equity_type">
               <input type="radio" name="home_equity_type" id="he-heloc" value="heloc"><label for="he-heloc">HELOC (line of credit)</label>
@@ -955,7 +959,7 @@
   <div class="wrap foot">
     <div>
       <div class="brandline">Investor Loan Exchange</div>
-      <p class="small">A scenario-routing desk for investment-property lending. Quotes come from panel lenders, and any loan is between you and the lender you choose.</p>
+      <p class="small">A scenario-routing desk for investment-property and home equity lending. Quotes come from panel lenders, and any loan is between you and the lender you choose.</p>
     </div>
     <div class="foot-links">
       <a href="#how">How it works</a>
@@ -1261,7 +1265,10 @@
       row('Under county limit', val('under_limit'), 'Conforming');
       if (val('dti_band')) row('DTI band', label({under_36:'Under 36%', '36_43':'36-43%', '43_50':'43-50%', over_50:'Over 50%', not_sure:'Not sure'}, val('dti_band')), 'Conforming');
     }
-    if (product() === 'home_equity' && val('home_equity_type')) row('Product type', label({heloc:'HELOC (line of credit)', home_equity_loan:'Home equity loan (lump sum)'}, val('home_equity_type')), 'Home equity');
+    if (product() === 'home_equity') {
+      if (val('home_equity_type')) row('Product type', label({heloc:'HELOC (line of credit)', home_equity_loan:'Home equity loan (lump sum)'}, val('home_equity_type')), 'Home equity');
+      if (val('first_mortgage_balance')) row('First mortgage balance', money(val('first_mortgage_balance')), 'Home equity');
+    }
     if (val('notes')) row('Notes', val('notes'), 'About you');
     document.getElementById('f-review').innerHTML = rows.join('');
     document.querySelectorAll('.r-edit').forEach(function(btn){
@@ -1344,7 +1351,10 @@
       obj.conforming = { under_county_limit: val('under_limit') };
       if (val('dti_band')) obj.conforming.dti_band = val('dti_band');
     }
-    if (product() === 'home_equity' && val('home_equity_type')) obj.home_equity_type = val('home_equity_type');
+    if (product() === 'home_equity') {
+      if (val('home_equity_type')) obj.home_equity_type = val('home_equity_type');
+      if (val('first_mortgage_balance')) obj.first_mortgage_balance_usd = parseFloat(val('first_mortgage_balance'));
+    }
     if (val('notes')) obj.notes = val('notes');
     return JSON.stringify(obj, null, 2);
   }
@@ -1557,7 +1567,7 @@
     if (!raw) { status.textContent = 'Paste a scenario.json first.'; return; }
     var d;
     try { d = JSON.parse(raw); } catch(e) { status.textContent = 'That is not valid JSON.'; return; }
-    var known = ['dscr_rental','fix_flip','bridge','ground_up_construction','cash_out_refi','conforming_agency'];
+    var known = ['dscr_rental','fix_flip','bridge','ground_up_construction','cash_out_refi','conforming_agency','home_equity'];
     if (!d.product || known.indexOf(d.product) < 0) {
       status.textContent = d.product
         ? 'This file\'s product ("' + d.product + '") is not one we route; nothing was loaded.'
@@ -1606,13 +1616,14 @@
     setField('under_limit', cf.under_county_limit);
     setField('dti_band', cf.dti_band);
     setField('home_equity_type', d.home_equity_type);
+    setField('first_mortgage_balance', d.first_mortgage_balance_usd);
     setField('role', d.role);
     setField('prepared_by', d.prepared_by);
     setField('notes', d.notes);
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     var changeNotes = [];
     if (d.schema_version && d.schema_version !== '1.6') changeNotes.push('updated it from v' + d.schema_version + ' to v1.6');
-    var knownTop = ['schema_version','prepared_by','consent','product','purpose','property','loan_amount_usd','ltv','role','credit_band','citizenship','experience','liquidity_band','vesting','target_close','monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','estimated_dscr','arv_usd','rehab_budget_usd','exit_strategy','flip_experience','bridge_exit_strategy','bridge_term','project_budget_usd','build_timeline','land_status','guc_exit_strategy','loan_to_cost','loan_to_arv','preferences','conforming','notes','home_equity_type'];
+    var knownTop = ['schema_version','prepared_by','consent','product','purpose','property','loan_amount_usd','ltv','role','credit_band','citizenship','experience','liquidity_band','vesting','target_close','monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','estimated_dscr','arv_usd','rehab_budget_usd','exit_strategy','flip_experience','bridge_exit_strategy','bridge_term','project_budget_usd','build_timeline','land_status','guc_exit_strategy','loan_to_cost','loan_to_arv','preferences','conforming','notes','home_equity_type','first_mortgage_balance_usd'];
     var unknownTop = Object.keys(d).filter(function(k){ return knownTop.indexOf(k) < 0; });
     var knownProp = ['type','occupancy','state','zip','est_value_usd','units','condition'];
     unknownTop = unknownTop.concat(Object.keys(p).filter(function(k){ return knownProp.indexOf(k) < 0; }).map(function(k){ return 'property.' + k; }));

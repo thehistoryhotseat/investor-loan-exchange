@@ -7,7 +7,7 @@ default branch root: https://thehistoryhotseat.github.io/investor-loan-exchange/
 
 - `index.html` - the whole site: landing sections and the native multi-step
   scenario intake (currently in test mode; entries are validated and shown to
-  the submitter as JSON, nothing is transmitted).
+  the submitter as a readable deal sheet (raw JSON behind a "For agents" toggle); nothing is transmitted).
 - `scenario.schema.json` - JSON Schema (draft 2020-12, v1.6) for one loan
   scenario. Agents prepare files against it; the intake loader prefills from a
   valid file but never loads contact details or consent.

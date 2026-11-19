@@ -339,9 +339,102 @@
         "home_equity_loan"
       ],
       "description": "Home equity lane: HELOC (line of credit) or home equity loan (lump sum). Primary or investment property."
+    },
+    "first_mortgage_balance_usd": {
+      "type": "number",
+      "description": "Home equity lane: current balance of the first mortgage. Second liens price on combined LTV (CLTV = (first balance + new loan) / value)."
     }
   },
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "const": "dscr_rental"
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "required": [
+          "monthly_rent_usd"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "const": "fix_flip"
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "required": [
+          "arv_usd",
+          "rehab_budget_usd"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "const": "conforming_agency"
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "required": [
+          "conforming"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "const": "bridge"
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "required": [
+          "bridge_exit_strategy",
+          "bridge_term"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "const": "ground_up_construction"
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "required": [
+          "project_budget_usd",
+          "build_timeline",
+          "guc_exit_strategy"
+        ]
+      }
+    },
     {
       "if": {
         "properties": {
@@ -364,7 +457,29 @@
               }
             }
           }
+        },
+        "not": {
+          "required": [
+            "home_equity_type"
+          ]
         }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "const": "home_equity"
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "required": [
+          "home_equity_type"
+        ]
       }
     }
   ]
