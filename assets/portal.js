@@ -18,6 +18,7 @@ const PROPS = [
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate = iso => new Date(iso).toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
+const fmtDateTime = iso => new Date(iso).toLocaleString('en-US', {year:'numeric', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
 
 
 function mapDbError(e){
@@ -133,7 +134,7 @@ function renderVersions(){
     const sub = bits.join(', ');
     return `<div class="v-row">
       <span class="v-num">v${esc(v.version)}</span>
-      <div class="v-main"><b>${esc(fmtDate(v.created_at))}</b> ${i === 0 ? '<span class="badge cur">Current</span>' : ''}
+      <div class="v-main"><b>${esc(fmtDateTime(v.created_at))}</b> ${i === 0 ? '<span class="badge cur">Current</span>' : ''}
         ${sub ? `<div class="v-sub">${esc(sub)}</div>` : ''}</div>
       ${v.pdf_path ? `<button class="btn ghost sm v-dl" data-path="${esc(v.pdf_path)}">PDF</button>` : '<span></span>'}
     </div>`;
