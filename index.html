@@ -1173,6 +1173,7 @@
       var hide = inp.hasAttribute('data-long') ? shortLane : !shortLane;
       var lbl = document.querySelector('label[for="' + inp.id + '"]');
       if (lbl) lbl.style.display = hide ? 'none' : '';
+      inp.disabled = hide;
       if (hide && inp.checked) inp.checked = false;
     });
     var isConf = product() === 'conforming_agency';
@@ -1187,9 +1188,11 @@
         el.hidden = (el.hasAttribute('data-long') && rtShort) || isConf;
         if (el.hidden && el.selected) el.selected = false;
       } else {
+        var ioHide = isConf || (el.hasAttribute('data-long') && shortLane);
         var lbl = document.querySelector('label[for="' + el.id + '"]');
-        if (lbl) lbl.style.display = isConf ? 'none' : (el.hasAttribute('data-long') && shortLane ? 'none' : '');
-        if (isConf && el.checked) el.checked = false;
+        if (lbl) lbl.style.display = ioHide ? 'none' : '';
+        el.disabled = ioHide;
+        if (ioHide && el.checked) el.checked = false;
       }
     });
   }
@@ -1597,18 +1600,21 @@
     e.preventDefault();
     nextBtn.click();
   });
-  // Arrow keys move through a pill group from the group container, not only from a checked pill.
+  // Arrow keys move through a pill group relative to the focused pill (or the checked one).
   form.querySelectorAll('.pills').forEach(function(p){
     p.addEventListener('keydown', function(e){
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
       var d = {ArrowRight:1, ArrowDown:1, ArrowLeft:-1, ArrowUp:-1}[e.key];
       if (!d) return;
       var rs = Array.prototype.filter.call(p.querySelectorAll('input[type="radio"]'), function(r){
+        if (r.disabled) return false;
         var l = document.querySelector('label[for="' + r.id + '"]');
         return !l || l.style.display !== 'none';
       });
       if (!rs.length) return;
       e.preventDefault();
-      var i = rs.findIndex(function(r){ return r.checked; });
+      var i = rs.indexOf(document.activeElement);
+      if (i === -1) i = rs.findIndex(function(r){ return r.checked; });
       var n = rs[i === -1 ? (d === 1 ? 0 : rs.length - 1) : (i + d + rs.length) % rs.length];
       n.checked = true;
       n.focus();
