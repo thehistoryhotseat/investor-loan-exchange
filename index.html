@@ -514,7 +514,7 @@
           </div>
           <div class="f-field">
             <label for="zip">ZIP</label>
-            <input type="text" id="zip" name="zip" maxlength="10" placeholder="Optional">
+            <input type="text" inputmode="numeric" maxlength="5" id="zip" name="zip" placeholder="Optional">
           </div>
           </div>
           <div class="f-field">
@@ -754,7 +754,7 @@
         <div class="f-grid">
           <div class="f-field">
             <label for="first-bal">First mortgage balance <span class="opt">(second liens price on combined LTV)</span></label>
-            <div class="money"><span>$</span><input type="text" inputmode="numeric" class="money-in" id="first-bal" name="first_mortgage_balance" placeholder="e.g. 240,000"></div>
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="first-bal" name="first_mortgage_balance" placeholder="e.g. 240,000"></div>
           </div>
           <div class="f-field full">
             <p class="ltv-line" id="cltv-line"><span class="ltv-note">Combined LTV shows once first balance, loan and value are in</span></p>
@@ -1094,6 +1094,8 @@
     if (ok) {
       var st = step.querySelector('#state');
       if (st && st.value && !/^(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])$/.test(st.value.toUpperCase())) { st.classList.add('f-invalid'); fieldMsg(st, 'Use the 2-letter state code.'); ok = false; }
+      var zp = form.querySelector('[name="zip"]');
+      if (zp && zp.value && !/^\d{5}$/.test(zp.value)) { zp.classList.add('f-invalid'); fieldMsg(zp, 'ZIP is 5 digits.'); ok = false; }
       var ct = step.querySelector('#contact');
       if (ct && ct.value && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ct.value) || /^[+()\-.\s\d]{7,}$/.test(ct.value))) { ct.classList.add('f-invalid'); fieldMsg(ct, 'Enter an email or a phone number.'); ok = false; }
       var occ = step.querySelector('#occ');
@@ -1175,7 +1177,7 @@
     }
     form.querySelectorAll('[data-io]').forEach(function(el){
       if (el.tagName === 'OPTION') {
-        el.hidden = (el.hasAttribute('data-long') && shortLane) || isConf;
+        el.hidden = (el.hasAttribute('data-long') && rtShort) || isConf;
         if (el.hidden && el.selected) el.selected = false;
       } else {
         var lbl = document.querySelector('label[for="' + el.id + '"]');
@@ -1190,7 +1192,9 @@
     var fb = num('first_mortgage_balance'), la = num('loan_amount_usd'), ev = num('est_value_usd');
     if (fb > 0 && la > 0 && ev > 0) {
       var c = (fb + la) / ev * 100;
-      el.innerHTML = '<span class="ltv-k">CLTV</span><span class="ltv-v">' + c.toFixed(1) + '%</span>';
+      var over = c > 90;
+      el.innerHTML = '<span class="ltv-k">CLTV</span><span class="ltv-v' + (over ? ' over' : '') + '">' + c.toFixed(1) + '%</span>'
+        + (over ? '<span class="ltv-note">over most second-lien caps (~90%)</span>' : '');
     } else {
       el.innerHTML = '<span class="ltv-note">Combined LTV shows once first balance, loan and value are in</span>';
     }
@@ -1326,7 +1330,6 @@
       credit_band: val('credit_band') === 'Below 620' ? 'below_620' : val('credit_band'),
       role: val('role'),
       role: val('role'),
-      contact: val('contact'),
       consent: { share_with_lenders: true, contact_withheld_until_engaged: true }
     };
     if (val('zip')) obj.property.zip = val('zip');
@@ -1373,6 +1376,7 @@
     }
     if (product() === 'conforming_agency') {
       obj.conforming = { under_county_limit: val('under_limit') };
+      if (val('conforming_note')) obj.conforming.note = val('conforming_note');
       if (val('dti_band')) obj.conforming.dti_band = val('dti_band');
     }
     if (product() === 'home_equity') {
@@ -1445,6 +1449,8 @@
   });
   form.addEventListener('change', saveDraft);
   restoreDraft();
+  updateRateType();
+  updateCltv();
   form.querySelectorAll('.money-in').forEach(function(el){
     if (el.value) { el.value = moneyMask(el.value); }
   });
@@ -1497,11 +1503,12 @@
     document.getElementById('f-send-err').style.display = 'none';
     doneEl.classList.add('on');
     setTimeout(function(){ document.getElementById('f-done-live-h').focus(); }, 60);
-    fetch(SUBMIT_ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain','Accept':'application/json'}, body: json})
+    fetch(SUBMIT_ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain','Accept':'application/json'}, body: JSON.stringify({scenario: JSON.parse(json), contact: val('contact')})})
       .then(function(r){ if (!r.ok) throw new Error('send failed'); return r.text(); })
       .then(function(t){
-        var ref = '';
-        try { var j = JSON.parse(t); ref = j.reference || j.id || ''; } catch(e) {}
+        var j = null, ref = '';
+        try { j = JSON.parse(t); ref = j.reference || j.id || ''; } catch(e) {}
+        if (!j || (j.ok !== true && !ref)) throw new Error('bad response');
         clearDraft();
         var refLine = document.getElementById('f-ref-line');
         if (ref) { document.getElementById('f-ref').textContent = ref; refLine.style.display = ''; }
@@ -1647,6 +1654,7 @@
     setField('prepay', pf.prepay_tolerance);
     var cf = d.conforming || {};
     setField('under_limit', cf.under_county_limit);
+    setField('conforming_note', cf.note);
     setField('dti_band', cf.dti_band);
     setField('home_equity_type', d.home_equity_type);
     setField('first_mortgage_balance', d.first_mortgage_balance_usd);
@@ -1662,7 +1670,7 @@
     unknownTop = unknownTop.concat(Object.keys(p).filter(function(k){ return knownProp.indexOf(k) < 0; }).map(function(k){ return 'property.' + k; }));
     var knownPf = ['structure','rate_type','prepay_tolerance'];
     unknownTop = unknownTop.concat(Object.keys(pf).filter(function(k){ return knownPf.indexOf(k) < 0; }).map(function(k){ return 'preferences.' + k; }));
-    var knownCf = ['under_county_limit','dti_band'];
+    var knownCf = ['under_county_limit','dti_band','note'];
     unknownTop = unknownTop.concat(Object.keys(cf).filter(function(k){ return knownCf.indexOf(k) < 0; }).map(function(k){ return 'conforming.' + k; }));
     if (unknownTop.length) changeNotes.push('dropped unknown fields: ' + unknownTop.join(', '));
     if (pf.rate_type && val('rate_type') && val('rate_type') !== pf.rate_type) changeNotes.push('matched rate type to "' + val('rate_type') + '"');
@@ -1697,6 +1705,7 @@
         status.textContent = (laneMissing.length
           ? 'Loaded, but the file has no ' + laneMissing.join(' or ') + ' - the lane screen will ask for ' + (laneMissing.length > 1 ? 'them' : 'it') + '.'
           : 'Loaded. Review each screen; contact and consent stay yours to fill.') + dropNote;
+    updateRateType(); updateLtv(); updateFlip(); updateDscr(); updateCltv();
       }
   });
   document.getElementById('f-download').addEventListener('click', function(){

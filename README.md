@@ -23,8 +23,10 @@ Push to the default branch; GitHub Pages republishes in under a minute.
 
 The intake stays in test mode while `SUBMIT_ENDPOINT` in `index.html` is an
 empty string. To switch on live submissions, set it to the chosen intake URL.
-The form then POSTs the scenario record as JSON (`Content-Type:
-application/json`). If the endpoint answers with `{"reference": "..."}`, the
+The form then POSTs the scenario record wrapped with the submitter's contact
+(`{"scenario": {...}, "contact": "..."}`, sent as `Content-Type: text/plain` so
+Apps Script gets no preflight). Contact never travels inside the lender-facing
+record itself. If the endpoint answers with `{"reference": "..."}`, the
 submitter sees that reference on the confirmation screen; otherwise a local
 `ILX-...` reference is generated. A failed send keeps every entry on the page
 and tells the submitter nothing was lost. Any endpoint that accepts a JSON

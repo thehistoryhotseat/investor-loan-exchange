@@ -243,6 +243,10 @@
             "not_sure"
           ],
           "description": "Conforming (agency): debt-to-income band. Agency investment loans price on DTI."
+        },
+        "note": {
+          "type": "string",
+          "description": "Free-text note for lenders on a conforming deal."
         }
       },
       "required": [
@@ -344,10 +348,6 @@
     "first_mortgage_balance_usd": {
       "type": "number",
       "description": "Home equity lane: current balance of the first mortgage. Second liens price on combined LTV (CLTV = (first balance + new loan) / value)."
-    },
-    "contact": {
-      "type": "string",
-      "description": "Email or phone of the person submitting. Filled by the submitter on the page, never loaded from a file."
     },
     "cltv": {
       "type": "number",

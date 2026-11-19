@@ -47,7 +47,7 @@ Formats that trip validators:
 - ground_up_construction: project_budget_usd, build_timeline (under_9_months, 9_12_months, 12_18_months, over_18_months) and guc_exit_strategy (sell, refinance_into_dscr, undecided), all required; land_status (owned, under_contract, not_yet) optional.
 - cash_out_refi: no extra fields.
 - home_equity: home_equity_type (heloc, home_equity_loan) required. Accepts occupancy "owner_occupied" or "investment". rate_type fits a line or a second lien: "Fixed", "Floating" or "No preference"; no prepay_tolerance. first_mortgage_balance_usd optional: current first-mortgage balance; the record then carries cltv = (first_mortgage_balance_usd + loan_amount_usd) / est_value_usd.
-- conforming_agency: conforming.under_county_limit is required and is the string "yes", "no" or "not_sure" (not a boolean). conforming.dti_band optional: under_36, 36_43, 43_50, over_50, not_sure. Agency loans carry no prepayment penalty and are not interest-only, so this lane takes no prepay_tolerance and no interest_only (IO) structure or IO ARM rate type; those values are dropped at intake.
+- conforming_agency: conforming.under_county_limit is required and is the string "yes", "no" or "not_sure" (not a boolean). conforming.dti_band optional: under_36, 36_43, 43_50, over_50, not_sure. conforming.note optional free text for lenders. Agency loans carry no prepayment penalty and are not interest-only, so this lane takes no prepay_tolerance and no interest_only (IO) structure or IO ARM rate type; those values are dropped at intake.
 
 ## Preferences by lane
 
