@@ -35,14 +35,17 @@
   :root{
     --ink:#101820; --ink-2:#2a3542; --paper:#f6f4ee; --card:#fffdf8;
     --line:#ddd6c8; --brass:#9a7b3f; --brass-ink:#7d6230; --brass-soft:#b3975e; --muted:#66707c;
-    --navy:#14263c;
+    --navy:#14263c; --btn:#0f1b2d; --btn-hover:#1b2c44; --field:#d9d3c7;
+    --e1:0 1px 2px rgba(17,24,39,.06),0 1px 1px rgba(17,24,39,.04);
+    --e2:0 4px 12px -2px rgba(17,24,39,.08),0 2px 4px -2px rgba(17,24,39,.05);
+    --e3:0 24px 48px -12px rgba(17,24,39,.18),0 0 0 1px rgba(17,24,39,.06);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
-  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-ink);font-weight:500}
-  .skip-link{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .skip-link{position:absolute;left:-999px;top:0;background:var(--btn);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
   .skip-link:focus{left:0}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   [id]{scroll-margin-top:76px}
@@ -50,160 +53,172 @@
   nav{position:sticky;top:0;z-index:50;background:rgba(246,244,238,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
   .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
-  .mark{width:34px;height:34px;border:1.5px solid var(--ink);display:grid;place-items:center;font-family:'Fraunces',serif;font-weight:560;font-size:15px;border-radius:3px}
+  .mark{font-family:'Fraunces',serif;font-weight:560;font-size:23px;letter-spacing:-.01em;line-height:1}
   .brand-name{font-weight:600;font-size:15px;letter-spacing:.01em;white-space:nowrap}
   .nav-links{display:flex;gap:26px;align-items:center}
   .nav-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500}
   .nav-links a:not(.btn){transition:color .15s ease}
   .nav-links a:hover{color:var(--brass)}
   .nav-links a.btn{color:var(--paper)}
-  .btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:600;font-size:14.5px;padding:12px 22px;border-radius:4px;letter-spacing:.01em;transition:background .18s cubic-bezier(.2,.7,.3,1),transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .18s cubic-bezier(.2,.7,.3,1);border:none;cursor:pointer;font-family:inherit}
-  .btn:hover{background:var(--navy);transform:translateY(-1px);box-shadow:0 8px 20px rgba(16,24,32,.16)}
+  .btn{display:inline-block;background:var(--btn);color:var(--paper);text-decoration:none;font-weight:600;font-size:14.5px;padding:13px 24px;border-radius:6px;letter-spacing:.01em;transition:background .16s ease,transform .16s ease,box-shadow .16s ease;border:none;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--btn-hover);transform:translateY(-1px);box-shadow:var(--e1)}
   .btn:active{transform:translateY(0);box-shadow:0 2px 6px rgba(16,24,32,.12)}
   .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
-  .btn.ghost:hover{background:var(--ink);color:var(--paper)}
+  .btn.ghost:hover{background:var(--btn);border-color:var(--btn);color:var(--paper)}
   .btn.sm{padding:9px 16px;font-size:13.5px}
   .btn[disabled]{opacity:.4;pointer-events:none}
   .menu{display:none;position:relative}
   .menu summary{list-style:none;cursor:pointer;font-size:13.5px;font-weight:600;padding:9px 14px;border:1.5px solid var(--ink);border-radius:4px;color:var(--ink);user-select:none}
   .menu summary::-webkit-details-marker{display:none}
-  .menu[open] summary{background:var(--ink);color:var(--paper)}
+  .menu[open] summary{background:var(--btn);border-color:var(--btn);color:var(--paper)}
   .menu:not([open]) .menu-links{display:none}
-  .menu-links{position:absolute;right:0;top:calc(100% + 8px);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px;min-width:210px;box-shadow:0 14px 34px rgba(16,24,32,.14);display:flex;flex-direction:column;z-index:60}
+  .menu-links{position:absolute;right:0;top:calc(100% + 8px);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px;min-width:210px;box-shadow:var(--e2);display:flex;flex-direction:column;z-index:60}
   .menu-links a{padding:11px 12px;color:var(--ink-2);text-decoration:none;font-size:14.5px;font-weight:500;border-radius:4px}
   .menu-links a:hover{background:var(--paper);color:var(--ink)}
-  .menu-links a.cta{display:none;background:var(--ink);color:var(--paper);text-align:center;font-weight:600;margin-bottom:6px}
-  .menu-links a.cta:hover{background:var(--navy);color:var(--paper)}
+  .menu-links a.cta{display:none;background:var(--btn);color:var(--paper);text-align:center;font-weight:600;margin-bottom:6px}
+  .menu-links a.cta:hover{background:var(--btn-hover);color:var(--paper)}
 
   header.hero{padding:88px 0 76px;border-bottom:1px solid var(--line);background:radial-gradient(1000px 460px at 78% 0%,rgba(154,123,63,.07),transparent 62%),linear-gradient(180deg,#faf8f2 0%,var(--paper) 100%)}
   .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:60px;align-items:start}
-  .hero h1{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(36px,4.6vw,56px);line-height:1.08;letter-spacing:-.015em;margin:20px 0 22px;max-width:15ch}
-  .hero h1 em{font-style:italic;color:var(--brass)}
+  .hero h1{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(40px,4vw + 1rem,64px);line-height:1.02;letter-spacing:-.02em;margin:20px 0 22px;max-width:16ch}
+  .hero h1 em{font-style:normal;color:inherit}
   .hero p{max-width:52ch;font-size:18px;color:var(--ink-2)}
   .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;align-items:center}
-  .hero-note{font-size:13px;color:var(--muted);margin-top:14px}
+  .hero-note{font-size:14px;color:var(--muted);margin-top:16px}
   .trust-row{display:flex;gap:10px 28px;flex-wrap:wrap;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
-  .trust-row span{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;gap:8px}
-  .trust-row span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--brass);flex:none}
-  .quote-card{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 1px 2px rgba(16,24,32,.05),0 24px 56px rgba(16,24,32,.10);margin-top:66px}
-  .qc-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);background:#fbf8f1}
-  .qc-head .t{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-ink);font-weight:500}
-  .qc-head .s{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)}
-  .qc-illus{padding:8px 22px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--brass-ink);border-bottom:1px solid var(--line)}
-  .qc-cols,.qc-row{display:grid;grid-template-columns:1fr 1fr 1.05fr .85fr .7fr .7fr;gap:8px;align-items:baseline;padding:13px 22px}
-  .qc-cols{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-top:12px;padding-bottom:10px}
-  .qc-row{border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink-2)}
+  .trust-row span{font-size:13px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .trust-row span::before{content:"";width:6px;height:6px;border-radius:50%;background:#b7af9e;flex:none}
+  .quote-card{background:#0f1b2d;border:none;border-radius:10px;overflow:hidden;box-shadow:var(--e3);margin-top:24px;align-self:start}
+  .qc-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:18px 22px;border-bottom:1px solid rgba(246,244,238,.14)}
+  .qc-head .t{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#e8e4da;font-weight:600}
+      .qc-cols,.qc-row{display:grid;grid-template-columns:1fr 1fr 1.05fr .85fr .7fr .7fr;gap:8px;align-items:baseline;padding:14px 22px}
+  .qc-cols span:nth-child(n+2),.qc-row span:nth-child(n+2){text-align:right}
+  .qc-cols{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8d9aa9;border-bottom:1px solid rgba(246,244,238,.1);padding-top:13px;padding-bottom:11px}
+  .qc-row{border-bottom:1px solid rgba(246,244,238,.1);font-size:13.5px;color:#c6d0dc}
   .qc-row:last-of-type{border-bottom:none}
-  .qc-row .who{font-weight:600;color:var(--ink);font-size:13px}
-  .qc-row .rate{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;font-size:19px;font-weight:500;color:var(--ink)}
-  .qc-row .num{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;font-size:13px}
-  .qc-foot{padding:11px 22px;font-size:11.5px;color:var(--muted);background:#fbf8f1;border-top:1px solid var(--line)}
+  .qc-row .who{font-weight:600;color:#f6f4ee;font-size:13px}
+  .qc-row .rate{font-variant-numeric:tabular-nums lining-nums;font-size:20px;font-weight:600;color:#f6f4ee}
+  .qc-row .num{font-variant-numeric:tabular-nums lining-nums;font-size:13.5px;white-space:nowrap}
+  .qc-foot{padding:13px 22px;font-size:12px;line-height:1.55;color:#8d9aa9;border-top:1px solid rgba(246,244,238,.1)}
 
-  section{padding:76px 0;border-bottom:1px solid var(--line)}
-  .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:44px;flex-wrap:wrap}
-  h2{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(28px,3.6vw,40px);line-height:1.15;letter-spacing:-.01em}
+  section{padding:96px 0;border-bottom:1px solid var(--line)}
+  section[id],header[id]{scroll-margin-top:96px}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:40px;flex-wrap:wrap}
+  .sec-head .eyebrow{display:block;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(28px,3.6vw,40px);line-height:1.1;letter-spacing:-.015em}
   .sec-head p{max-width:42ch;color:var(--muted);font-size:15px}
 
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--card)}
-  .step{padding:30px 26px 34px;border-right:1px solid var(--line)}
-  .step:last-child{border-right:none}
-  .step .n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--brass-ink);letter-spacing:.12em;margin-bottom:16px}
-  .step h3{font-family:'Fraunces',serif;font-weight:560;font-size:18.5px;margin-bottom:8px;line-height:1.3}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+  .step{padding:0}
+    .step .n{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.08em;margin-bottom:14px}
+  .step h3{font-weight:600;font-size:18px;margin-bottom:8px;line-height:1.3;letter-spacing:-.01em}
   .step p{font-size:14px;color:var(--muted)}
 
   .lanes{border-top:1px solid var(--ink)}
-  .lane{display:grid;grid-template-columns:64px 1fr 1.6fr;gap:20px;align-items:baseline;padding:20px 4px;border-bottom:1px solid var(--line)}
-  .lane .n{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--brass-ink)}
-  .lane h3{font-family:'Fraunces',serif;font-weight:560;font-size:20px}
+  .lane{display:grid;grid-template-columns:1fr 1.6fr;gap:28px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+    .lane h3{font-weight:600;font-size:19px;letter-spacing:-.01em}
   .lane p{font-size:14.5px;color:var(--muted)}
-  .callout{margin-top:28px;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:4px;padding:18px 22px;font-size:14px;color:var(--ink-2)}
+  .callout{margin-top:28px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px 22px;font-size:13.5px;color:var(--ink-2)}
   .callout strong{color:var(--ink)}
 
-  .form-card{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 1px 2px rgba(16,24,32,.04),0 20px 48px rgba(16,24,32,.07)}
+  .form-card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:var(--e3)}
   .f-progress{height:4px;background:var(--line)}
-  .f-bar{height:100%;background:var(--brass);width:8%;transition:width .45s cubic-bezier(.2,.7,.3,1)}
-  .f-meta{display:flex;justify-content:space-between;padding:20px 30px 0;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .f-bar{height:100%;background:var(--brass);width:8%;transition:width .3s cubic-bezier(.2,0,0,1)}
+  .f-meta{display:flex;justify-content:space-between;padding:20px 30px 0;font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
   .f-step{display:none;padding:6px 30px;border:none}
-  .f-step.on{display:block;animation:stepIn .3s cubic-bezier(.2,.7,.3,1)}
-  @keyframes stepIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .f-step.on{display:block;animation:stepIn .24s cubic-bezier(.2,0,0,1)}
+  @keyframes stepIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   .f-step.on + .f-step.on{border-top:1px solid var(--line);margin-top:14px;padding-top:22px}
-  .f-step h3{font-family:'Fraunces',serif;font-weight:560;font-size:25px;margin:12px 0 6px}
+  .f-step h3{font-weight:600;font-size:22px;letter-spacing:-.015em;margin:12px 0 6px}
   .f-step .sub{font-size:14px;color:var(--muted);margin-bottom:24px}
   .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   .f-field{display:flex;flex-direction:column;gap:7px}
   .f-field.full{grid-column:1/-1}
   .f-field > label, .f-label{font-size:13px;font-weight:600;color:var(--ink-2)}
   .f-field label .req, .f-label .req{color:var(--brass)}
-  .f-field input[type=text],.f-field input[type=email],.f-field input[type=tel],.f-field input[type=number],.f-field input[type=date],.f-field select,.f-field textarea{font:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:5px;padding:11px 13px;outline:none;width:100%;transition:border-color .15s ease,box-shadow .15s ease}
+  .f-field input[type=text],.f-field input[type=email],.f-field input[type=tel],.f-field input[type=number],.f-field input[type=date],.f-field select,.f-field textarea{font:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--field);border-radius:8px;padding:0 14px;height:48px;outline:none;width:100%;transition:border-color .16s ease,box-shadow .16s ease}
+  .f-field textarea{height:auto;padding:12px 14px}
+  .f-field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%2366707c' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+  .f-field input::placeholder,.f-field textarea::placeholder{color:rgba(16,24,39,.42)}
+  .money{position:relative}
+  .money > span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;pointer-events:none}
+  .money input{padding-left:27px;font-variant-numeric:tabular-nums lining-nums}
   .f-field input:focus,.f-field select:focus,.f-field textarea:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(154,123,63,.28)}
   .f-field textarea{min-height:90px;resize:vertical}
   .pills{display:flex;flex-wrap:wrap;gap:8px}
   .pills input{position:absolute;opacity:0;pointer-events:none}
-  .pills label{font-size:13.5px;font-weight:500;padding:9px 15px;border:1px solid var(--line);border-radius:99px;cursor:pointer;color:var(--ink-2);background:#fff;transition:border-color .15s ease,background .15s ease,color .15s ease,transform .1s ease}
+  .pills label{font-size:13.5px;font-weight:500;padding:10px 16px;border:1px solid var(--field);border-radius:99px;cursor:pointer;color:var(--ink-2);background:#fff;transition:border-color .16s ease,background .16s ease,color .16s ease,transform .1s ease}
   .pills label:active{transform:scale(.97)}
-  .pills label:hover{border-color:var(--brass)}
-  .pills input:checked + label{border-color:var(--brass);background:#f4ecdc;color:var(--ink);font-weight:600}
+  .pills label:hover{border-color:#a8a091}
+  .pills input:checked + label{border-color:var(--ink);background:var(--ink);color:#fff;font-weight:600}
   .pills input:focus-visible + label{outline:2px solid var(--brass);outline-offset:2px}
+  .ltv-line{display:flex;justify-content:flex-end;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .ltv-k{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .ltv-v{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums lining-nums;color:var(--ink)}
+  .ltv-v.over{color:#b4432e}
+  .ltv-note{font-size:13px;color:var(--muted)}
   .f-consent{display:flex;gap:12px;align-items:flex-start;background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:16px 18px;font-size:13.5px;color:var(--ink-2);margin-top:22px;cursor:pointer}
   .f-consent input{margin-top:3px;flex:none}
   .f-nav{display:flex;justify-content:space-between;gap:12px;padding:22px 30px 28px;border-top:1px solid var(--line);margin-top:20px}
   .f-error{margin:16px 30px 0;padding:12px 16px;border:1px solid rgba(178,58,44,.35);background:#fbeeec;color:#8a2b21;border-radius:6px;font-size:14px}
-  .f-field input.f-invalid,.f-field select.f-invalid{border-color:#b3432e}
-  .pills.f-invalid label{border-color:#b3432e}
+  .f-field input.f-invalid,.f-field select.f-invalid{border-color:#b4432e}
+  .f-label.f-invalid-label{color:#b4432e}
+  .pills-msg{font-size:13px;color:#b4432e;margin-top:8px}
   .f-nav .btn{white-space:nowrap}
   #f-toreview{margin-left:auto}
   .f-review .r-row{display:grid;grid-template-columns:170px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
   .r-edit{background:none;border:none;padding:0;font:inherit;font-size:12.5px;color:var(--brass-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;align-self:start}
   .r-edit:hover{color:var(--brass)}
-  .f-review .r-row .k{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+  .f-review .r-row .k{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
   .f-err{color:#b3432e;font-size:13.5px;font-weight:500;margin-top:16px;display:none}
   .f-done{display:none;padding:8px 30px 30px}
   .f-done.on{display:block}
-  .f-done h3{font-family:'Fraunces',serif;font-weight:560;font-size:24px;margin:10px 0 8px}
+  .f-done h3{font-weight:600;font-size:22px;letter-spacing:-.015em;margin:10px 0 8px}
   .f-done p{font-size:14.5px;color:var(--muted);max-width:56ch}
   .f-done pre{margin:18px 0 14px}
-  .f-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-ink);border:1px solid var(--brass);border-radius:99px;padding:5px 12px;margin-bottom:8px}
-  .copy-btn-light{background:transparent;border:1.5px solid var(--ink);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 16px;border-radius:4px;cursor:pointer}
-  .copy-btn-light:hover{background:var(--ink);color:var(--paper)}
+  .f-badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:5px 12px;margin-bottom:8px}
+  .copy-btn-light{background:transparent;border:1.5px solid var(--ink);color:var(--ink);font-size:13px;font-weight:600;padding:8px 16px;border-radius:6px;cursor:pointer;transition:background .16s ease,color .16s ease}
+  .copy-btn-light:hover{background:var(--btn);border-color:var(--btn);color:var(--paper)}
 
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:28px 26px;display:flex;flex-direction:column;gap:12px;transition:transform .2s cubic-bezier(.2,.7,.3,1),box-shadow .2s cubic-bezier(.2,.7,.3,1)}
-  .card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(16,24,32,.10)}
-  .card .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-ink);border:1px solid var(--line);align-self:flex-start;padding:4px 10px;border-radius:99px}
-  .card h3{font-family:'Fraunces',serif;font-weight:560;font-size:21px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:28px 26px;display:flex;flex-direction:column;gap:12px;transition:border-color .16s ease}
+  .card:hover{border-color:#a8a091}
+  .card h3{font-weight:600;font-size:19px;letter-spacing:-.01em}
   .card p{font-size:14.5px;color:var(--muted);flex:1}
   .pre-light{background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:22px 24px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.6px;line-height:1.7;color:var(--ink-2)}
   .lender-sample{margin-top:36px}
-  .lender-sample h3{font-family:'Fraunces',serif;font-weight:560;font-size:19px;margin-bottom:12px}
+  .lender-sample h3{font-weight:600;font-size:19px;letter-spacing:-.01em;margin-bottom:12px}
 
-  .agents{background:var(--navy);color:#e8ecf1;border-bottom:none}
-  .agents .eyebrow{color:var(--brass-soft)}
-  .agents h2{color:#fff}
-  .agents .sec-head p{color:#9fb0c3}
-  .agents p.lead{max-width:62ch;color:#c6d0dc;font-size:16px;margin-bottom:30px}
+  .agents p.lead{max-width:62ch;color:var(--ink-2);font-size:16px;margin-bottom:30px}
   pre{background:#0c1a2b;border:1px solid #24384f;border-radius:6px;padding:26px 28px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.8px;line-height:1.65;color:#c9d8e8}
   .f-done pre{background:#fbf8f1;border-color:var(--line);color:var(--ink-2)}
-  .load-json{background:var(--card);border:1px dashed var(--line);border-radius:6px;padding:14px 18px;margin-bottom:18px}
-  .load-json summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--ink-2)}
-  .load-json summary:hover{color:var(--brass)}
-  .load-json textarea{width:100%;margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;border:1px solid var(--line);border-radius:5px;padding:10px 12px;background:#fff;color:var(--ink)}
+  .load-json{margin-bottom:22px}
+  .load-json summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--ink-2);list-style:none;display:inline-flex;align-items:center;gap:7px}
+  .load-json summary::-webkit-details-marker{display:none}
+  .load-json summary::after{content:"\203A";font-size:15px;color:var(--muted);transition:transform .16s ease}
+  .load-json[open] summary::after{transform:rotate(90deg)}
+  .load-json summary:hover{color:var(--ink)}
+  .load-json textarea{width:100%;margin-top:12px;background:var(--card);border:1px solid var(--field);border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:12px 14px;color:var(--ink)}
   .load-row{display:flex;gap:12px;align-items:center;margin-top:10px}
   #json-status{font-size:13px;color:var(--muted)}
   .pre-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;margin-top:34px;gap:14px}
-  .pre-head span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#7e93a9}
-  .copy-btn{background:transparent;border:1px solid #3a5068;color:#c9d8e8;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:7px 14px;border-radius:4px;cursor:pointer;flex:none}
-  .copy-btn:hover{border-color:var(--brass-soft);color:#fff}
-  .agents .callout{background:#0c1a2b;border-color:#24384f;border-left-color:var(--brass-soft);color:#c6d0dc;margin-top:30px}
-  .agents .callout strong{color:#fff}
-  .agents a.inline{color:#c9d8e8;border-bottom:1px solid #3a5068;text-decoration:none}
-  .agents a.inline:hover{color:#fff}
+  .pre-head span{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .copy-btn{background:transparent;border:1.5px solid var(--ink);color:var(--ink);font-size:13px;font-weight:600;padding:8px 16px;border-radius:6px;cursor:pointer;flex:none;transition:background .16s ease,color .16s ease}
+  .copy-btn:hover{background:var(--btn);border-color:var(--btn);color:var(--paper)}
+  .agents a.inline{color:var(--ink);border-bottom:1px solid var(--line);text-decoration:none}
+  .agents a.inline:hover{border-bottom-color:var(--ink)}
 
   footer{padding:56px 0 64px}
   .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
   footer .small{font-size:13px;color:var(--muted);max-width:52ch}
+  .foot-links{display:flex;gap:22px;flex-wrap:wrap}
+  .foot-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500}
+  .foot-links a:hover{color:var(--ink)}
   footer .brandline{font-family:'Fraunces',serif;font-size:17px;font-weight:560;margin-bottom:8px}
 
   .mobile-cta{display:none}
+
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;scroll-behavior:auto !important}}
 
   @media (max-width:900px){
     .hero-grid{display:flex;flex-direction:column;gap:0}
@@ -211,20 +226,18 @@
     .hero .eyebrow{order:1}
     .hero h1{order:2}
     .hero p{order:3}
-    .quote-card{order:4;margin:26px 0 0}
-    .hero-cta{order:5}
+    .hero-cta{order:4}
+    .quote-card{order:5}
     .hero-note{order:6}
     .trust-row{order:7}
-    .steps{grid-template-columns:1fr 1fr}
-    .step:nth-child(2){border-right:none}
-    .step{border-bottom:1px solid var(--line)}
-    .step:nth-child(3),.step:nth-child(4){border-bottom:none}
+    .steps{grid-template-columns:1fr 1fr;gap:24px}
+    .hero h1{margin:16px 0 20px}
     .cards{grid-template-columns:1fr}
     .nav-links > a:not(.btn){display:none}
     .menu{display:block}
     .menu-links a.cta{display:block}
     .hero-grid{grid-template-columns:1fr;gap:36px}
-    .quote-card{margin-top:0}
+    .quote-card{margin:26px 0 0}
     .hero .hero-note{display:none}
     .mobile-cta{display:block;position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(246,244,238,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
     .mobile-cta .btn{display:block;text-align:center}
@@ -235,10 +248,11 @@
   }
   @media (max-width:560px){
     .steps{grid-template-columns:1fr}
-    .step{border-right:none;border-bottom:1px solid var(--line)}
-    .step:last-child{border-bottom:none}
-    .lane{grid-template-columns:40px 1fr;grid-template-rows:auto auto}
-    .lane p{grid-column:2}
+    section{padding:64px 0}
+    .wrap{padding:0 16px}
+    .pills{display:grid;grid-template-columns:1fr 1fr}
+    .pills label{display:flex;align-items:center;justify-content:center;min-height:44px;text-align:center}
+    .lane{grid-template-columns:1fr;gap:6px}
     header.hero{padding:64px 0 56px}
     .nav-links > a.btn{display:none}
     .brand-name{font-size:14px}
@@ -305,7 +319,7 @@
   <div class="wrap hero-grid">
    <div>
     <span class="eyebrow">A loan scenario exchange for investment property</span>
-    <h1>One scenario in. <em>Fitting lenders</em> price&nbsp;it.</h1>
+    <h1>One scenario in. Fitting lenders price&nbsp;it.</h1>
     <p>Send the deal once. Every fitting panel lender gets one rate request. Quotes come back side by side; you choose.</p>
     <div class="hero-cta">
       <a class="btn" href="#intake">Submit a scenario</a>
@@ -319,15 +333,14 @@
     </div>
    </div>
    <div class="quote-card" aria-label="Sample anonymized quote comparison">
-    <div class="qc-head"><span class="t">What comes back</span><span class="s">Sample - request #1042 - DSCR rental - NJ</span></div>
-    <div class="qc-illus">Illustrative figures, not current rates or an offer.</div>
+    <div class="qc-head"><span class="t">Sample quotes - DSCR rental, NJ</span></div>
     <div role="table" aria-label="Sample quote comparison">
-    <div role="row" class="qc-cols"><span>Lender</span><span>Rate</span><span>Term</span><span><span class="fullw">Max </span>LTV</span><span>Pts</span><span>Prepay</span></div>
+    <div role="row" class="qc-cols"><span>Lender</span><span>Rate</span><span>Term</span><span>LTV</span><span>Pts</span><span>Prepay</span></div>
     <div role="row" class="qc-row"><span class="who">Lender A</span><span class="rate">6.875%</span><span class="num">30-yr fix</span><span class="num">75%</span><span class="num">1.50</span><span class="num">3 yr</span></div>
     <div role="row" class="qc-row"><span class="who">Lender B</span><span class="rate">7.125%</span><span class="num">30-yr fix</span><span class="num">80%</span><span class="num">1.00</span><span class="num">None</span></div>
-    <div role="row" class="qc-row"><span class="who">Lender C</span><span class="rate">7.375%</span><span class="num">5/6 ARM IO</span><span class="num">75%</span><span class="num">0</span><span class="num">5 yr</span></div>
+    <div role="row" class="qc-row"><span class="who">Lender C</span><span class="rate">7.375%</span><span class="num">5/6 ARM IO</span><span class="num">75%</span><span class="num">0.00</span><span class="num">5 yr</span></div>
     </div>
-    <div class="qc-foot">One scenario in, quotes side by side. 30-day lock. Points are lender fees, before any broker comp. Shown in the order received.</div>
+    <div class="qc-foot">Illustrative figures, not current rates or an offer. One scenario in, quotes side by side. 30-day lock. Points are lender fees, before any broker comp. Shown in the order received.</div>
    </div>
   </div>
 </header>
@@ -375,12 +388,12 @@
       <p>Outside these lanes? Submit anyway; it is reviewed by hand.</p>
     </div>
     <div class="lanes">
-      <div class="lane"><span class="n">01</span><h3>DSCR rental</h3><p>Long-term rental loans qualified on the property's cash flow. Priced on DSCR, LTV and credit.</p></div>
-      <div class="lane"><span class="n">02</span><h3>Fix &amp; flip</h3><p>Short-term purchase and rehab funding, sized on budget and ARV. Priced on ARV, loan-to-cost and experience.</p></div>
-      <div class="lane"><span class="n">03</span><h3>Bridge</h3><p>Fast interim financing while a deal transitions. Priced on equity, the exit and speed.</p></div>
-      <div class="lane"><span class="n">04</span><h3>Ground-up construction</h3><p>Draw-based funding from lot to completion. Priced on budget, experience and the exit.</p></div>
-      <div class="lane"><span class="n">05</span><h3>Cash-out refinance</h3><p>Pull equity out of an existing investment property. Priced on LTV, credit and cash flow.</p></div>
-      <div class="lane"><span class="n">06</span><h3>Conforming (agency)</h3><p>Conventional Fannie / Freddie pricing, under the county limit. Priced on credit, LTV and DTI.</p></div>
+      <div class="lane"><h3>DSCR rental</h3><p>Long-term rental loans qualified on the property's cash flow. Priced on DSCR, LTV and credit.</p></div>
+      <div class="lane"><h3>Fix &amp; flip</h3><p>Short-term purchase and rehab funding, sized on budget and ARV. Priced on ARV, loan-to-cost and experience.</p></div>
+      <div class="lane"><h3>Bridge</h3><p>Fast interim financing while a deal transitions. Priced on equity, the exit and speed.</p></div>
+      <div class="lane"><h3>Ground-up construction</h3><p>Draw-based funding from lot to completion. Priced on budget, experience and the exit.</p></div>
+      <div class="lane"><h3>Cash-out refinance</h3><p>Pull equity out of an existing investment property. Priced on LTV, credit and cash flow.</p></div>
+      <div class="lane"><h3>Conforming (agency)</h3><p>Conventional Fannie / Freddie pricing, under the county limit. Priced on credit, LTV and DTI.</p></div>
     </div>
     <div class="callout"><strong>A note on conforming.</strong> Owner-occupied conforming loans are consumer-purpose mortgages with their own rules; those scenarios are reviewed before any lender sees them. Investment-property conforming deals flow like every other lane.</div>
   </div>
@@ -395,7 +408,7 @@
       <p>Test mode: your entry is checked on this page and shown to you as the exact record we would send. Nothing leaves your browser until submissions are switched on.</p>
     </div>
     <details class="load-json">
-      <summary>Have a scenario.json from your agent? Load it here</summary>
+      <summary>Load a scenario.json from your agent</summary>
       <textarea id="json-in" rows="6" aria-label="Paste your scenario JSON" placeholder='Paste scenario.json here. Contact details and consent are never loaded from a file; you fill those yourself.'></textarea>
       <div class="load-row">
         <button type="button" class="btn sm" id="json-load">Load</button>
@@ -468,7 +481,7 @@
           </div>
           <div class="f-field">
             <label for="state">State <span class="req">*</span></label>
-            <input type="text" id="state" name="state" maxlength="2" placeholder="NJ" required>
+            <input type="text" id="state" name="state" maxlength="2" placeholder="e.g. NJ" required>
           </div>
           <div class="f-field full" id="oo-warn" style="display:none">
             <span class="f-label" style="color:#b3432e">Owner-occupied deals are consumer-purpose mortgages. Only the conforming lane routes those today; an owner-occupied DSCR or bridge deal will not price.</span>
@@ -479,18 +492,18 @@
           </div>
           <div class="f-field">
             <label for="value">Est. value / purchase price <span class="req">*</span></label>
-            <input type="number" id="value" name="est_value_usd" min="1000" step="1000" placeholder="450000" required>
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="value" name="est_value_usd" placeholder="e.g. 450,000" required></div>
           </div>
           <div class="f-field">
             <label for="amount">Loan amount <span class="req">*</span></label>
-            <input type="number" id="amount" name="loan_amount_usd" min="1000" step="1000" placeholder="337500" required>
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="amount" name="loan_amount_usd" placeholder="e.g. 337,500" required></div>
           </div>
           <div class="f-field" id="units-wrap">
             <label for="units">Units</label>
             <input type="number" id="units" name="units" min="1" max="40" placeholder="1">
           </div>
           <div class="f-field full">
-            <span class="f-label" id="ltv-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass-ink)">LTV: enter value and loan amount</span>
+            <span class="ltv-line" id="ltv-line"><span class="ltv-note">LTV shows once value and loan amount are in</span></span>
           </div>
         </div>
       </fieldset>
@@ -560,19 +573,19 @@
         <div class="f-grid">
           <div class="f-field">
             <label for="rent">Monthly rent <span class="req">*</span></label>
-            <input type="number" id="rent" name="monthly_rent_usd" min="0" step="50" placeholder="3200" required>
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="rent" name="monthly_rent_usd" placeholder="e.g. 3,200" required></div>
           </div>
           <div class="f-field">
             <label for="taxes">Monthly taxes</label>
-            <input type="number" id="taxes" name="monthly_taxes_usd" min="0" step="10" placeholder="600">
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="taxes" name="monthly_taxes_usd" placeholder="e.g. 600"></div>
           </div>
           <div class="f-field">
             <label for="ins">Monthly insurance</label>
-            <input type="number" id="ins" name="monthly_insurance_usd" min="0" step="10" placeholder="150">
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="ins" name="monthly_insurance_usd" placeholder="e.g. 150"></div>
           </div>
           <div class="f-field">
             <label for="hoa">Monthly HOA</label>
-            <input type="number" id="hoa" name="monthly_hoa_usd" min="0" step="10" placeholder="0">
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="hoa" name="monthly_hoa_usd" placeholder="e.g. 0"></div>
           </div>
           <div class="f-field full">
             <span class="f-label" id="dscr-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass-ink)">Estimated DSCR appears here once rent and loan are in</span>
@@ -586,11 +599,11 @@
         <div class="f-grid">
           <div class="f-field">
             <label for="arv">After-repair value (ARV) <span class="req">*</span></label>
-            <input type="number" id="arv" name="arv_usd" min="1000" step="1000" placeholder="575000" required>
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="arv" name="arv_usd" placeholder="e.g. 575,000" required></div>
           </div>
           <div class="f-field">
             <label for="rehab">Rehab budget <span class="req">*</span></label>
-            <input type="number" id="rehab" name="rehab_budget_usd" min="0" step="1000" placeholder="85000" required>
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="rehab" name="rehab_budget_usd" placeholder="e.g. 85,000" required></div>
           </div>
           <div class="f-field">
             <label for="exit">Exit strategy</label>
@@ -602,7 +615,7 @@
             </select>
           </div>
           <div class="f-field full">
-            <span class="f-label" id="ltc-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass-ink)">Loan-to-cost and loan-to-ARV appear once price, loan and ARV are in</span>
+            <span class="ltv-line" id="ltc-line"><span class="ltv-note">Loan-to-cost and loan-to-ARV appear once price, loan and ARV are in</span></span>
           </div>
           <div class="f-field">
             <label for="flips">Completed flips</label>
@@ -751,17 +764,14 @@
     </div>
     <div class="cards">
       <div class="card">
-        <span class="tag">Fit</span>
         <h3>Only your lane</h3>
         <p>Tell us the box you price in. Scenarios outside it never reach your desk.</p>
       </div>
       <div class="card">
-        <span class="tag">Speed</span>
         <h3>One structured request</h3>
         <p>The same fields every time, so a deal can be priced without an email chain.</p>
       </div>
       <div class="card">
-        <span class="tag">Volume</span>
         <h3>Broker flow</h3>
         <p>Brokers send one scenario and stop shopping inboxes. You see that volume first.</p>
       </div>
@@ -809,6 +819,12 @@
     <div>
       <div class="brandline">Investor Loan Exchange</div>
       <p class="small">A scenario-routing desk for investment-property lending. Quotes come from panel lenders, and any loan is between you and the lender you choose.</p>
+    </div>
+    <div class="foot-links">
+      <a href="#how">How it works</a>
+      <a href="#lanes">Products</a>
+      <a href="#intake">Submit a scenario</a>
+      <a href="#agents">For agents</a>
     </div>
     <p class="small">Sample figures on this page are illustrative, not rates or offers.</p>
   </div>
@@ -886,11 +902,25 @@
       var pills = first && first.closest('.pills');
       if (pills && pills.getAttribute('data-optional')) return;
       var missing = !step.querySelector('input[name="' + n + '"]:checked');
-      if (pills) pills.classList.toggle('f-invalid', missing);
+      if (pills) {
+        pills.classList.toggle('f-invalid', missing);
+        var gl = pills.previousElementSibling;
+        if (gl && gl.classList.contains('f-label')) gl.classList.toggle('f-invalid-label', missing);
+        var pm = pills.parentNode.querySelector('.pills-msg');
+        if (!pm) {
+          pm = document.createElement('p');
+          pm.className = 'pills-msg';
+          pm.style.display = 'none';
+          pills.parentNode.appendChild(pm);
+        }
+        pm.textContent = 'Pick one to continue.';
+        pm.style.display = missing ? 'block' : 'none';
+      }
       if (missing) ok = false;
     });
     step.querySelectorAll('[required]').forEach(function(f){
-      var bad = !f.value || (f.type === 'number' && isNaN(parseFloat(f.value)));
+      var raw = (f.value || '').replace(/,/g, '');
+      var bad = !f.value || ((f.type === 'number' || f.classList.contains('money-in')) && isNaN(parseFloat(raw)));
       f.classList.toggle('f-invalid', bad);
       if (bad) ok = false;
     });
@@ -902,18 +932,12 @@
     }
     if (name === 'Review' && !document.getElementById('consent').checked) ok = false;
     if (!ok) {
-      step.style.outline = '2px solid #b3432e';
-      setTimeout(function(){ step.style.outline = 'none'; }, 900);
-      var msg = step.querySelector('.f-err');
-      if (!msg) {
-        msg = document.createElement('p');
-        msg.className = 'f-err';
-        msg.textContent = 'Finish the required fields to continue.';
-        step.appendChild(msg);
+      var firstBad = step.querySelector('.f-invalid') || step.querySelector('.pills.f-invalid input') || step.querySelector('.pills.f-invalid');
+      if (firstBad) {
+        try { firstBad.focus({preventScroll:true}); } catch(e) {}
+        var y = firstBad.getBoundingClientRect().top + window.pageYOffset - 120;
+        window.scrollTo({top: y, behavior: 'smooth'});
       }
-      msg.style.display = 'block';
-      clearTimeout(step._errT);
-      step._errT = setTimeout(function(){ msg.style.display = 'none'; }, 3000);
     }
     return ok;
   }
@@ -924,6 +948,7 @@
       var c = form.querySelector('input[name="' + n + '"]:checked');
       return c ? c.value : '';
     }
+    if (el.classList && el.classList.contains('money-in')) return (el.value || '').replace(/,/g, '');
     return el.value || '';
   }
   function label(map, v){ return map[v] || v || '-'; }
@@ -936,13 +961,10 @@
     if (v > 0 && a > 0) {
       var pct = (a / v * 100).toFixed(1);
       var over = a > v;
-      el.style.color = over ? '#b3432e' : '';
-      el.textContent = flip
-        ? 'Loan-to-price: ' + pct + '%' + (over ? '  (over 100% - check the numbers)' : '  (loan-to-cost and loan-to-ARV come with the rehab numbers)')
-        : 'LTV: ' + pct + '%' + (over ? '  (over 100% - check the numbers)' : '');
+      el.innerHTML = '<span class="ltv-k">' + (flip ? 'Loan-to-price' : 'LTV') + '</span><span class="ltv-v' + (over ? ' over' : '') + '">' + pct + '%</span>'
+        + (over ? '<span class="ltv-note">over 100% - check the numbers</span>' : (flip ? '<span class="ltv-note">loan-to-cost and loan-to-ARV come with the rehab numbers</span>' : ''));
     } else {
-      el.style.color = '';
-      el.textContent = flip ? 'Loan-to-price: enter price and loan amount' : 'LTV: enter value and loan amount';
+      el.innerHTML = '<span class="ltv-note">' + (flip ? 'Loan-to-price shows once price and loan amount are in' : 'LTV shows once value and loan amount are in') + '</span>';
     }
   }
   function updateFlip(){
@@ -950,14 +972,11 @@
     if (!el) return;
     var loan = num('loan_amount_usd'), price = num('est_value_usd'), arv = num('arv_usd'), rehab = num('rehab_budget_usd');
     if (loan > 0 && price > 0 && arv > 0) {
-      var parts = [];
-      if ((price + rehab) > 0) parts.push('Loan-to-cost: ' + (loan / (price + rehab) * 100).toFixed(1) + '%');
-      parts.push('Loan-to-ARV: ' + (loan / arv * 100).toFixed(1) + '%');
-      el.textContent = parts.join('    ');
+      el.innerHTML = '<span class="ltv-k">Loan-to-cost</span><span class="ltv-v">' + (loan / (price + rehab) * 100).toFixed(1) + '%</span><span class="ltv-k">Loan-to-ARV</span><span class="ltv-v">' + (loan / arv * 100).toFixed(1) + '%</span>';
       el.setAttribute('data-ltc', (loan / (price + rehab)).toFixed(3));
       el.setAttribute('data-ltarv', (loan / arv).toFixed(3));
     } else {
-      el.textContent = 'Loan-to-cost and loan-to-ARV appear once price, loan and ARV are in';
+      el.innerHTML = '<span class="ltv-note">Loan-to-cost and loan-to-ARV appear once price, loan and ARV are in</span>';
       el.removeAttribute('data-ltc');
       el.removeAttribute('data-ltarv');
     }
@@ -1151,11 +1170,23 @@
     updateDscr();
   }
   function clearDraft(){ try { localStorage.removeItem(DRAFT_KEY); } catch(e) {} }
+  form.querySelectorAll('.money-in').forEach(function(el){
+    el.addEventListener('input', function(){
+      var d = el.value.replace(/[^\d]/g, '');
+      el.value = d.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+  });
   form.addEventListener('input', function(e){
     saveDraft();
     e.target.classList.remove('f-invalid');
     var p = e.target.closest('.pills');
-    if (p) p.classList.remove('f-invalid');
+    if (p) {
+      p.classList.remove('f-invalid');
+      var gl = p.previousElementSibling;
+      if (gl && gl.classList.contains('f-label')) gl.classList.remove('f-invalid-label');
+      var pm = p.parentNode.querySelector('.pills-msg');
+      if (pm) pm.style.display = 'none';
+    }
   });
   form.addEventListener('change', saveDraft);
   restoreDraft();
@@ -1262,7 +1293,13 @@
           if (nv && (no === nv || no.indexOf(nv) === 0 || nv.indexOf(no) === 0)) el.value = o.value;
         });
       }
-      else el.value = v;
+      else {
+        el.value = v;
+        if (el.classList && el.classList.contains('money-in')) {
+          var dv = String(el.value).replace(/[^\d]/g, '');
+          el.value = dv.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+      }
     });
   }
   document.getElementById('json-load').addEventListener('click', function(){
