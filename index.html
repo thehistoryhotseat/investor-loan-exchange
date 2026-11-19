@@ -199,8 +199,15 @@
   .pre-light{background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:22px 24px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.6px;line-height:1.7;color:var(--ink-2)}
   .lender-sample{margin-top:36px}
   .lender-sample h3{font-weight:600;font-size:19px;letter-spacing:-.01em;margin-bottom:12px}
+  .req-card{background:#0f1b2d;border-radius:10px;overflow:hidden;box-shadow:var(--e3)}
+  .req-card .r-row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:11px 22px;border-bottom:1px solid rgba(246,244,238,.1);font-size:14px}
+  .req-card .r-row:last-child{border-bottom:none}
+  .req-card .r-row .k{color:#8d9aa9}
+  .req-card .r-row span:not(.k){color:#e8edf3}
 
-  .agents p.lead{max-width:62ch;color:var(--ink-2);font-size:16px;margin-bottom:30px}
+  section.agents{padding:64px 0}
+  .agents .sec-head{margin-bottom:18px}
+  .agents p.lead{max-width:68ch;color:var(--ink-2);font-size:15px;margin-bottom:0}
   pre{background:#0c1a2b;border:1px solid #24384f;border-radius:6px;padding:26px 28px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.8px;line-height:1.65;color:#c9d8e8}
   .f-done pre{background:#fbf8f1;border-color:var(--line);color:var(--ink-2)}
   .load-json{margin-bottom:22px}
@@ -917,6 +924,8 @@
     </div>
     <div class="lender-sample">
       <h3>What a rate request looks like</h3>
+      <div class="req-card" aria-label="Sample rate request">
+      <div class="qc-head"><span class="t">Sample rate request - DSCR rental, NJ</span></div>
       <div class="f-review f-sheet">
         <div class="r-row"><span class="k">Product</span><span>DSCR rental</span></div>
         <div class="r-row"><span class="k">Purpose</span><span>Purchase</span></div>
@@ -928,6 +937,7 @@
         <div class="r-row"><span class="k">Monthly rent</span><span>$3,200</span></div>
         <div class="r-row"><span class="k">Vesting</span><span>LLC</span></div>
         <div class="r-row"><span class="k">Contact</span><span>Withheld until the broker engages</span></div>
+      </div>
       </div>
       <details class="load-json" style="margin-top:16px">
         <summary>For agents: the raw scenario.json</summary>
@@ -963,7 +973,7 @@
     </div>
     <p class="lead">The site ships a machine-readable <a class="inline" href="llms.txt">llms.txt</a> and a JSON <a class="inline" href="scenario.schema.json">scenario schema</a>. An agent can build a valid scenario from a conversation; the schema spells out every field. Paste the file into the <a class="inline" href="#intake">loader</a> at the top of the intake form and it prefills for your review.</p>
     
-    <div class="callout"><strong>For your agent:</strong> fetch <a class="inline" href="llms.txt">/investor-loan-exchange/llms.txt</a> and <a class="inline" href="scenario.schema.json">/investor-loan-exchange/scenario.schema.json</a>, validate against the schema, and present the result for review. Never include SSNs, account numbers, or documents.</div>
+    <div class="callout" style="margin-top:20px"><strong>For your agent:</strong> fetch <a class="inline" href="llms.txt">/investor-loan-exchange/llms.txt</a> and <a class="inline" href="scenario.schema.json">/investor-loan-exchange/scenario.schema.json</a>, validate against the schema, and present the result for review. Never include SSNs, account numbers, or documents.</div>
   </div>
 </section>
 </main>
