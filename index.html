@@ -132,7 +132,7 @@
   .f-field > label, .f-label{font-size:13px;font-weight:600;color:var(--ink-2)}
   .f-field label .req, .f-label .req{color:var(--brass)}
   .f-field input[type=text],.f-field input[type=email],.f-field input[type=tel],.f-field input[type=number],.f-field input[type=date],.f-field select,.f-field textarea{font:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:5px;padding:11px 13px;outline:none;width:100%}
-  .f-field input:focus,.f-field select:focus,.f-field textarea:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(154,123,63,.16)}
+  .f-field input:focus,.f-field select:focus,.f-field textarea:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(154,123,63,.28)}
   .f-field textarea{min-height:90px;resize:vertical}
   .pills{display:flex;flex-wrap:wrap;gap:8px}
   .pills input{position:absolute;opacity:0;pointer-events:none}
@@ -388,7 +388,7 @@
     </div>
     <details class="load-json">
       <summary>Have a scenario.json from your agent? Load it here</summary>
-      <textarea id="json-in" rows="6" placeholder='Paste scenario.json here. Contact details and consent are never loaded from a file; you fill those yourself.'></textarea>
+      <textarea id="json-in" rows="6" aria-label="Paste your scenario JSON" placeholder='Paste scenario.json here. Contact details and consent are never loaded from a file; you fill those yourself.'></textarea>
       <div class="load-row">
         <button type="button" class="btn sm" id="json-load">Load</button>
         <span id="json-status"></span>
