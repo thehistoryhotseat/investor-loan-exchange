@@ -138,6 +138,8 @@ function renderVersions(){
   }));
 }
 
+$('app-print').addEventListener('click', () => window.print());
+
 $('si-email').addEventListener('keydown', e => {
   if (e.key === 'Enter') { e.preventDefault(); $('si-send').click(); }
 });

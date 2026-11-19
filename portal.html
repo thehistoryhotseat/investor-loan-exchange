@@ -88,6 +88,20 @@
   .file-line input[type=file]{font-size:13.5px;color:var(--muted)}
   .hint{font-size:13px;color:var(--muted);margin-top:6px}
   .foot{padding:34px 0 46px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  @media print{
+    body{background:#fff}
+    nav{position:static;background:#fff;border-bottom:2px solid var(--ink);backdrop-filter:none}
+    .nav-links,#view-signin,#card-new,.msg,.btn,.hint,#si-hint{display:none!important}
+    main{padding:24px 0}
+    .lede{margin-bottom:18px}
+    .card{box-shadow:none;border:1px solid #b9b2a4;border-radius:6px;break-inside:avoid;padding:22px 26px}
+    .card .sub{margin-bottom:14px}
+    .f-field input[type=text],.f-field input[type=email],.f-field input[type=tel],.f-field input[type=number],.f-field textarea{border:none;background:transparent;padding:0;height:auto;font-size:14px}
+    .f-field input[readonly]{background:transparent;color:var(--ink)}
+    .badge{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+    .foot{border-top:1px solid #b9b2a4}
+  }
+
   @media (max-width:640px){
     .nav-in{padding:0 16px}
     .brand-name{font-size:13.5px}
@@ -146,7 +160,10 @@
           <span class="badge stale" id="app-stale" hidden>Stale - over 90 days</span>
         </div>
       </div>
-      <button class="btn ghost sm" id="app-signout">Sign out</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn ghost sm" id="app-print">Print</button>
+        <button class="btn ghost sm" id="app-signout">Sign out</button>
+      </div>
     </div>
 
     <section class="card" id="card-profile">
