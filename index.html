@@ -247,7 +247,7 @@
 </style>
 </head>
 <body>
-<a class="skip-link" href="#top">Skip to content</a>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <nav>
   <div class="wrap nav-in">
@@ -275,6 +275,7 @@
   </div>
 </nav>
 
+<main id="main">
 <header class="hero" id="top">
   <div class="wrap hero-grid">
    <div>
@@ -295,10 +296,12 @@
    <div class="quote-card" aria-label="Sample anonymized quote comparison">
     <div class="qc-head"><span class="t">What comes back</span><span class="s">Sample - request #1042 - DSCR rental - NJ</span></div>
     <div class="qc-illus">Illustrative figures, not current rates or an offer.</div>
-    <div class="qc-cols"><span>Lender</span><span>Rate</span><span>Term</span><span><span class="fullw">Max </span>LTV</span><span>Pts</span><span>Prepay</span></div>
-    <div class="qc-row"><span class="who">Lender A</span><span class="rate">6.875%</span><span class="num">30-yr fix</span><span class="num">75%</span><span class="num">1.50</span><span class="num">3 yr</span></div>
-    <div class="qc-row"><span class="who">Lender B</span><span class="rate">7.125%</span><span class="num">30-yr fix</span><span class="num">80%</span><span class="num">1.00</span><span class="num">None</span></div>
-    <div class="qc-row"><span class="who">Lender C</span><span class="rate">7.375%</span><span class="num">5/6 ARM IO</span><span class="num">75%</span><span class="num">0</span><span class="num">5 yr</span></div>
+    <div role="table" aria-label="Sample quote comparison">
+    <div role="row" class="qc-cols"><span>Lender</span><span>Rate</span><span>Term</span><span><span class="fullw">Max </span>LTV</span><span>Pts</span><span>Prepay</span></div>
+    <div role="row" class="qc-row"><span class="who">Lender A</span><span class="rate">6.875%</span><span class="num">30-yr fix</span><span class="num">75%</span><span class="num">1.50</span><span class="num">3 yr</span></div>
+    <div role="row" class="qc-row"><span class="who">Lender B</span><span class="rate">7.125%</span><span class="num">30-yr fix</span><span class="num">80%</span><span class="num">1.00</span><span class="num">None</span></div>
+    <div role="row" class="qc-row"><span class="who">Lender C</span><span class="rate">7.375%</span><span class="num">5/6 ARM IO</span><span class="num">75%</span><span class="num">0</span><span class="num">5 yr</span></div>
+    </div>
     <div class="qc-foot">One scenario in, quotes side by side. 30-day lock. Points are lender fees, before any broker comp. Shown in the order received.</div>
    </div>
   </div>
@@ -785,6 +788,7 @@
     <div class="callout"><strong>For your agent:</strong> fetch <a class="inline" href="/investor-loan-exchange/llms.txt">/investor-loan-exchange/llms.txt</a> and <a class="inline" href="/investor-loan-exchange/scenario.schema.json">/investor-loan-exchange/scenario.schema.json</a>, validate against the schema, and present the result for review. Never include SSNs, account numbers, or documents.</div>
   </div>
 </section>
+</main>
 
 <footer>
   <div class="wrap foot">
