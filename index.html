@@ -1321,6 +1321,11 @@
     clearDraft();
     document.getElementById('f-done').classList.remove('on');
     document.getElementById('f-json').textContent = '';
+    updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType();
+    form.querySelectorAll('.f-invalid, .f-invalid-label').forEach(function(e){ e.classList.remove('f-invalid', 'f-invalid-label'); });
+    form.querySelectorAll('.pills[aria-invalid]').forEach(function(p){ p.setAttribute('aria-invalid', 'false'); });
+    form.querySelectorAll('.pills-msg').forEach(function(p){ p.style.display = 'none'; });
+    form.querySelectorAll('[aria-describedby]').forEach(function(r){ r.removeAttribute('aria-describedby'); });
     show(0);
   });
   function finish(){
