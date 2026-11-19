@@ -299,7 +299,7 @@
     *,*::before,*::after{transition:none !important;animation:none !important}
   }
   /* Reveal-on-scroll, only when JS adds .js-reveal; no-JS keeps everything visible */
-  html.js-reveal .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,.61,.21,1)}
+  html.js-reveal .reveal{opacity:0;transform:translateY(9px);transition:opacity .45s ease,transform .45s cubic-bezier(.22,.61,.21,1)}
   html.js-reveal .reveal.on{opacity:1;transform:none}
 </style>
 </head>
@@ -949,7 +949,7 @@
         <h2>Readable by your agent</h2>
       </div>
     </div>
-    <p class="lead">The site ships a machine-readable <a class="inline" href="/investor-loan-exchange/llms.txt">llms.txt</a> and a JSON <a class="inline" href="/investor-loan-exchange/scenario.schema.json">scenario schema</a>. An agent can build a valid scenario from a conversation; the schema spells out every field. Paste the file into the loader at the top of the intake form and it prefills for your review.</p>
+    <p class="lead">The site ships a machine-readable <a class="inline" href="/investor-loan-exchange/llms.txt">llms.txt</a> and a JSON <a class="inline" href="/investor-loan-exchange/scenario.schema.json">scenario schema</a>. An agent can build a valid scenario from a conversation; the schema spells out every field. Paste the file into the <a class="inline" href="#intake">loader</a> at the top of the intake form and it prefills for your review.</p>
     
     <div class="callout"><strong>For your agent:</strong> fetch <a class="inline" href="/investor-loan-exchange/llms.txt">/investor-loan-exchange/llms.txt</a> and <a class="inline" href="/investor-loan-exchange/scenario.schema.json">/investor-loan-exchange/scenario.schema.json</a>, validate against the schema, and present the result for review. Never include SSNs, account numbers, or documents.</div>
   </div>
@@ -1473,6 +1473,7 @@
     form.reset();
     document.getElementById('prepared-by').value = '';
     clearDraft();
+    currentSubmissionId = '';
     document.getElementById('f-done').classList.remove('on');
     document.getElementById('f-json').textContent = '';
     document.getElementById('f-sheet').innerHTML = '';
@@ -1485,7 +1486,8 @@
   });
   var currentSubmissionId = '';
   function finish(){
-    currentSubmissionId = 'ILX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+    // Mint once per scenario: a retry after a failed send comes back through finish(), so only fill when empty. Cleared by Start a new scenario.
+    if (!currentSubmissionId) currentSubmissionId = 'ILX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
     var json = buildJson();
     document.getElementById('f-json').textContent = json;
     var sheet = document.getElementById('f-sheet');
@@ -1514,7 +1516,7 @@
     document.getElementById('f-send-err').style.display = 'none';
     doneEl.classList.add('on');
     setTimeout(function(){ document.getElementById('f-done-live-h').focus(); }, 60);
-    // One id per finished scenario: a retry after a failed send reuses it, so the endpoint can dedupe.
+    // One id per scenario: a retry after a failed send reuses it, so the endpoint can dedupe.
     var envelope = {
       submission_id: currentSubmissionId,
       consent: { version: CONSENT_VERSION, given_at: consentGivenAt || new Date().toISOString() },
@@ -1762,11 +1764,19 @@
     revealEls.forEach(function(el){
       var n = groupCounts.get(el.parentNode) || 0;
       groupCounts.set(el.parentNode, n + 1);
-      el.style.transitionDelay = Math.min(n * 70, 280) + 'ms';
+      el.style.transitionDelay = Math.min(n * 50, 150) + 'ms';
       el.classList.add('reveal');
       ro.observe(el);
     });
   }
+  // Once the entrance finishes, drop the reveal styles so an element's own transitions (card hover border) work again.
+  document.addEventListener('transitionend', function(e){
+    var el = e.target;
+    if (el.classList && el.classList.contains('reveal') && el.classList.contains('on') && e.propertyName === 'opacity') {
+      el.classList.remove('reveal', 'on');
+      el.style.transitionDelay = '';
+    }
+  });
   show(0);
 })();
 </script>
