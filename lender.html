@@ -672,14 +672,6 @@
   function rows(withEdit){
     var r = record();
     var secs = [
-      ['Your company', [
-        ['Company', r.company],
-        ['Contact', r.contact_name],
-        ['Email', r.email],
-        ['Phone', r.phone || ''],
-        ['Lender type', r.lender_type ? label(ltypeLabels, r.lender_type) : ''],
-        ['NMLS ID', r.nmls_id || '']
-      ]],
       ['The box you price in', [
         ['Products', r.products.map(function(p){ return label(productLabels, p); }).join(', ')],
         ['Property types', r.property_types.map(function(p){ return label(ptypeLabels, p); }).join(', ')],
@@ -696,7 +688,7 @@
         ['Phone', r.phone || ''],
         ['Lender type', r.lender_type ? label(ltypeLabels, r.lender_type) : ''],
         ['NMLS ID', r.nmls_id || '']
-      ]],
+      ]]
     ];
     return secs.map(function(sec){
       var visible = sec[1].filter(function(pair){ return pair[1] !== ''; });
