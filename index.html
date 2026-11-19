@@ -222,6 +222,14 @@
     .f-step,.f-meta,.f-nav,.f-done{padding-left:20px;padding-right:20px}
     .f-review .r-row{grid-template-columns:1fr;gap:2px}
   }
+  @media print{
+    nav,.mobile-cta,.load-json,.f-nav,.f-progress,.f-meta,header.hero,section:not(#intake),footer{display:none !important}
+    body{background:#fff;padding-bottom:0}
+    section#intake{border:none;padding:0}
+    .f-step{display:none !important}
+    .f-step.on{display:block !important;border:none}
+    .form-card{box-shadow:none;border:none}
+  }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
     *,*::before,*::after{transition:none !important;animation:none !important}
@@ -670,7 +678,10 @@
           <p>This is the structured scenario a lender or an agent would work from. Copy it, or submit it again once live intake is switched on.</p>
           <div class="pre-head" style="margin-top:18px"><span>scenario.json</span><button class="copy-btn-light" id="f-copy" type="button">Copy</button></div>
           <pre id="f-json"></pre>
-          <button type="button" class="btn ghost" id="f-restart">Start a new scenario</button>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button type="button" class="btn ghost" id="f-restart">Start a new scenario</button>
+            <button type="button" class="btn ghost" id="f-download">Download .json</button>
+          </div>
         </div>
       </fieldset>
 
@@ -1165,6 +1176,14 @@
     saveDraft();
     show(0);
     status.textContent = 'Loaded. Review each screen; contact and consent stay yours to fill.';
+  });
+  document.getElementById('f-download').addEventListener('click', function(){
+    var blob = new Blob([document.getElementById('f-json').textContent], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'scenario.json';
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
   });
   document.getElementById('f-copy').addEventListener('click', function(){
     navigator.clipboard.writeText(document.getElementById('f-json').textContent).then(function(){
