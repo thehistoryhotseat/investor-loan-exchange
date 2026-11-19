@@ -138,6 +138,8 @@
   .f-field > label, .f-label{font-size:13px;font-weight:600;color:var(--ink-2)}
   .f-field label .req, .f-label .req{color:var(--brass)}
   .f-field input[type=text],.f-field input[type=email],.f-field input[type=tel],.f-field input[type=number],.f-field input[type=date],.f-field select,.f-field textarea{font:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--field);border-radius:8px;padding:0 14px;height:48px;outline:none;width:100%;transition:border-color .16s ease,box-shadow .16s ease}
+  .linklike{background:none;border:none;padding:0;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  .linklike:hover{color:var(--ink)}
   .f-field textarea{height:auto;padding:12px 14px}
   @media (max-width:640px){.f-field input[type=text],.f-field input[type=email],.f-field input[type=tel],.f-field input[type=number],.f-field input[type=date],.f-field select,.f-field textarea{font-size:16px}}
   .f-field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%2366707c' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
@@ -365,6 +367,7 @@
       </div>
     </div>
 
+    <p id="draft-clear-line" hidden><button type="button" id="draft-clear" class="linklike">Clear saved progress</button></p>
     <form class="form-card" id="ilx-lender-form" novalidate>
       <div class="f-meta" aria-live="polite"><span id="l-stepname">The box you price in</span><span id="l-stepno"></span></div>
 
@@ -736,7 +739,7 @@
       var d = record();
       d.consent = document.getElementById('l-consent').checked;
       d.rec_id = recId;
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({savedAt: Date.now(), data: d}));
     } catch(e) {}
   }
   function restoreDraft(){
@@ -745,6 +748,10 @@
     if (!raw) return;
     var d;
     try { d = JSON.parse(raw); } catch(e) { return; }
+    if (d && d.data) {
+      if (!d.savedAt || Date.now() - d.savedAt > 30*24*60*60*1000) { try { localStorage.removeItem(DRAFT_KEY); } catch(e) {} return; }
+      d = d.data;
+    }
     ['company','contact_name','email','phone','nmls_id','states','max_ltv_pct','min_loan_usd','max_loan_usd','min_fico','notes'].forEach(function(n){
       var el = form.querySelector('[name="' + n + '"]');
       if (el && d[n] != null) el.value = (n === 'states' && Array.isArray(d[n])) ? d[n].join(', ') : d[n];
@@ -831,8 +838,21 @@
     try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
     show(0);
   });
+  var draftClearLine = document.getElementById('draft-clear-line');
+  function syncDraftClear(){
+    var has = false;
+    try { has = !!localStorage.getItem(DRAFT_KEY); } catch(e) {}
+    if (draftClearLine) draftClearLine.hidden = !has;
+  }
+  document.getElementById('draft-clear').addEventListener('click', function(){
+    document.getElementById('l-restart').click();
+    syncDraftClear();
+  });
+  var origSaveDraft = saveDraft;
+  saveDraft = function(){ origSaveDraft(); syncDraftClear(); };
   restoreDraft();
   show(0);
+  syncDraftClear();
 })();
 </script>
 </body>
