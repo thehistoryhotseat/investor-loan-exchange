@@ -333,7 +333,7 @@
 <header class="hero" id="top">
   <div class="wrap hero-grid">
    <div>
-    <span class="eyebrow">A loan scenario exchange for investment property and home equity</span>
+    <span class="eyebrow">A loan scenario exchange for investment property and home&nbsp;equity</span>
     <h1>Send one deal. The lenders who fit it compete for&nbsp;it.</h1>
     <p>Send the deal once. Every fitting panel lender gets one rate request. Quotes come back side by side; you choose.</p>
     <div class="hero-cta">
@@ -1392,6 +1392,10 @@
   // Live intake endpoint. Empty keeps the form in test mode: nothing leaves the browser.
   // On go-live, set this to the chosen intake URL. The envelope {submission_id, consent, scenario, contact} is POSTed as text/plain; a JSON reply with ok:true confirms receipt and an optional reference is shown to the broker.
   var CONSENT_VERSION = '2026-11-19'; // date of the Review-step consent wording
+  var consentGivenAt = ''; // ISO time of the tick, not the send
+  document.getElementById('consent').addEventListener('change', function(e){
+    consentGivenAt = e.target.checked ? new Date().toISOString() : '';
+  });
   var SUBMIT_ENDPOINT = '';
   var DRAFT_KEY = 'ilx-draft';
   function saveDraft(){
@@ -1510,7 +1514,7 @@
     // One id per finished scenario: a retry after a failed send reuses it, so the endpoint can dedupe.
     var envelope = {
       submission_id: currentSubmissionId,
-      consent: { version: CONSENT_VERSION, given_at: new Date().toISOString() },
+      consent: { version: CONSENT_VERSION, given_at: consentGivenAt || new Date().toISOString() },
       scenario: JSON.parse(json),
       contact: val('contact')
     };
