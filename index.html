@@ -91,6 +91,7 @@
   .trust-row span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--brass);flex:none}
 
   section{padding:76px 0;border-bottom:1px solid var(--line)}
+  [id]{scroll-margin-top:76px}
   .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:44px;flex-wrap:wrap}
   h2{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(28px,3.6vw,40px);line-height:1.15;letter-spacing:-.01em}
   .sec-head p{max-width:42ch;color:var(--muted);font-size:15px}
@@ -183,6 +184,10 @@
   footer .small{font-size:13px;color:var(--muted);max-width:52ch}
   footer .brandline{font-family:'Fraunces',serif;font-size:17px;font-weight:560;margin-bottom:8px}
 
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{transition:none !important;animation:none !important}
+  }
   @media (max-width:900px){
     .steps{grid-template-columns:1fr 1fr}
     .step:nth-child(2){border-right:none}
@@ -266,7 +271,7 @@
     </div>
    </div>
    <div class="quote-card" aria-label="Sample anonymized quote comparison">
-    <div class="qc-head"><span class="t">What comes back</span><span class="s">Sample - DSCR rental - anonymized</span></div>
+    <div class="qc-head"><span class="t">What comes back</span><span class="s">Sample - DSCR rental - $412,500 - NJ - anonymized</span></div>
     <div class="qc-cols"><span>Lender</span><span>Rate</span><span>Pts</span><span>LTV</span><span>Prepay</span></div>
     <div class="qc-row"><span class="who">Lender A</span><span class="rate">6.875%</span><span class="num">1.50</span><span class="num">75%</span><span class="num">5/4/3/2/1</span></div>
     <div class="qc-row"><span class="who">Lender B</span><span class="rate">7.125%</span><span class="num">1.00</span><span class="num">80%</span><span class="num">3/2/1</span></div>
