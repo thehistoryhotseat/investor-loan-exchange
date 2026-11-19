@@ -858,7 +858,7 @@
     <div class="lender-sample">
       <h3>What a rate request looks like</h3>
       <pre class="pre-light">{
-  "schema_version": "1.3",
+  "schema_version": "1.4",
   "product": "dscr_rental",
   "purpose": "purchase",
   "property": {
@@ -1193,7 +1193,7 @@
   function snake(x){ return (x || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }
   function buildJson(){
     var obj = {
-      schema_version: '1.3',
+      schema_version: '1.4',
       prepared_by: 'ilx-intake',
       product: val('product'),
       purpose: val('purpose'),
