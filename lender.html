@@ -556,6 +556,8 @@
     steps.forEach(function(s){ s.classList.remove('on'); });
     var s = steps[i];
     s.classList.add('on');
+    var done = s.querySelector('.f-done');
+    if (done) done.classList.add('on');
     if (moved) { s.classList.remove('step-in'); void s.offsetWidth; s.classList.add('step-in'); }
     stepName.textContent = s.getAttribute('data-name');
     stepNo.textContent = (i >= steps.length - 1) ? '' : ('Step ' + (i + 1) + ' of ' + (steps.length - 1));
