@@ -347,10 +347,13 @@
     },
     "first_mortgage_balance_usd": {
       "type": "number",
+      "minimum": 0,
       "description": "Home equity lane: current balance of the first mortgage. Second liens price on combined LTV (CLTV = (first balance + new loan) / value)."
     },
     "cltv": {
       "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 2,
       "description": "Home equity lane: combined LTV, (first_mortgage_balance_usd + loan_amount_usd) / est_value_usd."
     }
   },

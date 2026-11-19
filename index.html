@@ -425,7 +425,7 @@
         <span class="eyebrow">Submit a scenario</span>
         <h2>Three minutes. No documents.</h2>
       </div>
-      <p>Test mode: your entry is checked on this page and shown to you as the exact envelope we would send. Nothing leaves your browser until submissions are switched on.</p>
+      <p>Test mode: your entry is checked on this page and shown to you as the exact record that goes to fitting lenders. Nothing leaves your browser until submissions are switched on.</p>
     </div>
     <details class="load-json">
       <summary>Load a scenario.json from your agent</summary>
@@ -1476,7 +1476,9 @@
     form.querySelectorAll('[aria-describedby]').forEach(function(r){ r.removeAttribute('aria-describedby'); });
     show(0);
   });
+  var currentSubmissionId = '';
   function finish(){
+    currentSubmissionId = 'ILX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
     var json = buildJson();
     document.getElementById('f-json').textContent = json;
     var sheet = document.getElementById('f-sheet');
@@ -1505,8 +1507,9 @@
     document.getElementById('f-send-err').style.display = 'none';
     doneEl.classList.add('on');
     setTimeout(function(){ document.getElementById('f-done-live-h').focus(); }, 60);
+    // One id per finished scenario: a retry after a failed send reuses it, so the endpoint can dedupe.
     var envelope = {
-      submission_id: 'ILX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase(),
+      submission_id: currentSubmissionId,
       consent: { version: CONSENT_VERSION, given_at: new Date().toISOString() },
       scenario: JSON.parse(json),
       contact: val('contact')
