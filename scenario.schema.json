@@ -254,6 +254,14 @@
         }
       },
       "description": "Added by the human submitter in the intake form. An agent preparing this file leaves consent out entirely; it is never the agent's to give."
+    },
+    "loan_to_cost": {
+      "type": "number",
+      "description": "Computed by the intake for fix & flip: loan / (purchase price + rehab). Illustrative."
+    },
+    "loan_to_arv": {
+      "type": "number",
+      "description": "Computed by the intake for fix & flip: loan / after-repair value. Illustrative."
     }
   },
   "allOf": [

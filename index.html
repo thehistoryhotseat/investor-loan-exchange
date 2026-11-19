@@ -713,6 +713,7 @@
 
       <div class="f-nav">
         <button type="button" class="btn ghost" id="f-back">Back</button>
+        <button type="button" class="btn ghost" id="f-toreview" style="display:none">Back to review</button>
         <button type="button" class="btn" id="f-next">Continue</button>
       </div>
     </form>
@@ -775,29 +776,8 @@
         <h2>Readable by your agent</h2>
       </div>
     </div>
-    <p class="lead">The site ships a machine-readable <a class="inline" href="/investor-loan-exchange/llms.txt">llms.txt</a> and a JSON <a class="inline" href="/investor-loan-exchange/scenario.schema.json">scenario schema</a>. An agent can build a valid scenario from a conversation; paste the file into the loader above the intake and it prefills for your review.</p>
-    <div class="pre-head"><span>scenario.json - worked example</span><button class="copy-btn" id="copy-scenario" type="button">Copy</button></div>
-    <pre id="scenario-example">{
-  "schema_version": "1.1",
-  "prepared_by": "your-agent",
-  "product": "dscr_rental",
-  "purpose": "purchase",
-  "property": {
-    "type": "single_family",
-    "occupancy": "investment",
-    "state": "NJ",
-    "est_value_usd": 450000
-  },
-  "loan_amount_usd": 337500,
-  "credit_band": "740-779",
-  "citizenship": "us_person",
-  "monthly_rent_usd": 3200,
-  "vesting": "LLC",
-  "consent": {
-    "share_with_lenders": true,
-    "contact_withheld_until_engaged": true
-  }
-}</pre>
+    <p class="lead">The site ships a machine-readable <a class="inline" href="/investor-loan-exchange/llms.txt">llms.txt</a> and a JSON <a class="inline" href="/investor-loan-exchange/scenario.schema.json">scenario schema</a>. An agent can build a valid scenario from a conversation; the schema spells out every field. Paste the file into the loader above the intake and it prefills for your review.</p>
+    
     <div class="callout"><strong>For your agent:</strong> fetch <a class="inline" href="/investor-loan-exchange/llms.txt">/investor-loan-exchange/llms.txt</a> and <a class="inline" href="/investor-loan-exchange/scenario.schema.json">/investor-loan-exchange/scenario.schema.json</a>, validate against the schema, and present the result for review. Never include SSNs, account numbers, or documents.</div>
   </div>
 </section>
@@ -823,6 +803,11 @@
   var stepName = document.getElementById('f-stepname');
   var stepNo = document.getElementById('f-stepno');
   var backBtn = document.getElementById('f-back');
+  var toReviewBtn = document.getElementById('f-toreview');
+  toReviewBtn.addEventListener('click', function(){
+    var scr = screensFor(product());
+    for (var i = 0; i < scr.length; i++){ if (scr[i].name === 'Review & you'){ show(i); return; } }
+  });
   var nextBtn = document.getElementById('f-next');
   var current = 0;
 
@@ -858,10 +843,11 @@
     var sc = scr[i];
     sc.els.forEach(function(s){ s.classList.add('on'); });
     stepName.textContent = sc.name;
-    stepNo.textContent = 'Step ' + (i + 1) + ' of ' + scr.length;
+    stepNo.textContent = (i === scr.length - 1) ? 'Done' : ('Step ' + (i + 1) + ' of ' + (scr.length - 1));
     bar.style.width = Math.round(((i + 1) / scr.length) * 100) + '%';
     backBtn.disabled = (i === 0);
     var last = (i === scr.length - 1);
+    if (sc.name === 'Review & you' || last) toReviewBtn.style.display = 'none';
     var review = sc.name === 'Review & you';
     nextBtn.textContent = review ? 'Check my entry' : (last ? 'Done' : 'Continue');
     nextBtn.style.display = last ? 'none' : '';
@@ -981,6 +967,8 @@
     if (['monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','loan_amount_usd'].indexOf(n) >= 0) updateDscr();
     if (['arv_usd','rehab_budget_usd'].indexOf(n) >= 0) updateFlip();
     if (n === 'occupancy' || n === 'product') updateOoWarn();
+    var scr0 = screensFor(product());
+    if (scr0[current] && scr0[current].name === 'Review & you') renderReview();
   });
   function money(n){
     var v = parseFloat(n);
@@ -1001,7 +989,7 @@
     if (val('units')) row('Units', val('units'), 'Property');
     row('Loan amount', money(val('loan_amount_usd')), 'Numbers');
     var _v = num('est_value_usd'), _a = num('loan_amount_usd');
-    if (_v > 0 && _a > 0) row('LTV', (_a / _v * 100).toFixed(1) + '%', 'Numbers');
+    if (_v > 0 && _a > 0) row('LTV', (_a / _v * 100).toFixed(1) + '%');
     if (val('condition')) row('Condition', val('condition'), 'Property');
     row('Citizenship', val('citizenship') === 'us_person' ? 'US citizen / resident' : (val('citizenship') === 'foreign_national' ? 'Foreign national' : ''), 'Numbers');
     if (val('experience')) row('Experience', val('experience'), 'Numbers');
@@ -1027,8 +1015,6 @@
       row('Under county limit', val('under_limit'), 'Conforming');
       row('Owner-occupied', val('owner_occ'), 'Conforming');
     }
-    row('You are a', val('role'), 'About you');
-    row('Quotes to', val('contact'), 'About you');
     if (val('notes')) row('Notes', val('notes'), 'About you');
     document.getElementById('f-review').innerHTML = rows.join('');
     document.querySelectorAll('.r-edit').forEach(function(btn){
@@ -1038,6 +1024,7 @@
         for (var i = 0; i < scr.length; i++){
           if (scr[i].els.some(function(fs){ return fs.getAttribute('data-name') === t; })){
             show(i);
+            toReviewBtn.style.display = '';
             var first = scr[i].els[0].querySelector('input,select,textarea');
             if (first) first.focus();
             return;
@@ -1163,6 +1150,8 @@
     if (e.target.name === 'product') { show(0); }
     if (e.target.name === 'product' || e.target.name === 'occupancy') updateOoWarn();
     if (e.target.name === 'product') { updateLtv(); updateFlip(); }
+    var scr1 = screensFor(product());
+    if (scr1[current] && scr1[current].name === 'Review & you') renderReview();
   });
   form.addEventListener('submit', function(e){ e.preventDefault(); });
   form.addEventListener('keydown', function(e){
