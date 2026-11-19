@@ -25,6 +25,19 @@ Schema version: 1.4 (scenario.schema.json)
 
 DSCR rental, fix & flip, bridge, ground-up construction, cash-out refinance, and conforming (agency) for investment property only. Owner-occupied (consumer-purpose) scenarios are not accepted.
 
+## Lane-specific fields
+
+- dscr_rental: monthly_rent_usd (required); monthly_taxes_usd, monthly_insurance_usd, monthly_hoa_usd sharpen the DSCR estimate.
+- fix_flip: arv_usd and rehab_budget_usd (required); exit_strategy, flip_experience.
+- bridge: bridge_exit_strategy and bridge_term (required).
+- ground_up_construction: project_budget_usd, build_timeline and guc_exit_strategy (required); land_status optional.
+- cash_out_refi: no extra fields.
+- conforming_agency: conforming.under_county_limit.
+
+## Preferences by lane
+
+preferences.structure, preferences.rate_type and preferences.prepay_tolerance are optional. Short-term lanes (bridge, ground_up_construction) take month-scale prepay (none, up_to_6mo, up_to_12mo, flexible) and Fixed or Floating rate types; long lanes take year-scale prepay (up_to_3yr, up_to_5yr) and 30-yr fixed or ARM. Values that do not fit the lane are dropped at intake with a note to the reviewer.
+
 ## Links
 
 - [Site and intake form](https://thehistoryhotseat.github.io/investor-loan-exchange/#intake): the single intake for people and agents
