@@ -31,7 +31,8 @@
   .mark-img{display:block;border-radius:7px}
   .brand-name{font-weight:600;font-size:15px;letter-spacing:.01em;white-space:nowrap}
   .nav-links{display:flex;gap:26px;align-items:center}
-  .nav-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;transition:color .15s ease}
+  .nav-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;transition:color .15s ease;white-space:nowrap}
+  .card{scroll-margin-top:84px}
   .nav-links a:hover{color:var(--brass)}
 
   main{padding:56px 0 96px}
@@ -88,6 +89,10 @@
   .hint{font-size:13px;color:var(--muted);margin-top:6px}
   .foot{padding:34px 0 46px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
   @media (max-width:640px){
+    .nav-in{padding:0 16px}
+    .brand-name{font-size:13.5px}
+    .nav-links{gap:16px}
+    .nav-links a{font-size:13px}
     .f-grid{grid-template-columns:1fr}
     .card{padding:22px}
     .v-row{grid-template-columns:52px 1fr;gap:10px}
