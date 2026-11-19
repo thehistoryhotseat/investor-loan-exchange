@@ -211,6 +211,11 @@
   footer{padding:56px 0 64px}
   .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
   footer .small{font-size:13px;color:var(--muted);max-width:52ch}
+  .cta-band{background:#0f1b2d;border-bottom:none;padding:72px 0}
+  .cta-band h2{color:#f6f4ee;max-width:22ch}
+  .cta-in{display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap}
+  .cta-band .btn{background:#f6f4ee;color:#0f1b2d}
+  .cta-band .btn:hover{background:#e3ded2;box-shadow:none}
   .foot-links{display:flex;gap:22px;flex-wrap:wrap}
   .foot-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500}
   .foot-links a:hover{color:var(--ink)}
@@ -814,6 +819,13 @@
 </section>
 </main>
 
+<section class="cta-band">
+  <div class="wrap cta-in">
+    <h2>Send the deal once. Quotes come back side by side.</h2>
+    <a class="btn" href="#intake">Submit a scenario</a>
+  </div>
+</section>
+
 <footer>
   <div class="wrap foot">
     <div>
@@ -1098,7 +1110,7 @@
         est_value_usd: parseFloat(val('est_value_usd')) || null
       },
       loan_amount_usd: parseFloat(val('loan_amount_usd')) || null,
-      credit_band: snake(val('credit_band')),
+      credit_band: val('credit_band') === 'Below 620' ? 'below_620' : val('credit_band'),
       role: val('role'),
       consent: { share_with_lenders: true, contact_withheld_until_engaged: true }
     };
