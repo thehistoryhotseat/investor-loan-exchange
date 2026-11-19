@@ -1597,6 +1597,24 @@
     e.preventDefault();
     nextBtn.click();
   });
+  // Arrow keys move through a pill group from the group container, not only from a checked pill.
+  form.querySelectorAll('.pills').forEach(function(p){
+    p.addEventListener('keydown', function(e){
+      var d = {ArrowRight:1, ArrowDown:1, ArrowLeft:-1, ArrowUp:-1}[e.key];
+      if (!d) return;
+      var rs = Array.prototype.filter.call(p.querySelectorAll('input[type="radio"]'), function(r){
+        var l = document.querySelector('label[for="' + r.id + '"]');
+        return !l || l.style.display !== 'none';
+      });
+      if (!rs.length) return;
+      e.preventDefault();
+      var i = rs.findIndex(function(r){ return r.checked; });
+      var n = rs[i === -1 ? (d === 1 ? 0 : rs.length - 1) : (i + d + rs.length) % rs.length];
+      n.checked = true;
+      n.focus();
+      n.dispatchEvent(new Event('change', {bubbles: true}));
+    });
+  });
   var stEl = document.getElementById('state');
   stEl.addEventListener('input', function(){ stEl.value = stEl.value.toUpperCase(); });
   var closeEl = document.getElementById('close');
