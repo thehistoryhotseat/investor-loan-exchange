@@ -1312,7 +1312,7 @@
     }
     row('Product', label(productLabels, val('product')), 'Product');
     row('Purpose', label({purchase:'Purchase', refinance:'Refinance', rate_term_refi:'Rate-term refi', cash_out:'Cash-out refinance', equity_draw:'Equity draw'}, val('purpose')), 'Product');
-    row('Property', [val('property_type'), val('occupancy') === 'investment' ? 'investment' : (val('occupancy') === 'owner_occupied' ? 'owner-occupied' : '')].filter(Boolean).join(' - '), 'Property');
+    row('Property', [val('property_type'), val('occupancy') === 'investment' ? 'investment' : (val('occupancy') === 'owner_occupied' ? 'owner-occupied' : '')].filter(Boolean).join(', '), 'Property');
     row('Location', (val('state') || '') + (val('zip') ? ' ' + val('zip') : ''), 'Property');
     row('Value / price', money(val('est_value_usd')), 'Property');
     if (val('units')) row('Units', val('units'), 'Property');
