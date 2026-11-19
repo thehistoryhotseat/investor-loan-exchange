@@ -190,7 +190,10 @@
 
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:28px 26px;display:flex;flex-direction:column;gap:12px;transition:border-color .16s ease,transform .18s ease,box-shadow .18s ease}
-  .card:hover{border-color:#a8a091;transform:translateY(-3px);box-shadow:var(--e2)}
+  .card:hover{border-color:#a8a091}
+  @media (hover:hover) and (prefers-reduced-motion: no-preference){
+    .card:hover{transform:translateY(-3px);box-shadow:var(--e2)}
+  }
   .card h3{font-weight:600;font-size:19px;letter-spacing:-.01em}
   .card p{font-size:14.5px;color:var(--muted);flex:1}
   .pre-light{background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:22px 24px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.6px;line-height:1.7;color:var(--ink-2)}
@@ -1759,7 +1762,12 @@
     });
     var ro = new IntersectionObserver(function(es){
       es.forEach(function(en){
-        if (en.isIntersecting) { en.target.classList.add('on'); ro.unobserve(en.target); }
+        if (en.isIntersecting) {
+          en.target.classList.add('on');
+          ro.unobserve(en.target);
+          // Fallback for a skipped transitionend (interrupted or instant transition)
+          setTimeout(function(){ endReveal(en.target); }, 450 + 150 + 150);
+        }
       });
     }, {rootMargin: '0px 0px -10% 0px', threshold: 0.08});
     var groupCounts = new Map();
@@ -1772,12 +1780,14 @@
     });
   }
   // Once the entrance finishes, drop the reveal styles so an element's own transitions (card hover border) work again.
-  document.addEventListener('transitionend', function(e){
-    var el = e.target;
-    if (el.classList && el.classList.contains('reveal') && el.classList.contains('on') && e.propertyName === 'opacity') {
+  function endReveal(el){
+    if (el.classList && el.classList.contains('reveal')) {
       el.classList.remove('reveal', 'on');
       el.style.transitionDelay = '';
     }
+  }
+  document.addEventListener('transitionend', function(e){
+    if (e.propertyName === 'opacity') endReveal(e.target);
   });
   // Mobile menu: close after picking a link, and on any tap outside it.
   var topMenu = document.querySelector('.menu');
@@ -1787,6 +1797,12 @@
     });
     document.addEventListener('click', function(e){
       if (topMenu.open && !topMenu.contains(e.target)) topMenu.open = false;
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && topMenu.open) {
+        topMenu.open = false;
+        topMenu.querySelector('summary').focus();
+      }
     });
   }
   // The "loader" link in the agents section opens the loader as it jumps to the intake.
