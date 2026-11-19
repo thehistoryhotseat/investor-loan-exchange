@@ -688,18 +688,24 @@
         ['Loan size', (r.min_loan_usd !== null || r.max_loan_usd !== null) ? (moneyFmt(r.min_loan_usd) || 'No min') + ' to ' + (moneyFmt(r.max_loan_usd) || 'no max') : ''],
         ['Min FICO', r.min_fico !== null ? String(r.min_fico) : ''],
         ['Notes', r.notes || '']
-      ]]
+      ]],
+      ['Your company', [
+        ['Company', r.company],
+        ['Contact', r.contact_name],
+        ['Email', r.email],
+        ['Phone', r.phone || ''],
+        ['Lender type', r.lender_type ? label(ltypeLabels, r.lender_type) : ''],
+        ['NMLS ID', r.nmls_id || '']
+      ]],
     ];
     return secs.map(function(sec){
       var visible = sec[1].filter(function(pair){ return pair[1] !== ''; });
       if (!visible.length) return '';
       var head = '';
-      if (withEdit) {
-        var idx = -1;
-        steps.forEach(function(st, j){ if (st.getAttribute('data-name') === sec[0]) idx = j; });
-        head = '<div class="r-sec-head"><span class="k">' + esc(sec[0]) + '</span>'
-          + (idx > -1 ? '<button type="button" class="r-edit" data-step="' + idx + '">Edit</button>' : '') + '</div>';
-      }
+      var idx = -1;
+      steps.forEach(function(st, j){ if (st.getAttribute('data-name') === sec[0]) idx = j; });
+      head = '<div class="r-sec-head"><span class="k">' + esc(sec[0]) + '</span>'
+        + ((withEdit && idx > -1) ? '<button type="button" class="r-edit" data-step="' + idx + '">Edit</button>' : '') + '</div>';
       var body = visible.map(function(pair){
         return '<div class="r-row"><span class="k">' + esc(pair[0]) + '</span><span>' + esc(pair[1]) + '</span></div>';
       }).join('');
