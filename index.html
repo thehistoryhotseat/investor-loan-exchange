@@ -26,14 +26,14 @@
 <style>
   :root{
     --ink:#101820; --ink-2:#2a3542; --paper:#f6f4ee; --card:#fffdf8;
-    --line:#ddd6c8; --brass:#9a7b3f; --brass-soft:#b3975e; --muted:#66707c;
+    --line:#ddd6c8; --brass:#9a7b3f; --brass-ink:#7d6230; --brass-soft:#b3975e; --muted:#66707c;
     --navy:#14263c;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
-  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);font-weight:500}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-ink);font-weight:500}
   .skip-link{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
   .skip-link:focus{left:0}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
@@ -77,9 +77,9 @@
   .trust-row span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--brass);flex:none}
   .quote-card{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 20px 48px rgba(16,24,32,.09);margin-top:66px}
   .qc-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);background:#fbf8f1}
-  .qc-head .t{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);font-weight:500}
+  .qc-head .t{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-ink);font-weight:500}
   .qc-head .s{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)}
-  .qc-illus{padding:8px 22px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--brass);border-bottom:1px solid var(--line)}
+  .qc-illus{padding:8px 22px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--brass-ink);border-bottom:1px solid var(--line)}
   .qc-cols,.qc-row{display:grid;grid-template-columns:1fr 1fr 1.05fr .85fr .7fr .7fr;gap:8px;align-items:baseline;padding:13px 22px}
   .qc-cols{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-top:12px;padding-bottom:10px}
   .qc-row{border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink-2)}
@@ -97,13 +97,13 @@
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--card)}
   .step{padding:30px 26px 34px;border-right:1px solid var(--line)}
   .step:last-child{border-right:none}
-  .step .n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--brass);letter-spacing:.12em;margin-bottom:16px}
+  .step .n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--brass-ink);letter-spacing:.12em;margin-bottom:16px}
   .step h3{font-family:'Fraunces',serif;font-weight:560;font-size:18.5px;margin-bottom:8px;line-height:1.3}
   .step p{font-size:14px;color:var(--muted)}
 
   .lanes{border-top:1px solid var(--ink)}
   .lane{display:grid;grid-template-columns:64px 1fr 1.6fr;gap:20px;align-items:baseline;padding:20px 4px;border-bottom:1px solid var(--line)}
-  .lane .n{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--brass)}
+  .lane .n{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--brass-ink)}
   .lane h3{font-family:'Fraunces',serif;font-weight:560;font-size:20px}
   .lane p{font-size:14.5px;color:var(--muted)}
   .callout{margin-top:28px;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:4px;padding:18px 22px;font-size:14px;color:var(--ink-2)}
@@ -143,13 +143,13 @@
   .f-done h3{font-family:'Fraunces',serif;font-weight:560;font-size:24px;margin:10px 0 8px}
   .f-done p{font-size:14.5px;color:var(--muted);max-width:56ch}
   .f-done pre{margin:18px 0 14px}
-  .f-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);border:1px solid var(--brass);border-radius:99px;padding:5px 12px;margin-bottom:8px}
+  .f-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-ink);border:1px solid var(--brass);border-radius:99px;padding:5px 12px;margin-bottom:8px}
   .copy-btn-light{background:transparent;border:1.5px solid var(--ink);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 16px;border-radius:4px;cursor:pointer}
   .copy-btn-light:hover{background:var(--ink);color:var(--paper)}
 
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:28px 26px;display:flex;flex-direction:column;gap:12px}
-  .card .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);border:1px solid var(--line);align-self:flex-start;padding:4px 10px;border-radius:99px}
+  .card .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-ink);border:1px solid var(--line);align-self:flex-start;padding:4px 10px;border-radius:99px}
   .card h3{font-family:'Fraunces',serif;font-weight:560;font-size:21px}
   .card p{font-size:14.5px;color:var(--muted);flex:1}
   .pre-light{background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:22px 24px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.6px;line-height:1.7;color:var(--ink-2)}
@@ -498,7 +498,7 @@
             <input type="date" id="close" name="target_close">
           </div>
           <div class="f-field full">
-            <span class="f-label" id="ltv-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass)">LTV: enter value and loan amount</span>
+            <span class="f-label" id="ltv-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass-ink)">LTV: enter value and loan amount</span>
           </div>
           <div class="f-field full">
             <span class="f-label">Citizenship <span class="req">*</span> <span style="font-weight:400;color:var(--muted)">(foreign nationals price differently)</span></span>
@@ -551,7 +551,7 @@
             <input type="number" id="hoa" name="monthly_hoa_usd" min="0" step="10" placeholder="0">
           </div>
           <div class="f-field full">
-            <span class="f-label" id="dscr-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass)">Estimated DSCR appears here once rent and loan are in</span>
+            <span class="f-label" id="dscr-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass-ink)">Estimated DSCR appears here once rent and loan are in</span>
           </div>
         </div>
       </fieldset>
@@ -578,7 +578,7 @@
             </select>
           </div>
           <div class="f-field full">
-            <span class="f-label" id="ltc-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass)">Loan-to-cost and loan-to-ARV appear once price, loan and ARV are in</span>
+            <span class="f-label" id="ltc-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass-ink)">Loan-to-cost and loan-to-ARV appear once price, loan and ARV are in</span>
           </div>
           <div class="f-field">
             <label for="flips">Completed flips</label>
