@@ -489,7 +489,7 @@ Reply with: rate - points - LTV - prepay - exceptions</pre>
     <p class="lead" style="margin-bottom:36px;margin-top:-24px;font-size:13.5px">Machine-readable: <a href="llms.txt" style="color:#c9d8e8;border-bottom:1px solid #3a5068">llms.txt</a> &middot; <a href="scenario.schema.json" style="color:#c9d8e8;border-bottom:1px solid #3a5068">scenario.schema.json</a></p>
     <div class="pre-head">
       <span>scenario.json - the intake format</span>
-      <button class="copy-btn" id="copyBtn" type="button">Copy</button>
+      <button class="copy-btn" data-copy="schema" type="button">Copy</button>
     </div>
     <pre id="schema">{
   "contact": {
@@ -529,6 +529,19 @@ Reply with: rate - points - LTV - prepay - exceptions</pre>
         <div class="callout" style="margin-top:0"><strong>Same consent.</strong> Agent submissions are covered by the same consent checkbox: scenarios are shared with lenders only, no personal documents, and the broker can be contacted about the deal.</div>
       </div>
     </div>
+    <div style="margin-top:44px">
+      <h3 style="font-family:'Fraunces',serif;font-weight:560;font-size:19px;color:#fff;margin-bottom:12px">Hand your assistant one line</h3>
+      <p style="font-size:14.5px;color:#9fb0c3;margin-bottom:14px;max-width:64ch">A broker using any AI assistant can start with this prompt. The assistant reads the machine-readable brief, interviews for the fields, and prepares the submission - the broker reviews before anything goes.</p>
+      <div class="pre-head">
+        <span>broker-prompt.txt</span>
+        <button class="copy-btn" data-copy="brokerPrompt" type="button">Copy</button>
+      </div>
+      <pre id="brokerPrompt">Read https://thehistoryhotseat.github.io/investor-loan-exchange/llms.txt
+and the scenario format it links to. Interview me for each field of my
+deal, fill the intake form field for field, and show me the filled
+scenario before submitting. The contact fields carry my details, not
+yours - name yourself as the preparing agent in the notes.</pre>
+    </div>
   </div>
 </section>
 
@@ -566,9 +579,9 @@ Reply with: rate - points - LTV - prepay - exceptions</pre>
 document.querySelectorAll('.menu-links a').forEach(function(a){
   a.addEventListener('click', function(){ a.closest('details').removeAttribute('open'); });
 });
-document.getElementById('copyBtn').addEventListener('click', function () {
-  var btn = this;
-  var text = document.getElementById('schema').innerText;
+document.querySelectorAll('.copy-btn').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+  var text = document.getElementById(btn.getAttribute('data-copy')).innerText;
   function done(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1800); }
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(done, function(){ fallback(); });
@@ -579,6 +592,7 @@ document.getElementById('copyBtn').addEventListener('click', function () {
     try { document.execCommand('copy'); done(); } catch(e) { btn.textContent = 'Copy failed'; }
     document.body.removeChild(ta);
   }
+  });
 });
 </script>
 
