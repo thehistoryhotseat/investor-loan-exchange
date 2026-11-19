@@ -87,7 +87,7 @@
             "heavy_rehab",
             "shell"
           ],
-          "description": "snake_case, like every other enum"
+          "description": "snake_case. credit_band is the exception: it keeps its display form (780+, 740-779, 700-739, 660-699, 620-659, below_620)"
         }
       }
     },

@@ -95,16 +95,17 @@
       .qc-cols,.qc-row{display:grid;grid-template-columns:1fr 1fr 1.05fr .85fr .7fr .7fr;gap:8px;align-items:baseline;padding:14px 22px}
   .qc-cols span:nth-child(n+2),.qc-row span:nth-child(n+2){text-align:right}
   .qc-cols span:nth-child(3),.qc-row span:nth-child(3){padding-left:16px}
+  .qc-row span:nth-child(4),.qc-row span:nth-child(5){font-variant-numeric:tabular-nums lining-nums}
   .qc-cols{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8d9aa9;border-bottom:1px solid rgba(246,244,238,.1);padding-top:13px;padding-bottom:11px}
   .qc-row{border-bottom:1px solid rgba(246,244,238,.1);font-size:13.5px;color:#c6d0dc}
   .qc-row:last-of-type{border-bottom:none}
   .qc-row .who{font-weight:600;color:#f6f4ee;font-size:13px}
   .qc-row .rate{font-variant-numeric:tabular-nums lining-nums;font-size:20px;font-weight:600;color:#f6f4ee}
-  .qc-row .num{font-variant-numeric:tabular-nums lining-nums;font-size:13.5px;white-space:nowrap}
+  .qc-row .num{font-size:13.5px;white-space:nowrap}
   .qc-foot{padding:13px 22px;font-size:12px;line-height:1.55;color:#8d9aa9;border-top:1px solid rgba(246,244,238,.1)}
 
   section{padding:96px 0;border-top:1px solid var(--line)}
-  section[id],header[id]{scroll-margin-top:96px}
+  section[id],header[id]{scroll-margin-top:64px}
   .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:40px;flex-wrap:wrap}
   .sec-head .eyebrow{display:block;margin-bottom:12px}
   h2{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(28px,3.6vw,40px);line-height:1.1;letter-spacing:-.015em}
@@ -244,7 +245,6 @@
     .nav-links > a:not(.btn){display:none}
     .menu{display:block}
     .menu-links a.cta{display:block}
-    .hero-grid{grid-template-columns:1fr;gap:36px}
     .quote-card{margin:26px 0 0}
     .mobile-cta{display:block;position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(246,244,238,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
     .mobile-cta .btn{display:block;text-align:center}
@@ -951,14 +951,6 @@
       if (ct && ct.value && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ct.value) || /^[+()\-.\s\d]{7,}$/.test(ct.value))) ok = false;
     }
     if (name === 'Review' && !document.getElementById('consent').checked) ok = false;
-    if (!ok) {
-      var firstBad = step.querySelector('.pills.f-invalid input, .f-invalid');
-      if (firstBad) {
-        try { firstBad.focus({preventScroll:true}); } catch(e) {}
-        var y = firstBad.getBoundingClientRect().top + window.pageYOffset - 120;
-        window.scrollTo({top: y, behavior: 'smooth'});
-      }
-    }
     return ok;
   }
   function val(n){
@@ -1213,6 +1205,12 @@
   form.querySelectorAll('.money-in').forEach(function(el){
     if (el.value) { var d = el.value.replace(/[^\d]/g, ''); el.value = d.replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
   });
+  (function(){
+    var mcta = document.querySelector('.mobile-cta'), band = document.querySelector('.cta-band');
+    if (mcta && band && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function(en){ mcta.style.visibility = en[0].isIntersecting ? 'hidden' : ''; }).observe(band);
+    }
+  })();
   document.getElementById('f-restart').addEventListener('click', function(){
     form.reset();
     clearDraft();
@@ -1268,7 +1266,18 @@
     if (sc.name === 'Done') return;
     var ok = true;
     sc.els.forEach(function(s){ if (!validate(s)) ok = false; });
-    if (!ok) return;
+    if (!ok) {
+      var firstBad = null;
+      for (var bi = 0; bi < sc.els.length && !firstBad; bi++) {
+        firstBad = sc.els[bi].querySelector('.pills.f-invalid input, .f-invalid');
+      }
+      if (firstBad) {
+        try { firstBad.focus({preventScroll:true}); } catch(e) {}
+        var by = firstBad.getBoundingClientRect().top + window.pageYOffset - 120;
+        window.scrollTo({top: by, behavior: 'smooth'});
+      }
+      return;
+    }
     if (sc.name === 'Review & you') {
       for (var i = 0; i < scr.length - 1; i++) {
         var sweep = true;
