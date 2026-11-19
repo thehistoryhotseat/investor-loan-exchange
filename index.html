@@ -47,6 +47,7 @@
   .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
   .skip-link{position:absolute;left:-999px;top:0;background:var(--btn);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
   .skip-link:focus{left:0}
+  [tabindex="-1"]:focus{outline:none}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   [id]{scroll-margin-top:76px}
 
@@ -141,6 +142,7 @@
   .f-field textarea{height:auto;padding:12px 14px}
   .f-field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%2366707c' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
   .f-field input::placeholder,.f-field textarea::placeholder{color:rgba(16,24,39,.42)}
+  .f-pair{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:18px}
   .money{position:relative}
   .money > span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;pointer-events:none}
   .f-field .money input.money-in{padding-left:28px;font-variant-numeric:tabular-nums lining-nums}
@@ -488,6 +490,7 @@
               <option>Shell</option>
             </select>
           </div>
+          <div class="f-pair">
           <div class="f-field">
             <label for="state">State <span class="req">*</span></label>
             <input type="text" id="state" name="state" maxlength="2" placeholder="e.g. NJ" required>
@@ -498,6 +501,7 @@
           <div class="f-field">
             <label for="zip">ZIP</label>
             <input type="text" id="zip" name="zip" maxlength="10" placeholder="Optional">
+          </div>
           </div>
           <div class="f-field">
             <label for="value">Est. value / purchase price <span class="req">*</span></label>
