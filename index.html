@@ -80,7 +80,7 @@
   .qc-head .t{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);font-weight:500}
   .qc-head .s{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)}
   .qc-illus{padding:8px 22px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--brass);border-bottom:1px solid var(--line)}
-  .qc-cols,.qc-row{display:grid;grid-template-columns:1fr 1fr 1.05fr .85fr .7fr;gap:8px;align-items:baseline;padding:13px 22px}
+  .qc-cols,.qc-row{display:grid;grid-template-columns:1fr 1fr 1.05fr .85fr .7fr .7fr;gap:8px;align-items:baseline;padding:13px 22px}
   .qc-cols{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-top:12px;padding-bottom:10px}
   .qc-row{border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink-2)}
   .qc-row:last-of-type{border-bottom:none}
@@ -137,6 +137,7 @@
   .f-nav{display:flex;justify-content:space-between;gap:12px;padding:22px 30px 28px;border-top:1px solid var(--line);margin-top:20px}
   .f-review .r-row{display:grid;grid-template-columns:170px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
   .f-review .r-row .k{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+  .f-err{color:#b3432e;font-size:13.5px;font-weight:500;margin-top:16px;display:none}
   .f-done{display:none;padding:8px 30px 30px}
   .f-done.on{display:block}
   .f-done h3{font-family:'Fraunces',serif;font-weight:560;font-size:24px;margin:10px 0 8px}
@@ -185,6 +186,15 @@
   .mobile-cta{display:none}
 
   @media (max-width:900px){
+    .hero-grid{display:flex;flex-direction:column;gap:0}
+    .hero-grid > div:first-child{display:contents}
+    .hero .eyebrow{order:1}
+    .hero h1{order:2}
+    .hero p{order:3}
+    .quote-card{order:4;margin:26px 0 0}
+    .hero-cta{order:5}
+    .hero-note{order:6}
+    .trust-row{order:7}
     .steps{grid-template-columns:1fr 1fr}
     .step:nth-child(2){border-right:none}
     .step{border-bottom:1px solid var(--line)}
@@ -285,10 +295,10 @@
    <div class="quote-card" aria-label="Sample anonymized quote comparison">
     <div class="qc-head"><span class="t">What comes back</span><span class="s">Sample - request #1042 - DSCR rental - NJ</span></div>
     <div class="qc-illus">Illustrative figures, not current rates or an offer.</div>
-    <div class="qc-cols"><span>Lender</span><span>Rate</span><span>Term</span><span><span class="fullw">Max </span>LTV</span><span>Pts</span></div>
-    <div class="qc-row"><span class="who">Lender A</span><span class="rate">6.875%</span><span class="num">30-yr fix</span><span class="num">75%</span><span class="num">1.50</span></div>
-    <div class="qc-row"><span class="who">Lender B</span><span class="rate">7.125%</span><span class="num">30-yr fix</span><span class="num">80%</span><span class="num">1.00</span></div>
-    <div class="qc-row"><span class="who">Lender C</span><span class="rate">7.375%</span><span class="num">5/6 ARM IO</span><span class="num">75%</span><span class="num">0</span></div>
+    <div class="qc-cols"><span>Lender</span><span>Rate</span><span>Term</span><span><span class="fullw">Max </span>LTV</span><span>Pts</span><span>Prepay</span></div>
+    <div class="qc-row"><span class="who">Lender A</span><span class="rate">6.875%</span><span class="num">30-yr fix</span><span class="num">75%</span><span class="num">1.50</span><span class="num">3-2-1</span></div>
+    <div class="qc-row"><span class="who">Lender B</span><span class="rate">7.125%</span><span class="num">30-yr fix</span><span class="num">80%</span><span class="num">1.00</span><span class="num">None</span></div>
+    <div class="qc-row"><span class="who">Lender C</span><span class="rate">7.375%</span><span class="num">5/6 ARM IO</span><span class="num">75%</span><span class="num">0</span><span class="num">5 yr</span></div>
     <div class="qc-foot">One scenario in, quotes side by side. 30-day lock. Points are lender fees, before any broker comp. Shown in the order received.</div>
    </div>
   </div>
@@ -861,6 +871,16 @@
     if (!ok) {
       step.style.outline = '2px solid #b3432e';
       setTimeout(function(){ step.style.outline = 'none'; }, 900);
+      var msg = step.querySelector('.f-err');
+      if (!msg) {
+        msg = document.createElement('p');
+        msg.className = 'f-err';
+        msg.textContent = 'Finish the required fields to continue.';
+        step.appendChild(msg);
+      }
+      msg.style.display = 'block';
+      clearTimeout(step._errT);
+      step._errT = setTimeout(function(){ msg.style.display = 'none'; }, 3000);
     }
     return ok;
   }
