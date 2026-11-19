@@ -94,6 +94,7 @@
   .file-line input[type=file]{font-size:13.5px;color:var(--muted)}
   .hint{font-size:13px;color:var(--muted);margin-top:6px}
   .foot{padding:34px 0 46px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;scroll-behavior:auto !important}}
   @media print{
     body{background:#fff}
     nav{position:static;background:#fff;border-bottom:2px solid var(--ink);backdrop-filter:none}
@@ -239,7 +240,7 @@
           <textarea id="g-notes" placeholder="Anything a broker should know about how you price."></textarea>
         </div>
         <div class="f-field full">
-          <span class="f-label">Guideline sheet (PDF, optional)</span>
+          <label class="f-label" for="g-pdf">Guideline sheet (PDF, optional)</label>
           <div class="file-line">
             <input type="file" id="g-pdf" accept="application/pdf">
           </div>
