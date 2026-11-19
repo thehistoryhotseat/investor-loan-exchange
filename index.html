@@ -752,7 +752,7 @@
             <span class="f-label" id="lbl-structure">Structure</span>
             <div class="pills" role="radiogroup" aria-labelledby="lbl-structure" data-group="structure" data-optional="1">
               <input type="radio" name="structure" id="s-am" value="amortizing" data-long><label for="s-am" data-long>Amortizing</label>
-              <input type="radio" name="structure" id="s-io" value="interest_only"><label for="s-io">Interest-only</label>
+              <input type="radio" name="structure" id="s-io" value="interest_only" data-io><label for="s-io" data-io>Interest-only</label>
               <input type="radio" name="structure" id="s-either" value="either"><label for="s-either">Either</label>
             </div>
           </div>
@@ -762,7 +762,7 @@
               <option value="">Select...</option>
               <option data-long>30-yr fixed</option>
               <option data-long>ARM</option>
-              <option data-long>Interest-only ARM</option>
+              <option data-long data-io>Interest-only ARM</option>
               <option data-short>Fixed</option>
               <option data-short>Floating</option>
               <option>No preference</option>
@@ -1118,12 +1118,22 @@
       if (lbl) lbl.style.display = hide ? 'none' : '';
       if (hide && inp.checked) inp.checked = false;
     });
+    var isConf = product() === 'conforming_agency';
     var prepayField = document.getElementById('pp-none').closest('.f-field');
     if (prepayField) {
-      var isConf = product() === 'conforming_agency';
       prepayField.style.display = isConf ? 'none' : '';
       if (isConf) form.querySelectorAll('input[name="prepay"]:checked').forEach(function(r){ r.checked = false; });
     }
+    form.querySelectorAll('[data-io]').forEach(function(el){
+      if (el.tagName === 'OPTION') {
+        el.hidden = (el.hasAttribute('data-long') && shortLane) || isConf;
+        if (el.hidden && el.selected) el.selected = false;
+      } else {
+        var lbl = document.querySelector('label[for="' + el.id + '"]');
+        if (lbl) lbl.style.display = isConf ? 'none' : (el.hasAttribute('data-long') && shortLane ? 'none' : '');
+        if (isConf && el.checked) el.checked = false;
+      }
+    });
   }
   function piMonthly(principal, annualRate, years){
     var r = annualRate / 12, n = years * 12;
