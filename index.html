@@ -979,6 +979,12 @@
       copyScenario.textContent = 'Copied';
     });
   });
+  var mcta = document.querySelector('.mobile-cta');
+  if (mcta && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function(es){
+      mcta.style.display = es[0].isIntersecting ? 'none' : '';
+    }).observe(document.getElementById('intake'));
+  }
   show(0);
 })();
 </script>
