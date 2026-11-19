@@ -963,7 +963,9 @@
     steps.forEach(function(s){ s.classList.remove('on'); });
     var sc = scr[i];
     sc.els.forEach(function(s){ s.classList.add('on'); });
-    stepName.textContent = sc.name;
+    var laneFs = null;
+    sc.els.forEach(function(s){ if (!laneFs && s.getAttribute('data-show-if')) laneFs = s; });
+    stepName.textContent = (sc.name === 'Details' && laneFs) ? laneFs.getAttribute('data-name') : sc.name;
     stepNo.textContent = (i === scr.length - 1) ? 'Done' : ('Step ' + (i + 1) + ' of ' + (scr.length - 1));
     bar.style.width = Math.round(((i + 1) / scr.length) * 100) + '%';
     backBtn.disabled = (i === 0);
