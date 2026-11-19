@@ -989,7 +989,11 @@
     if (val('units')) row('Units', val('units'), 'Property');
     row('Loan amount', money(val('loan_amount_usd')), 'Numbers');
     var _v = num('est_value_usd'), _a = num('loan_amount_usd');
-    if (_v > 0 && _a > 0) row('LTV', (_a / _v * 100).toFixed(1) + '%');
+    if (product() === 'fix_flip') {
+      var _fl = document.getElementById('ltc-line');
+      if (_fl && _fl.getAttribute('data-ltc')) row('Loan-to-cost', (_fl.getAttribute('data-ltc') * 100).toFixed(1) + '% (illustrative)');
+      if (_fl && _fl.getAttribute('data-ltarv')) row('Loan-to-ARV', (_fl.getAttribute('data-ltarv') * 100).toFixed(1) + '% (illustrative)');
+    } else if (_v > 0 && _a > 0) row('LTV', (_a / _v * 100).toFixed(1) + '%');
     if (val('condition')) row('Condition', val('condition'), 'Property');
     row('Citizenship', val('citizenship') === 'us_person' ? 'US citizen / resident' : (val('citizenship') === 'foreign_national' ? 'Foreign national' : ''), 'Numbers');
     if (val('experience')) row('Experience', val('experience'), 'Numbers');
@@ -1052,7 +1056,7 @@
     };
     if (val('zip')) obj.property.zip = val('zip');
     if (val('units')) obj.property.units = parseInt(val('units'), 10);
-    if (val('condition')) obj.property.condition = val('condition');
+    if (val('condition')) obj.property.condition = val('condition').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
     var _lv = parseFloat(val('est_value_usd')), _la = parseFloat(val('loan_amount_usd'));
     if (_lv > 0 && _la > 0) obj.ltv = Math.round(_la / _lv * 1000) / 1000;
     obj.citizenship = val('citizenship');

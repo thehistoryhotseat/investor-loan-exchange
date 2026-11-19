@@ -82,11 +82,12 @@
         "condition": {
           "type": "string",
           "enum": [
-            "Turnkey",
-            "Light rehab",
-            "Heavy rehab",
-            "Shell"
-          ]
+            "turnkey",
+            "light_rehab",
+            "heavy_rehab",
+            "shell"
+          ],
+          "description": "snake_case, like every other enum"
         }
       }
     },
