@@ -84,3 +84,14 @@ intake stays in test mode.
 - The `guidelines` bucket accepts only `application/pdf`, 10 MB max.
 - Lender emails are unique case-insensitively (unique index on
   `lower(email)`).
+
+## Custom domain checklist (when the owner picks one)
+
+Absolute `thehistoryhotseat.github.io/investor-loan-exchange` URLs live in:
+`index.html` (og:url, og:image, twitter:image, canonical, JSON-LD url, the
+"For your agent" callout), `lender.html` (og:url, og:image, canonical),
+`robots.txt` (sitemap line), `llms.txt` (two links), `README.md`.
+Root-relative `/investor-loan-exchange/` paths live in `404.html` (both
+buttons, marked with a CUSTOM DOMAIN comment). `sitemap.xml` URLs too.
+Update all of them together when the domain lands, and repoint the Supabase
+auth redirect URLs (site URL + email templates) at the same time.
