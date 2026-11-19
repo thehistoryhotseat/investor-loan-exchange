@@ -48,7 +48,7 @@
   .skip-link{position:absolute;left:-999px;top:0;background:var(--btn);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
   .skip-link:focus{left:0}
   h3[tabindex="-1"]:focus{outline:none}
-  .pills input:focus + label{outline:2px solid var(--btn);outline-offset:2px}
+  .pills input:focus-visible + label, .pills input.is-programmatic-focus + label{outline:2px solid var(--btn);outline-offset:2px}
   .pills input:focus + label{border-color:var(--ink)}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   [id]{scroll-margin-top:76px}
@@ -428,7 +428,7 @@
     </div>
     <details class="load-json">
       <summary>Load a scenario.json from your agent</summary>
-      <textarea id="json-in" rows="6" aria-label="Paste your scenario JSON" placeholder='Paste scenario.json here. Contact details and consent are never loaded from a file; you fill those yourself.'></textarea>
+      <textarea id="json-in" rows="6" aria-label="Paste your scenario JSON" placeholder='Paste scenario.json here. Contact details and consent are never loaded from a file; you fill those yourself.' spellcheck="false"></textarea>
       <div class="load-row">
         <button type="button" class="btn sm" id="json-load">Load</button>
         <span id="json-status"></span>
@@ -969,7 +969,7 @@
     var laneFs = null;
     sc.els.forEach(function(s){ if (!laneFs && s.getAttribute('data-show-if')) laneFs = s; });
     stepName.textContent = (sc.name === 'Details' && laneFs) ? laneFs.getAttribute('data-name') : sc.name;
-    stepNo.textContent = (i === scr.length - 1) ? 'Done' : ('Step ' + (i + 1) + ' of ' + (scr.length - 1));
+    stepNo.textContent = (i === scr.length - 1) ? '' : ('Step ' + (i + 1) + ' of ' + (scr.length - 1));
     bar.style.width = Math.round(((i + 1) / scr.length) * 100) + '%';
     backBtn.disabled = (i === 0);
     var last = (i === scr.length - 1);
@@ -1382,6 +1382,8 @@
         firstBad = sc.els[bi].querySelector('.pills.f-invalid input, input.f-invalid, select.f-invalid, textarea.f-invalid');
       }
       if (firstBad) {
+        firstBad.classList.add('is-programmatic-focus');
+        firstBad.addEventListener('blur', function(){ firstBad.classList.remove('is-programmatic-focus'); }, {once:true});
         try { firstBad.focus({preventScroll:true}); } catch(e) {}
         var by = firstBad.getBoundingClientRect().top + window.pageYOffset - 120;
         window.scrollTo({top: by, behavior: 'smooth'});
@@ -1508,7 +1510,7 @@
         var laneMissing = [];
         if (d.product === 'bridge') {
           if (!d.bridge_exit_strategy) laneMissing.push('exit strategy');
-          if (!d.bridge_term) laneMissing.push('term needed');
+          if (!d.bridge_term) laneMissing.push('term');
         }
         if (d.product === 'ground_up_construction') {
           if (!d.project_budget_usd) laneMissing.push('project budget');
