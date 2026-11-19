@@ -138,6 +138,10 @@ function renderVersions(){
   }));
 }
 
+$('si-email').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); $('si-send').click(); }
+});
+
 $('si-send').addEventListener('click', async () => {
   const email = $('si-email').value.trim();
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showMsg('err', 'Enter a valid email.'); return; }
