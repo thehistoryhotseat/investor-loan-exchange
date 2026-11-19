@@ -796,6 +796,7 @@
           <div class="f-field">
             <label for="contact">Email or phone <span class="req">*</span></label>
             <input type="text" id="contact" name="contact" placeholder="Where quotes come back to" required>
+            <input type="hidden" id="prepared-by" name="prepared_by">
           </div>
           <div class="f-field full">
             <label for="notes">Notes for lenders</label>
@@ -1103,7 +1104,7 @@
     w.style.display = show ? '' : 'none';
   }
   function updateRateType(){
-    var shortLane = product() === 'bridge' || product() === 'ground_up_construction';
+    var shortLane = product() === 'bridge' || product() === 'ground_up_construction' || product() === 'fix_flip';
     var rt = document.getElementById('ratetype');
     if (rt) {
       Array.prototype.forEach.call(rt.options, function(o){
@@ -1246,7 +1247,7 @@
   function buildJson(){
     var obj = {
       schema_version: '1.5',
-      prepared_by: 'ilx-intake',
+      prepared_by: val('prepared_by') || 'ilx-intake',
       product: val('product'),
       purpose: val('purpose'),
       property: {
@@ -1561,6 +1562,7 @@
     setField('under_limit', cf.under_county_limit);
     setField('dti_band', cf.dti_band);
     setField('role', d.role);
+    setField('prepared_by', d.prepared_by);
     setField('notes', d.notes);
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     var changeNotes = [];

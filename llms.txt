@@ -10,7 +10,7 @@ Schema version: 1.5 (scenario.schema.json)
 - Intake is the multi-step form at the site (anchor #intake). It has a scenario.json loader above the form: paste a valid file and the form prefills for the human to review. It currently runs in test mode: it validates the entry and shows the exact JSON record, but does not transmit it. When live intake is switched on, submissions will go to an endpoint named on this page.
 - The scenario record is lender-facing. The submitter's contact details are collected separately in the form and withheld from lenders until the submitter chooses to engage.
 - Name the preparing agent in prepared_by. Never put the borrower's or broker's name in notes.
-- ltv, estimated_dscr, loan_to_cost and loan_to_arv are computed by the intake and marked illustrative. An agent may include its own estimates; the intake recomputes them from the numbers.
+- ltv, estimated_dscr, loan_to_cost and loan_to_arv are computed by the intake and marked illustrative. An agent may include its own estimates; the intake recomputes them from the numbers. A prepared_by in the file survives the round trip - the intake keeps it instead of restamping.
 - Agents prepare and prefill. The human submitter personally reviews the scenario and checks the consent box; never mark consent on a person's behalf, and leave the consent object out of the file - the form adds it when the human submits.
 - Quotes and questions always go back to the person on the scenario. The agent prepares; the broker decides.
 
@@ -56,7 +56,7 @@ preferences.structure, preferences.rate_type and preferences.prepay_tolerance ar
 - rate_type (string, exact casing): "30-yr fixed", "ARM", "Interest-only ARM" on long lanes; "Fixed", "Floating" on short lanes; "No preference" on both.
 - prepay_tolerance: long lanes none, up_to_3yr, up_to_5yr, flexible; short lanes none, up_to_6mo, up_to_12mo, flexible.
 
-Short lanes are bridge and ground_up_construction. Long lanes are dscr_rental, fix_flip, cash_out_refi and conforming_agency. conforming_agency takes no prepay_tolerance at all. Values that do not fit the lane are dropped at intake with a note to the reviewer. The loader also says when it rebuilds an older file to the current version, drops unknown fields, or matches a value to the closest valid token.
+Short lanes are bridge, ground_up_construction and fix_flip. Long lanes are dscr_rental, cash_out_refi and conforming_agency. conforming_agency takes no prepay_tolerance at all. Values that do not fit the lane are dropped at intake with a note to the reviewer. The loader also says when it rebuilds an older file to the current version, drops unknown fields, or matches a value to the closest valid token.
 
 ## Links
 
