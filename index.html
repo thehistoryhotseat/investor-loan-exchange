@@ -1536,7 +1536,7 @@
     var dropLabels = {amortizing:'amortizing', interest_only:'interest-only', either:'either', none:'no prepay', up_to_6mo:'up to 6 mo prepay', up_to_12mo:'up to 12 mo prepay', up_to_3yr:'up to 3 yr prepay', up_to_5yr:'up to 5 yr prepay', flexible:'flexible prepay'};
     var droppedPrefs = [];
     if (pf.structure && !form.querySelector('input[name="structure"]:checked')) droppedPrefs.push(dropLabels[pf.structure] || pf.structure);
-    if (pf.rate_type && !val('rate_type')) droppedPrefs.push(pf.rate_type);
+    if (pf.rate_type && !val('rate_type')) droppedPrefs.push(/^(arm|io arm|interest-only arm)$/i.test(pf.rate_type) ? pf.rate_type.replace(/arm/i, 'ARM') : pf.rate_type);
     if (pf.prepay_tolerance && !form.querySelector('input[name="prepay"]:checked')) droppedPrefs.push(dropLabels[pf.prepay_tolerance] || pf.prepay_tolerance);
     saveDraft();
     show(0);
