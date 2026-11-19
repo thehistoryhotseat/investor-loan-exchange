@@ -162,6 +162,12 @@
   .agents p.lead{max-width:62ch;color:#c6d0dc;font-size:16px;margin-bottom:30px}
   pre{background:#0c1a2b;border:1px solid #24384f;border-radius:6px;padding:26px 28px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.8px;line-height:1.65;color:#c9d8e8}
   .f-done pre{background:#fbf8f1;border-color:var(--line);color:var(--ink-2)}
+  .load-json{background:var(--card);border:1px dashed var(--line);border-radius:6px;padding:14px 18px;margin-bottom:18px}
+  .load-json summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+  .load-json summary:hover{color:var(--brass)}
+  .load-json textarea{width:100%;margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;border:1px solid var(--line);border-radius:5px;padding:10px 12px;background:#fff;color:var(--ink)}
+  .load-row{display:flex;gap:12px;align-items:center;margin-top:10px}
+  #json-status{font-size:13px;color:var(--muted)}
   .pre-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;margin-top:34px;gap:14px}
   .pre-head span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#7e93a9}
   .copy-btn{background:transparent;border:1px solid #3a5068;color:#c9d8e8;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:7px 14px;border-radius:4px;cursor:pointer;flex:none}
@@ -342,6 +348,14 @@
       </div>
       <p>Test mode: your entry is checked on this page and shown to you as the exact record we would send. Nothing leaves your browser until submissions are switched on.</p>
     </div>
+    <details class="load-json">
+      <summary>Have a scenario.json from your agent? Load it here</summary>
+      <textarea id="json-in" rows="6" placeholder='Paste scenario.json here. Contact details and consent are never loaded from a file; you fill those yourself.'></textarea>
+      <div class="load-row">
+        <button type="button" class="btn sm" id="json-load">Load</button>
+        <span id="json-status"></span>
+      </div>
+    </details>
     <form class="form-card" id="ilx-form" novalidate>
       <div class="f-progress"><div class="f-bar" id="f-bar"></div></div>
       <div class="f-meta"><span id="f-stepname">Product</span><span id="f-stepno">Step 1 of 8</span></div>
@@ -719,7 +733,7 @@
         <h2>Readable by your agent</h2>
       </div>
     </div>
-    <p class="lead">The site ships a machine-readable <a class="inline" href="/investor-loan-exchange/llms.txt">llms.txt</a> and a JSON <a class="inline" href="/investor-loan-exchange/scenario.schema.json">scenario schema</a>. An agent can build a valid scenario from a conversation and hand you the file to submit here.</p>
+    <p class="lead">The site ships a machine-readable <a class="inline" href="/investor-loan-exchange/llms.txt">llms.txt</a> and a JSON <a class="inline" href="/investor-loan-exchange/scenario.schema.json">scenario schema</a>. An agent can build a valid scenario from a conversation; paste the file into the loader above the intake and it prefills for your review.</p>
     <div class="pre-head"><span>scenario.json - worked example</span><button class="copy-btn" id="copy-scenario" type="button">Copy</button></div>
     <pre id="scenario-example">{
   "schema_version": "1.1",
@@ -1077,6 +1091,67 @@
   });
   form.addEventListener('submit', function(e){ e.preventDefault(); });
 
+  function setField(n, v){
+    if (v === undefined || v === null || v === '') return;
+    var els = form.querySelectorAll('[name="' + n + '"]');
+    els.forEach(function(el){
+      if (el.type === 'radio') { el.checked = (String(el.value) === String(v)); }
+      else if (el.tagName === 'SELECT') {
+        var nv = String(v).toLowerCase().replace(/[^a-z0-9]/g, '');
+        Array.prototype.forEach.call(el.options, function(o){
+          var no = o.text.toLowerCase().replace(/[^a-z0-9]/g, '');
+          if (nv && (no === nv || no.indexOf(nv) === 0 || nv.indexOf(no) === 0)) el.value = o.value;
+        });
+      }
+      else el.value = v;
+    });
+  }
+  document.getElementById('json-load').addEventListener('click', function(){
+    var status = document.getElementById('json-status');
+    var raw = document.getElementById('json-in').value.trim();
+    if (!raw) { status.textContent = 'Paste a scenario.json first.'; return; }
+    var d;
+    try { d = JSON.parse(raw); } catch(e) { status.textContent = 'That is not valid JSON.'; return; }
+    setField('product', d.product);
+    form.dispatchEvent(new Event('change', {bubbles:true}));
+    setField('purpose', d.purpose);
+    var p = d.property || {};
+    setField('property_type', p.type);
+    setField('occupancy', p.occupancy);
+    setField('state', p.state);
+    setField('zip', p.zip);
+    setField('est_value_usd', p.est_value_usd);
+    setField('units', p.units);
+    setField('condition', p.condition);
+    setField('loan_amount_usd', d.loan_amount_usd);
+    setField('credit_band', d.credit_band);
+    setField('citizenship', d.citizenship);
+    setField('experience', d.experience);
+    setField('liquidity_band', d.liquidity_band);
+    setField('vesting', d.vesting);
+    setField('target_close', d.target_close);
+    setField('monthly_rent_usd', d.monthly_rent_usd);
+    setField('monthly_taxes_usd', d.monthly_taxes_usd);
+    setField('monthly_insurance_usd', d.monthly_insurance_usd);
+    setField('monthly_hoa_usd', d.monthly_hoa_usd);
+    setField('arv_usd', d.arv_usd);
+    setField('rehab_budget_usd', d.rehab_budget_usd);
+    setField('exit_strategy', d.exit_strategy);
+    setField('flip_experience', d.flip_experience);
+    var pf = d.preferences || {};
+    setField('structure', pf.structure);
+    setField('rate_type', pf.rate_type);
+    setField('prepay', pf.prepay_tolerance);
+    var cf = d.conforming || {};
+    setField('under_limit', cf.under_county_limit);
+    setField('owner_occ', cf.owner_occupied);
+    setField('role', d.role);
+    setField('notes', d.notes);
+    updateLtv(); updateDscr(); updateFlip(); updateOoWarn();
+    saveDraft();
+    show(0);
+    status.textContent = 'Loaded. Review each screen; contact and consent stay yours to fill.';
+  });
   document.getElementById('f-copy').addEventListener('click', function(){
     navigator.clipboard.writeText(document.getElementById('f-json').textContent).then(function(){
       document.getElementById('f-copy').textContent = 'Copied';
