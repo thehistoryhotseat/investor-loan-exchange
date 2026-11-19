@@ -752,8 +752,8 @@
           <div class="f-field">
             <span class="f-label" id="lbl-structure">Structure</span>
             <div class="pills" role="radiogroup" aria-labelledby="lbl-structure" data-group="structure" data-optional="1">
-              <input type="radio" name="structure" id="s-am" value="amortizing" data-long><label for="s-am" data-long>Amortizing</label>
-              <input type="radio" name="structure" id="s-io" value="interest_only" data-io><label for="s-io" data-io>Interest-only</label>
+              <input type="radio" name="structure" id="s-am" value="amortizing" data-long><label for="s-am" data-long>P&amp;I</label>
+              <input type="radio" name="structure" id="s-io" value="interest_only" data-io><label for="s-io" data-io>IO</label>
               <input type="radio" name="structure" id="s-either" value="either"><label for="s-either">Either</label>
             </div>
           </div>
@@ -763,7 +763,7 @@
               <option value="">Select...</option>
               <option data-long>30-yr fixed</option>
               <option data-long>ARM</option>
-              <option data-long data-io>Interest-only ARM</option>
+              <option data-long data-io>IO ARM</option>
               <option data-short>Fixed</option>
               <option data-short>Floating</option>
               <option>No preference</option>
@@ -1219,7 +1219,7 @@
       row('Exit strategy', val('guc_exit_strategy'), 'The build');
       if (val('land_status')) row('Land status', val('land_status'), 'The build');
     }
-    if (val('structure')) row('Structure', val('structure').replace('_', ' '), 'Preferences');
+    if (val('structure')) row('Structure', label({amortizing:'P&I', interest_only:'IO', either:'Either'}, val('structure')), 'Preferences');
     if (val('rate_type')) row('Rate type', val('rate_type'), 'Preferences');
     if (val('prepay')) row('Prepay tolerance', label({none:'None', up_to_6mo:'Up to 6 mo', up_to_12mo:'Up to 12 mo', up_to_3yr:'Up to 3 yr', up_to_5yr:'Up to 5 yr', flexible:'Flexible'}, val('prepay')), 'Preferences');
     if (product() === 'conforming_agency') {
@@ -1558,7 +1558,7 @@
     setField('guc_exit_strategy', d.guc_exit_strategy);
     var pf = d.preferences || {};
     setField('structure', pf.structure);
-    setField('rate_type', pf.rate_type);
+    setField('rate_type', typeof pf.rate_type === 'string' ? pf.rate_type.replace(/^interest[ -]?only arm$/i, 'IO ARM') : pf.rate_type);
     setField('prepay', pf.prepay_tolerance);
     var cf = d.conforming || {};
     setField('under_limit', cf.under_county_limit);
@@ -1579,7 +1579,7 @@
     unknownTop = unknownTop.concat(Object.keys(cf).filter(function(k){ return knownCf.indexOf(k) < 0; }).map(function(k){ return 'conforming.' + k; }));
     if (unknownTop.length) changeNotes.push('dropped unknown fields: ' + unknownTop.join(', '));
     if (pf.rate_type && val('rate_type') && val('rate_type') !== pf.rate_type) changeNotes.push('matched rate type to "' + val('rate_type') + '"');
-    var dropLabels = {amortizing:'amortizing', interest_only:'interest-only', either:'either', none:'no prepay', up_to_6mo:'up to 6 mo prepay', up_to_12mo:'up to 12 mo prepay', up_to_3yr:'up to 3 yr prepay', up_to_5yr:'up to 5 yr prepay', flexible:'flexible prepay'};
+    var dropLabels = {amortizing:'P&I', interest_only:'IO', either:'either', none:'no prepay', up_to_6mo:'up to 6 mo prepay', up_to_12mo:'up to 12 mo prepay', up_to_3yr:'up to 3 yr prepay', up_to_5yr:'up to 5 yr prepay', flexible:'flexible prepay'};
     var droppedPrefs = [];
     if (pf.structure && !form.querySelector('input[name="structure"]:checked')) droppedPrefs.push(dropLabels[pf.structure] || pf.structure);
     if (pf.rate_type && !val('rate_type')) droppedPrefs.push(/^(arm|io arm|interest-only arm)$/i.test(pf.rate_type) ? pf.rate_type.replace(/arm/i, 'ARM') : pf.rate_type);
