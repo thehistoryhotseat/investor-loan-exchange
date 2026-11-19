@@ -1260,8 +1260,8 @@
     if (product() === 'conforming_agency') {
       row('Under county limit', val('under_limit'), 'Conforming');
       if (val('dti_band')) row('DTI band', label({under_36:'Under 36%', '36_43':'36-43%', '43_50':'43-50%', over_50:'Over 50%', not_sure:'Not sure'}, val('dti_band')), 'Conforming');
-      if (val('home_equity_type')) row('Product type', label({heloc:'HELOC (line of credit)', home_equity_loan:'Home equity loan (lump sum)'}, val('home_equity_type')), 'Home equity');
     }
+    if (product() === 'home_equity' && val('home_equity_type')) row('Product type', label({heloc:'HELOC (line of credit)', home_equity_loan:'Home equity loan (lump sum)'}, val('home_equity_type')), 'Home equity');
     if (val('notes')) row('Notes', val('notes'), 'About you');
     document.getElementById('f-review').innerHTML = rows.join('');
     document.querySelectorAll('.r-edit').forEach(function(btn){
@@ -1343,8 +1343,8 @@
     if (product() === 'conforming_agency') {
       obj.conforming = { under_county_limit: val('under_limit') };
       if (val('dti_band')) obj.conforming.dti_band = val('dti_band');
-      if (val('home_equity_type')) obj.home_equity_type = val('home_equity_type');
     }
+    if (product() === 'home_equity' && val('home_equity_type')) obj.home_equity_type = val('home_equity_type');
     if (val('notes')) obj.notes = val('notes');
     return JSON.stringify(obj, null, 2);
   }
