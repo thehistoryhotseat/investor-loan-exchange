@@ -62,6 +62,7 @@
   .brand-name{font-weight:600;font-size:15px;letter-spacing:.01em;white-space:nowrap}
   .nav-links{display:flex;gap:26px;align-items:center}
   .nav-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500}
+  .nav-links a[aria-current=true]{color:var(--ink);box-shadow:0 2px 0 0 var(--brass)}
   .nav-links a:not(.btn){transition:color .15s ease}
   .nav-links a:hover{color:var(--brass)}
   .nav-links a.btn{color:var(--paper)}
@@ -1874,6 +1875,33 @@
     new IntersectionObserver(function(es){ heroOn = es[0].isIntersecting; syncBar(); }).observe(document.querySelector('header.hero'));
     new IntersectionObserver(function(es){ intakeOn = es[0].isIntersecting; syncBar(); }).observe(document.getElementById('intake'));
   }
+  // Scroll-spy: mark the nav link for the section in view. Desktop links and the mobile menu share the same hrefs, so one pass covers both.
+  (function(){
+    if (!('IntersectionObserver' in window)) return;
+    var map = {};
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(function(a){
+      var id = a.getAttribute('href');
+      if (!map[id]) map[id] = [];
+      map[id].push(a);
+    });
+    var current = null;
+    function mark(id){
+      if (id === current) return;
+      current = id;
+      Object.keys(map).forEach(function(k){
+        map[k].forEach(function(a){
+          if (k === id) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
+        });
+      });
+    }
+    var spy = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) mark('#' + e.target.id); });
+    }, {rootMargin:'-40% 0px -55% 0px'});
+    ['how','lanes','intake','lenders','agents'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el && map['#'+id]) spy.observe(el);
+    });
+  })();
   // Reveal-on-scroll: quiet section entrances. Reduced-motion users get instant transitions via the media query; without IntersectionObserver nothing is hidden.
   if ('IntersectionObserver' in window) {
     document.documentElement.classList.add('js-reveal');
