@@ -14,6 +14,11 @@ $$;
 revoke all on function public.my_lender_id() from public, anon;
 grant execute on function public.my_lender_id() to authenticated;
 
+-- Table-level privileges for the portal role (RLS policies then scope the rows).
+grant select on public.lenders to authenticated;
+grant select on public.lender_users to authenticated;
+grant select, insert on public.lender_guidelines to authenticated;
+
 alter table public.lenders enable row level security;
 alter table public.lender_guidelines enable row level security;
 alter table public.lender_users enable row level security;
