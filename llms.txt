@@ -46,7 +46,7 @@ Formats that trip validators:
 - bridge: bridge_exit_strategy (sell, refinance_into_dscr, refinance_into_conventional, undecided) and bridge_term (up_to_6_months, 6_12_months, 12_24_months), both required. Note the bridge exit enum adds refinance_into_conventional; the fix & flip exit_strategy enum does not have it.
 - ground_up_construction: project_budget_usd, build_timeline (under_9_months, 9_12_months, 12_18_months, over_18_months) and guc_exit_strategy (sell, refinance_into_dscr, undecided), all required; land_status (owned, under_contract, not_yet) optional.
 - cash_out_refi: no extra fields.
-- conforming_agency: conforming.under_county_limit is required and is the string "yes" or "no" (not a boolean). conforming.dti_band optional: under_36, 36_43, 43_50, over_50, not_sure.
+- conforming_agency: conforming.under_county_limit is required and is the string "yes" or "no" (not a boolean). conforming.dti_band optional: under_36, 36_43, 43_50, over_50, not_sure. Agency loans carry no prepayment penalty, so this lane takes no prepay_tolerance; a value there is dropped at intake.
 
 ## Preferences by lane
 
@@ -56,7 +56,7 @@ preferences.structure, preferences.rate_type and preferences.prepay_tolerance ar
 - rate_type (string, exact casing): "30-yr fixed", "ARM", "Interest-only ARM" on long lanes; "Fixed", "Floating" on short lanes; "No preference" on both.
 - prepay_tolerance: long lanes none, up_to_3yr, up_to_5yr, flexible; short lanes none, up_to_6mo, up_to_12mo, flexible.
 
-Short lanes are bridge and ground_up_construction. Long lanes are dscr_rental, fix_flip, cash_out_refi and conforming_agency. Values that do not fit the lane are dropped at intake with a note to the reviewer.
+Short lanes are bridge and ground_up_construction. Long lanes are dscr_rental, fix_flip, cash_out_refi and conforming_agency. conforming_agency takes no prepay_tolerance at all. Values that do not fit the lane are dropped at intake with a note to the reviewer. The loader also says when it rebuilds an older file to the current version, drops unknown fields, or matches a value to the closest valid token.
 
 ## Links
 

@@ -1118,6 +1118,12 @@
       if (lbl) lbl.style.display = hide ? 'none' : '';
       if (hide && inp.checked) inp.checked = false;
     });
+    var prepayField = document.getElementById('pp-none').closest('.f-field');
+    if (prepayField) {
+      var isConf = product() === 'conforming_agency';
+      prepayField.style.display = isConf ? 'none' : '';
+      if (isConf) form.querySelectorAll('input[name="prepay"]:checked').forEach(function(r){ r.checked = false; });
+    }
   }
   function piMonthly(principal, annualRate, years){
     var r = annualRate / 12, n = years * 12;
@@ -1547,6 +1553,18 @@
     setField('role', d.role);
     setField('notes', d.notes);
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
+    var changeNotes = [];
+    if (d.schema_version && d.schema_version !== '1.5') changeNotes.push('updated it from v' + d.schema_version + ' to v1.5');
+    var knownTop = ['schema_version','prepared_by','consent','product','purpose','property','loan_amount_usd','ltv','role','credit_band','citizenship','experience','liquidity_band','vesting','target_close','monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','estimated_dscr','arv_usd','rehab_budget_usd','exit_strategy','flip_experience','bridge_exit_strategy','bridge_term','project_budget_usd','build_timeline','land_status','guc_exit_strategy','loan_to_cost','loan_to_arv','preferences','conforming','notes'];
+    var unknownTop = Object.keys(d).filter(function(k){ return knownTop.indexOf(k) < 0; });
+    var knownProp = ['type','occupancy','state','zip','est_value_usd','units','condition'];
+    unknownTop = unknownTop.concat(Object.keys(p).filter(function(k){ return knownProp.indexOf(k) < 0; }).map(function(k){ return 'property.' + k; }));
+    var knownPf = ['structure','rate_type','prepay_tolerance'];
+    unknownTop = unknownTop.concat(Object.keys(pf).filter(function(k){ return knownPf.indexOf(k) < 0; }).map(function(k){ return 'preferences.' + k; }));
+    var knownCf = ['under_county_limit','dti_band'];
+    unknownTop = unknownTop.concat(Object.keys(cf).filter(function(k){ return knownCf.indexOf(k) < 0; }).map(function(k){ return 'conforming.' + k; }));
+    if (unknownTop.length) changeNotes.push('dropped unknown fields: ' + unknownTop.join(', '));
+    if (pf.rate_type && val('rate_type') && val('rate_type') !== pf.rate_type) changeNotes.push('matched rate type to "' + val('rate_type') + '"');
     var dropLabels = {amortizing:'amortizing', interest_only:'interest-only', either:'either', none:'no prepay', up_to_6mo:'up to 6 mo prepay', up_to_12mo:'up to 12 mo prepay', up_to_3yr:'up to 3 yr prepay', up_to_5yr:'up to 5 yr prepay', flexible:'flexible prepay'};
     var droppedPrefs = [];
     if (pf.structure && !form.querySelector('input[name="structure"]:checked')) droppedPrefs.push(dropLabels[pf.structure] || pf.structure);
@@ -1573,6 +1591,7 @@
         }
         if (d.product === 'dscr_rental' && !d.monthly_rent_usd) laneMissing.push('monthly rent');
         var dropNote = droppedPrefs.length ? ' Preferences that do not fit this lane were dropped: ' + droppedPrefs.join(', ') + '.' : '';
+        if (changeNotes.length) dropNote += ' Changes on load: ' + changeNotes.join('; ') + '.';
         status.textContent = (laneMissing.length
           ? 'Loaded, but the file has no ' + laneMissing.join(' or ') + ' - the lane screen will ask for ' + (laneMissing.length > 1 ? 'them' : 'it') + '.'
           : 'Loaded. Review each screen; contact and consent stay yours to fill.') + dropNote;
