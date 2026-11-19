@@ -1779,6 +1779,16 @@
       el.style.transitionDelay = '';
     }
   });
+  // Mobile menu: close after picking a link, and on any tap outside it.
+  var topMenu = document.querySelector('.menu');
+  if (topMenu) {
+    topMenu.querySelectorAll('.menu-links a').forEach(function(a){
+      a.addEventListener('click', function(){ topMenu.open = false; });
+    });
+    document.addEventListener('click', function(e){
+      if (topMenu.open && !topMenu.contains(e.target)) topMenu.open = false;
+    });
+  }
   // The "loader" link in the agents section opens the loader as it jumps to the intake.
   document.querySelectorAll('#agents a[href="#intake"]').forEach(function(a){
     a.addEventListener('click', function(){
