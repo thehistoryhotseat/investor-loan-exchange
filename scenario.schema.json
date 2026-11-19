@@ -17,7 +17,7 @@
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.7"
+      "const": "1.8"
     },
     "prepared_by": {
       "type": "string",
@@ -41,7 +41,8 @@
         "purchase",
         "refinance",
         "rate_term_refi",
-        "cash_out"
+        "cash_out",
+        "equity_draw"
       ]
     },
     "property": {
@@ -371,98 +372,10 @@
       "if": {
         "properties": {
           "product": {
-            "const": "dscr_rental"
-          }
-        },
-        "required": [
-          "product"
-        ]
-      },
-      "then": {
-        "required": [
-          "monthly_rent_usd"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "product": {
-            "const": "fix_flip"
-          }
-        },
-        "required": [
-          "product"
-        ]
-      },
-      "then": {
-        "required": [
-          "arv_usd",
-          "rehab_budget_usd"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "product": {
-            "const": "conforming_agency"
-          }
-        },
-        "required": [
-          "product"
-        ]
-      },
-      "then": {
-        "required": [
-          "conforming"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "product": {
-            "const": "bridge"
-          }
-        },
-        "required": [
-          "product"
-        ]
-      },
-      "then": {
-        "required": [
-          "bridge_exit_strategy",
-          "bridge_term"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "product": {
-            "const": "ground_up_construction"
-          }
-        },
-        "required": [
-          "product"
-        ]
-      },
-      "then": {
-        "required": [
-          "project_budget_usd",
-          "build_timeline",
-          "guc_exit_strategy"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "product": {
-            "not": {
-              "const": "home_equity"
-            }
+            "enum": [
+              "dscr_rental",
+              "conforming_agency"
+            ]
           }
         },
         "required": [
@@ -471,18 +384,13 @@
       },
       "then": {
         "properties": {
-          "property": {
-            "properties": {
-              "occupancy": {
-                "const": "investment"
-              }
-            }
+          "purpose": {
+            "enum": [
+              "purchase",
+              "rate_term_refi",
+              "cash_out"
+            ]
           }
-        },
-        "not": {
-          "required": [
-            "home_equity_type"
-          ]
         }
       }
     },
@@ -490,7 +398,10 @@
       "if": {
         "properties": {
           "product": {
-            "const": "home_equity"
+            "enum": [
+              "fix_flip",
+              "ground_up_construction"
+            ]
           }
         },
         "required": [
@@ -498,9 +409,85 @@
         ]
       },
       "then": {
+        "properties": {
+          "purpose": {
+            "enum": [
+              "purchase",
+              "refinance"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "enum": [
+              "bridge"
+            ]
+          }
+        },
         "required": [
-          "home_equity_type"
+          "product"
         ]
+      },
+      "then": {
+        "properties": {
+          "purpose": {
+            "enum": [
+              "purchase",
+              "refinance",
+              "cash_out"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "enum": [
+              "cash_out_refi"
+            ]
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "properties": {
+          "purpose": {
+            "enum": [
+              "cash_out"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "enum": [
+              "home_equity"
+            ]
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "properties": {
+          "purpose": {
+            "enum": [
+              "equity_draw"
+            ]
+          }
+        }
       }
     }
   ]

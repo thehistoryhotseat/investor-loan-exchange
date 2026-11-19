@@ -2,7 +2,7 @@
 
 > A loan scenario exchange for investment-property and home equity lending. A broker submits one loan scenario; it is checked against each lender's niche (product, state, property type, loan size); each fitting panel lender receives one structured rate request; quotes come back to one place, side by side, and the broker chooses who to engage. People and AI agents use the same intake.
 
-Schema version: 1.7 (scenario.schema.json)
+Schema version: 1.8 (scenario.schema.json)
 
 ## What agents can do here
 
@@ -23,7 +23,7 @@ Schema version: 1.7 (scenario.schema.json)
 
 ## Required base fields
 
-schema_version ("1.7"), product, purpose, property, loan_amount_usd, credit_band, citizenship. property requires type, occupancy, state and est_value_usd. Extra fields are rejected (additionalProperties is false everywhere).
+schema_version ("1.8"), product, purpose, property, loan_amount_usd, credit_band, citizenship. property requires type, occupancy, state and est_value_usd. Extra fields are rejected (additionalProperties is false everywhere).
 
 Formats that trip validators:
 
@@ -32,7 +32,7 @@ Formats that trip validators:
 - Money fields are numbers, not strings (450000, not "450,000").
 - ltv is a decimal (0.75, not 75). Same for estimated_dscr as a ratio (1.21).
 - product: dscr_rental, fix_flip, bridge, ground_up_construction, cash_out_refi, conforming_agency, home_equity.
-- purpose: purchase, refinance, rate_term_refi, cash_out.
+- purpose: purchase, refinance, rate_term_refi, cash_out, equity_draw. Allowed values depend on product: dscr_rental and conforming_agency take purchase, rate_term_refi or cash_out; fix_flip and ground_up_construction take purchase or refinance; bridge takes purchase, refinance or cash_out; cash_out_refi is always cash_out; home_equity is always equity_draw.
 - credit_band keeps its display form: 780+, 740-779, 700-739, 660-699, 620-659, below_620.
 - citizenship: us_person, foreign_national.
 - property.condition: turnkey, light_rehab, heavy_rehab, shell.
@@ -62,4 +62,4 @@ Short lanes are bridge, ground_up_construction and fix_flip. Long lanes are dscr
 ## Links
 
 - [Site and intake form](https://thehistoryhotseat.github.io/investor-loan-exchange/#intake): the single intake for people and agents
-- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema v1.7 for one loan scenario
+- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema v1.8 for one loan scenario

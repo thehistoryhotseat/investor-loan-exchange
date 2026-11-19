@@ -470,6 +470,7 @@
             <input type="radio" name="purpose" id="u-refi" value="refinance"><label for="u-refi">Refinance</label>
             <input type="radio" name="purpose" id="u-rateterm" value="rate_term_refi"><label for="u-rateterm">Rate-term refi</label>
             <input type="radio" name="purpose" id="u-cashout" value="cash_out"><label for="u-cashout">Cash-out refinance</label>
+            <input type="radio" name="purpose" id="u-draw" value="equity_draw" style="display:none"><label for="u-draw" style="display:none">Equity draw</label>
           </div>
         </div>
       </fieldset>
@@ -931,7 +932,7 @@
       <details class="load-json" style="margin-top:16px">
         <summary>For agents: the raw scenario.json</summary>
         <pre class="pre-light" style="margin-top:12px">{
-  "schema_version": "1.7",
+  "schema_version": "1.8",
   "product": "dscr_rental",
   "purpose": "purchase",
   "property": {
@@ -1219,7 +1220,7 @@
     ground_up_construction: ['purchase', 'refinance'],
     cash_out_refi: ['cash_out'],
     conforming_agency: ['purchase', 'rate_term_refi', 'cash_out'],
-    home_equity: ['cash_out']
+    home_equity: ['equity_draw']
   };
   function updatePurpose(){
     var allowed = PURPOSES_BY_PRODUCT[product()] || ['purchase', 'refinance', 'rate_term_refi', 'cash_out'];
@@ -1292,7 +1293,7 @@
         + (target ? '<button type="button" class="r-edit" data-target="' + target + '">Edit</button>' : '') + '</div>');
     }
     row('Product', label(productLabels, val('product')), 'Product');
-    row('Purpose', label({purchase:'Purchase', refinance:'Refinance', rate_term_refi:'Rate-term refi', cash_out:'Cash-out refinance'}, val('purpose')), 'Product');
+    row('Purpose', label({purchase:'Purchase', refinance:'Refinance', rate_term_refi:'Rate-term refi', cash_out:'Cash-out refinance', equity_draw:'Equity draw'}, val('purpose')), 'Product');
     row('Property', [val('property_type'), val('occupancy') === 'investment' ? 'investment' : (val('occupancy') === 'owner_occupied' ? 'owner-occupied' : '')].filter(Boolean).join(' - '), 'Property');
     row('Location', (val('state') || '') + (val('zip') ? ' ' + val('zip') : ''), 'Property');
     row('Value / price', money(val('est_value_usd')), 'Property');
@@ -1370,7 +1371,7 @@
   function snake(x){ return (x || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }
   function buildJson(){
     var obj = {
-      schema_version: '1.7',
+      schema_version: '1.8',
       prepared_by: val('prepared_by') || 'ilx-intake',
       product: val('product'),
       purpose: val('purpose'),
@@ -1757,7 +1758,7 @@
     setField('notes', d.notes);
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); updatePurpose(); if (typeof updateLtv === 'function') updateLtv();
     var changeNotes = [];
-    if (d.schema_version && d.schema_version !== '1.7') changeNotes.push('updated it from v' + d.schema_version + ' to v1.7');
+    if (d.schema_version && d.schema_version !== '1.8') changeNotes.push('updated it from v' + d.schema_version + ' to v1.8');
     var knownTop = ['schema_version','prepared_by','consent','product','purpose','property','loan_amount_usd','ltv','role','credit_band','citizenship','experience','liquidity_band','vesting','target_close','monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','estimated_dscr','arv_usd','rehab_budget_usd','exit_strategy','flip_experience','bridge_exit_strategy','bridge_term','project_budget_usd','build_timeline','land_status','guc_exit_strategy','loan_to_cost','loan_to_arv','preferences','conforming','notes','home_equity_type','first_mortgage_balance_usd'];
     var unknownTop = Object.keys(d).filter(function(k){ return knownTop.indexOf(k) < 0; });
     var knownProp = ['type','occupancy','state','zip','est_value_usd','units','condition'];
@@ -1768,6 +1769,12 @@
     unknownTop = unknownTop.concat(Object.keys(cf).filter(function(k){ return knownCf.indexOf(k) < 0; }).map(function(k){ return 'conforming.' + k; }));
     if (unknownTop.length) changeNotes.push('dropped unknown fields: ' + unknownTop.join(', '));
     if (pf.rate_type && val('rate_type') && val('rate_type') !== pf.rate_type) changeNotes.push('matched rate type to "' + val('rate_type') + '"');
+    if (d.purpose) {
+      var purLabels = {purchase:'Purchase', refinance:'Refinance', rate_term_refi:'Rate-term refi', cash_out:'Cash-out refinance', equity_draw:'Equity draw'};
+      var nowPur = val('purpose');
+      if (nowPur && String(d.purpose) !== nowPur) changeNotes.push('matched purpose to "' + (purLabels[nowPur] || nowPur) + '"');
+      if (!nowPur) changeNotes.push('cleared purpose (not offered for this product)');
+    }
     var dropLabels = {amortizing:'P&I', interest_only:'IO', either:'either', none:'no prepay', up_to_6mo:'up to 6 mo prepay', up_to_12mo:'up to 12 mo prepay', up_to_3yr:'up to 3 yr prepay', up_to_5yr:'up to 5 yr prepay', flexible:'flexible prepay'};
     var droppedPrefs = [];
     if (pf.structure && !form.querySelector('input[name="structure"]:checked')) droppedPrefs.push(dropLabels[pf.structure] || pf.structure);
