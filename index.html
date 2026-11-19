@@ -204,6 +204,11 @@
   .req-card .r-row:last-child{border-bottom:none}
   .req-card .r-row .k{color:#8d9aa9}
   .req-card .r-row span:not(.k){color:#e8edf3}
+  @media (min-width:641px){
+    .req-card .f-sheet{display:grid;grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat(5,auto)}
+    .req-card .r-row:nth-child(n+6){border-left:1px solid rgba(246,244,238,.1)}
+    .req-card .r-row:nth-child(5){border-bottom:none}
+  }
 
   section.agents{padding:64px 0}
   .agents .sec-head{margin-bottom:18px}
