@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Investor Loan Exchange - One scenario. Fitting lenders price it.</title>
-<meta name="description" content="A broker sends one loan scenario. Every lender whose niche it fits gets one rate request, and the quotes come back to one place.">
+<meta name="description" content="Send the deal once. Every fitting panel lender gets one rate request. Quotes come back side by side; you choose.">
 <meta name="theme-color" content="#14263c">
 <meta property="og:title" content="Investor Loan Exchange - One scenario. Fitting lenders price it.">
-<meta property="og:description" content="Submit a deal once. Every lender whose niche it fits gets one rate request, and the quotes come back to one place.">
+<meta property="og:description" content="Send the deal once. Every fitting panel lender gets one rate request. Quotes come back side by side; you choose.">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://thehistoryhotseat.github.io/investor-loan-exchange/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%2314263c'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='24' fill='%23f6f4ee' text-anchor='middle'%3EILX%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -19,7 +20,6 @@
   "description": "A loan scenario exchange for investment-property lending. One scenario in; fitting lenders price it; quotes come back side by side."
 }
 </script>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%2314263c'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='24' fill='%23f6f4ee' text-anchor='middle'%3EILX%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,420;9..144,560&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -33,23 +33,27 @@
   html{scroll-behavior:smooth}
   body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
-  .mono{font-family:'IBM Plex Mono',monospace}
   .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);font-weight:500}
-
   .skip-link{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
   .skip-link:focus{left:0}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  [id]{scroll-margin-top:76px}
 
-  /* nav */
   nav{position:sticky;top:0;z-index:50;background:rgba(246,244,238,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
   .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
   .mark{width:34px;height:34px;border:1.5px solid var(--ink);display:grid;place-items:center;font-family:'Fraunces',serif;font-weight:560;font-size:15px;border-radius:3px}
-  .brand-name{font-weight:600;font-size:15px;letter-spacing:.01em}
+  .brand-name{font-weight:600;font-size:15px;letter-spacing:.01em;white-space:nowrap}
   .nav-links{display:flex;gap:26px;align-items:center}
   .nav-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500}
   .nav-links a:hover{color:var(--brass)}
   .nav-links a.btn{color:var(--paper)}
+  .btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:600;font-size:14.5px;padding:12px 22px;border-radius:4px;letter-spacing:.01em;transition:background .15s ease;border:none;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--navy)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+  .btn.ghost:hover{background:var(--ink);color:var(--paper)}
+  .btn.sm{padding:9px 16px;font-size:13.5px}
+  .btn[disabled]{opacity:.4;pointer-events:none}
   .menu{display:none;position:relative}
   .menu summary{list-style:none;cursor:pointer;font-size:13.5px;font-weight:600;padding:9px 14px;border:1.5px solid var(--ink);border-radius:4px;color:var(--ink);user-select:none}
   .menu summary::-webkit-details-marker{display:none}
@@ -60,20 +64,22 @@
   .menu-links a:hover{background:var(--paper);color:var(--ink)}
   .menu-links a.cta{display:none;background:var(--ink);color:var(--paper);text-align:center;font-weight:600;margin-bottom:6px}
   .menu-links a.cta:hover{background:var(--navy);color:var(--paper)}
-  .btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:600;font-size:14.5px;padding:12px 22px;border-radius:4px;letter-spacing:.01em;transition:background .15s ease}
-  .btn:hover{background:var(--navy)}
-  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
-  .btn.ghost:hover{background:var(--ink);color:var(--paper)}
-  .btn.sm{padding:9px 16px;font-size:13.5px}
 
-  /* hero */
   header.hero{padding:88px 0 76px;border-bottom:1px solid var(--line)}
   .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:60px;align-items:start}
-  .quote-card{margin-top:66px}
-  .quote-card{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 20px 48px rgba(16,24,32,.09)}
+  .hero h1{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(36px,4.6vw,56px);line-height:1.08;letter-spacing:-.015em;margin:20px 0 22px;max-width:15ch}
+  .hero h1 em{font-style:italic;color:var(--brass)}
+  .hero p{max-width:52ch;font-size:18px;color:var(--ink-2)}
+  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;align-items:center}
+  .hero-note{font-size:13px;color:var(--muted);margin-top:14px}
+  .trust-row{display:flex;gap:10px 28px;flex-wrap:wrap;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
+  .trust-row span{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .trust-row span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--brass);flex:none}
+  .quote-card{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 20px 48px rgba(16,24,32,.09);margin-top:66px}
   .qc-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);background:#fbf8f1}
   .qc-head .t{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);font-weight:500}
   .qc-head .s{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)}
+  .qc-illus{padding:8px 22px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--brass);border-bottom:1px solid var(--line)}
   .qc-cols,.qc-row{display:grid;grid-template-columns:1fr 1fr 1.05fr .85fr .7fr;gap:8px;align-items:baseline;padding:13px 22px}
   .qc-cols{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-top:12px;padding-bottom:10px}
   .qc-row{border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink-2)}
@@ -82,23 +88,12 @@
   .qc-row .rate{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;font-size:19px;font-weight:500;color:var(--ink)}
   .qc-row .num{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;font-size:13px}
   .qc-foot{padding:11px 22px;font-size:11.5px;color:var(--muted);background:#fbf8f1;border-top:1px solid var(--line)}
-  .qc-illus{padding:8px 22px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--brass);border-bottom:1px solid var(--line)}
-  .hero h1{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(36px,4.6vw,56px);line-height:1.08;letter-spacing:-.015em;margin:20px 0 22px;max-width:15ch}
-  .hero h1 em{font-style:italic;color:var(--brass)}
-  .hero p{max-width:56ch;font-size:18px;color:var(--ink-2)}
-  .hero-cta{display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;align-items:center}
-  .hero-note{font-size:13px;color:var(--muted);margin-top:14px}
-  .trust-row{display:flex;gap:10px 28px;flex-wrap:wrap;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
-  .trust-row span{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--muted);display:flex;align-items:center;gap:8px}
-  .trust-row span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--brass);flex:none}
 
   section{padding:76px 0;border-bottom:1px solid var(--line)}
-  [id]{scroll-margin-top:76px}
   .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:44px;flex-wrap:wrap}
   h2{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(28px,3.6vw,40px);line-height:1.15;letter-spacing:-.01em}
   .sec-head p{max-width:42ch;color:var(--muted);font-size:15px}
 
-  /* steps */
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--card)}
   .step{padding:30px 26px 34px;border-right:1px solid var(--line)}
   .step:last-child{border-right:none}
@@ -106,7 +101,6 @@
   .step h3{font-family:'Fraunces',serif;font-weight:560;font-size:18.5px;margin-bottom:8px;line-height:1.3}
   .step p{font-size:14px;color:var(--muted)}
 
-  /* lanes */
   .lanes{border-top:1px solid var(--ink)}
   .lane{display:grid;grid-template-columns:64px 1fr 1.6fr;gap:20px;align-items:baseline;padding:20px 4px;border-bottom:1px solid var(--line)}
   .lane .n{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--brass)}
@@ -115,58 +109,66 @@
   .callout{margin-top:28px;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:4px;padding:18px 22px;font-size:14px;color:var(--ink-2)}
   .callout strong{color:var(--ink)}
 
-  /* intake */
-  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
-  .check-list{list-style:none;margin-top:8px}
-  .check-list li{padding:13px 0 13px 30px;border-bottom:1px solid var(--line);font-size:15px;position:relative;color:var(--ink-2)}
-  .check-list li::before{content:"";position:absolute;left:2px;top:21px;width:12px;height:6px;border-left:2px solid var(--brass);border-bottom:2px solid var(--brass);transform:rotate(-45deg)}
+  .form-card{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 20px 48px rgba(16,24,32,.07)}
+  .f-progress{height:4px;background:var(--line)}
+  .f-bar{height:100%;background:var(--brass);width:8%;transition:width .25s ease}
+  .f-meta{display:flex;justify-content:space-between;padding:20px 30px 0;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .f-step{display:none;padding:6px 30px;border:none}
+  .f-step.on{display:block}
+  .f-step h3{font-family:'Fraunces',serif;font-weight:560;font-size:25px;margin:12px 0 6px}
+  .f-step .sub{font-size:14px;color:var(--muted);margin-bottom:24px}
+  .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .f-field{display:flex;flex-direction:column;gap:7px}
+  .f-field.full{grid-column:1/-1}
+  .f-field > label, .f-label{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .f-field label .req, .f-label .req{color:var(--brass)}
+  .f-field input[type=text],.f-field input[type=email],.f-field input[type=tel],.f-field input[type=number],.f-field input[type=date],.f-field select,.f-field textarea{font:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:5px;padding:11px 13px;outline:none;width:100%}
+  .f-field input:focus,.f-field select:focus,.f-field textarea:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(154,123,63,.16)}
+  .f-field textarea{min-height:90px;resize:vertical}
+  .pills{display:flex;flex-wrap:wrap;gap:8px}
+  .pills input{position:absolute;opacity:0;pointer-events:none}
+  .pills label{font-size:13.5px;font-weight:500;padding:9px 15px;border:1px solid var(--line);border-radius:99px;cursor:pointer;color:var(--ink-2);background:#fff}
+  .pills label:hover{border-color:var(--brass)}
+  .pills input:checked + label{border-color:var(--brass);background:#f4ecdc;color:var(--ink);font-weight:600}
+  .pills input:focus-visible + label{outline:2px solid var(--brass);outline-offset:2px}
+  .f-consent{display:flex;gap:12px;align-items:flex-start;background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:16px 18px;font-size:13.5px;color:var(--ink-2);margin-top:22px;cursor:pointer}
+  .f-consent input{margin-top:3px;flex:none}
+  .f-nav{display:flex;justify-content:space-between;gap:12px;padding:22px 30px 28px;border-top:1px solid var(--line);margin-top:20px}
+  .f-review .r-row{display:grid;grid-template-columns:170px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .f-review .r-row .k{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+  .f-done{display:none;padding:8px 30px 30px}
+  .f-done.on{display:block}
+  .f-done h3{font-family:'Fraunces',serif;font-weight:560;font-size:24px;margin:10px 0 8px}
+  .f-done p{font-size:14.5px;color:var(--muted);max-width:56ch}
+  .f-done pre{margin:18px 0 14px}
+  .f-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);border:1px solid var(--brass);border-radius:99px;padding:5px 12px;margin-bottom:8px}
+  .copy-btn-light{background:transparent;border:1.5px solid var(--ink);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 16px;border-radius:4px;cursor:pointer}
+  .copy-btn-light:hover{background:var(--ink);color:var(--paper)}
 
-  /* lender cards */
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:28px 26px;display:flex;flex-direction:column;gap:12px}
   .card .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);border:1px solid var(--line);align-self:flex-start;padding:4px 10px;border-radius:99px}
   .card h3{font-family:'Fraunces',serif;font-weight:560;font-size:21px}
   .card p{font-size:14.5px;color:var(--muted);flex:1}
-
-  /* after submit */
-  .after{margin-top:48px;border:1px solid var(--line);border-radius:6px;background:var(--card);display:grid;grid-template-columns:auto 1fr 1fr 1fr}
-  .after .lab{padding:24px 22px;border-right:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);font-weight:500;display:flex;align-items:center}
-  .after .ph{padding:24px 22px;border-right:1px solid var(--line)}
-  .after .ph:last-child{border-right:none}
-  .after .ph h4{font-family:'Fraunces',serif;font-weight:560;font-size:16px;margin-bottom:6px}
-  .after .ph p{font-size:13.5px;color:var(--muted)}
-
-  /* faq */
-  .faq-list{border-top:1px solid var(--ink)}
-  .faq{border-bottom:1px solid var(--line)}
-  .faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:20px 4px;font-family:'Fraunces',serif;font-weight:560;font-size:18.5px;line-height:1.3;color:var(--ink)}
-  .faq summary::-webkit-details-marker{display:none}
-  .faq summary::after{content:"+";font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--brass);flex:none;transition:transform .15s ease}
-  .faq[open] summary::after{transform:rotate(45deg)}
-  .faq p{padding:0 4px 22px;font-size:14.5px;color:var(--muted);max-width:64ch}
-  .faq p a{color:var(--ink-2)}
   .pre-light{background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:22px 24px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.6px;line-height:1.7;color:var(--ink-2)}
   .lender-sample{margin-top:36px}
   .lender-sample h3{font-family:'Fraunces',serif;font-weight:560;font-size:19px;margin-bottom:12px}
 
-  /* agents */
   .agents{background:var(--navy);color:#e8ecf1;border-bottom:none}
   .agents .eyebrow{color:var(--brass-soft)}
   .agents h2{color:#fff}
   .agents .sec-head p{color:#9fb0c3}
-  .agents p.lead{max-width:62ch;color:#c6d0dc;font-size:16px;margin-bottom:36px}
+  .agents p.lead{max-width:62ch;color:#c6d0dc;font-size:16px;margin-bottom:30px}
   pre{background:#0c1a2b;border:1px solid #24384f;border-radius:6px;padding:26px 28px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.8px;line-height:1.65;color:#c9d8e8}
-  .pre-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .f-done pre{background:#fbf8f1;border-color:var(--line);color:var(--ink-2)}
+  .pre-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;margin-top:34px;gap:14px}
   .pre-head span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#7e93a9}
-  .copy-btn{background:transparent;border:1px solid #3a5068;color:#c9d8e8;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:7px 14px;border-radius:4px;cursor:pointer}
+  .copy-btn{background:transparent;border:1px solid #3a5068;color:#c9d8e8;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:7px 14px;border-radius:4px;cursor:pointer;flex:none}
   .copy-btn:hover{border-color:var(--brass-soft);color:#fff}
-  .agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:44px}
-  .agent-grid h3{font-family:'Fraunces',serif;font-weight:560;font-size:19px;color:#fff;margin-bottom:12px}
-  .agent-grid p, .agent-grid li{font-size:14.5px;color:#9fb0c3}
-  .agent-grid ol{padding-left:20px}
-  .agent-grid ol li{margin-bottom:10px}
-  .agents .callout{background:#0c1a2b;border-color:#24384f;border-left-color:var(--brass-soft);color:#c6d0dc;margin-top:24px}
+  .agents .callout{background:#0c1a2b;border-color:#24384f;border-left-color:var(--brass-soft);color:#c6d0dc;margin-top:30px}
   .agents .callout strong{color:#fff}
+  .agents a.inline{color:#c9d8e8;border-bottom:1px solid #3a5068;text-decoration:none}
+  .agents a.inline:hover{color:#fff}
 
   footer{padding:56px 0 64px}
   .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
@@ -174,50 +176,47 @@
   footer .brandline{font-family:'Fraunces',serif;font-size:17px;font-weight:560;margin-bottom:8px}
 
   .mobile-cta{display:none}
-  @media (max-width:900px){
-    .mobile-cta{display:block;position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(246,244,238,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
-    .mobile-cta .btn{display:block;text-align:center}
-    body{padding-bottom:78px}
-  }
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto}
-    *,*::before,*::after{transition:none !important;animation:none !important}
-  }
+
   @media (max-width:900px){
     .steps{grid-template-columns:1fr 1fr}
     .step:nth-child(2){border-right:none}
     .step{border-bottom:1px solid var(--line)}
     .step:nth-child(3),.step:nth-child(4){border-bottom:none}
     .cards{grid-template-columns:1fr}
-    .two-col{grid-template-columns:1fr;gap:36px}
-    .agent-grid{grid-template-columns:1fr}
-    .hero-grid{grid-template-columns:1fr;gap:36px}
-    .quote-card{margin-top:0}
-    .hero .hero-note{display:none}
-    .after{grid-template-columns:1fr}
-    .after .lab{border-right:none;border-bottom:1px solid var(--line);padding:16px 22px}
-    .after .ph{border-right:none;border-bottom:1px solid var(--line)}
-    .after .ph:last-child{border-bottom:none}
     .nav-links > a:not(.btn){display:none}
     .menu{display:block}
     .menu-links a.cta{display:block}
-    .brand-name{white-space:nowrap}
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .quote-card{margin-top:0}
+    .hero .hero-note{display:none}
+    .mobile-cta{display:block;position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(246,244,238,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+    .mobile-cta .btn{display:block;text-align:center}
+    body{padding-bottom:78px}
+  }
+  @media (max-width:640px){
+    .f-grid{grid-template-columns:1fr}
   }
   @media (max-width:560px){
-    .qc-cols,.qc-row{padding:12px 14px}
-    .qc-head,.qc-illus,.qc-foot{padding-left:14px;padding-right:14px}
-    .qc-row .rate{font-size:17px}
-    .qc-row .num{font-size:12px}
-    .fullw{display:none}
-    .nav-links > a.btn{display:none}
-    .brand-name{font-size:14px}
-    .nav-in{gap:10px}
     .steps{grid-template-columns:1fr}
     .step{border-right:none;border-bottom:1px solid var(--line)}
     .step:last-child{border-bottom:none}
     .lane{grid-template-columns:40px 1fr;grid-template-rows:auto auto}
     .lane p{grid-column:2}
-    header.hero{padding:72px 0 60px}
+    header.hero{padding:64px 0 56px}
+    .nav-links > a.btn{display:none}
+    .brand-name{font-size:14px}
+    .nav-in{gap:10px}
+    .qc-cols,.qc-row{padding:12px 14px}
+    .qc-head,.qc-illus,.qc-foot{padding-left:14px;padding-right:14px}
+    .qc-row .rate{font-size:17px}
+    .qc-row .num{font-size:12px}
+    .fullw{display:none}
+    .f-step,.f-meta,.f-nav,.f-done{padding-left:20px;padding-right:20px}
+    .f-review .r-row{grid-template-columns:1fr;gap:2px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{transition:none !important;animation:none !important}
   }
 </style>
 </head>
@@ -235,18 +234,15 @@
       <a href="#lanes">Products</a>
       <a href="#lenders">For lenders</a>
       <a href="#agents">For agents</a>
-      <a href="#faq">FAQ</a>
-      <a class="btn sm" href="https://docs.google.com/forms/d/e/1FAIpQLSf4aSnVUgbuLZBY7al9B7nZREiuUOY6RG76RujXuQgLqkVZVQ/viewform?usp=header" target="_blank" rel="noopener">Submit a scenario</a>
+      <a class="btn sm" href="#intake">Submit a scenario</a>
       <details class="menu">
         <summary>Menu</summary>
         <div class="menu-links">
-          <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSf4aSnVUgbuLZBY7al9B7nZREiuUOY6RG76RujXuQgLqkVZVQ/viewform?usp=header" target="_blank" rel="noopener">Submit a scenario</a>
+          <a class="cta" href="#intake">Submit a scenario</a>
           <a href="#how">How it works</a>
           <a href="#lanes">Products</a>
-          <a href="#intake">For brokers</a>
           <a href="#lenders">For lenders</a>
           <a href="#agents">For agents</a>
-          <a href="#faq">FAQ</a>
         </div>
       </details>
     </div>
@@ -258,16 +254,15 @@
    <div>
     <span class="eyebrow">A loan scenario exchange for investment property</span>
     <h1>One scenario in. <em>Fitting lenders</em> price&nbsp;it.</h1>
-    <p>Submit a deal once. It is checked against each panel lender's niche (product, state, property type, loan size), and every fitting one receives a single structured rate request. Quotes come back side by side; the broker chooses who to engage.</p>
+    <p>Send the deal once. Every fitting panel lender gets one rate request. Quotes come back side by side; you choose.</p>
     <div class="hero-cta">
-      <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSf4aSnVUgbuLZBY7al9B7nZREiuUOY6RG76RujXuQgLqkVZVQ/viewform?usp=header" target="_blank" rel="noopener">Submit a scenario</a>
+      <a class="btn" href="#intake">Submit a scenario</a>
       <a class="btn ghost" href="#how">See how it works</a>
     </div>
-    <p class="hero-note">People and AI agents use the same intake. No personal documents, ever. Scenarios only, shared with lenders only with your consent.</p>
+    <p class="hero-note">No documents, no sign-in. Scenarios only, shared with lenders only with your consent.</p>
     <div class="trust-row">
       <span>Panel lenders quote each deal</span>
-      <span>Scenarios only, never documents</span>
-      <span>Your name stays back until you choose a lender</span>
+      <span>Your name stays back until you choose</span>
       <span>Free for brokers</span>
     </div>
    </div>
@@ -290,28 +285,27 @@
         <span class="eyebrow">The flow</span>
         <h2>How a deal moves</h2>
       </div>
-      <p>Built so a broker touches a deal once and a lender only ever sees deals inside its box.</p>
     </div>
     <div class="steps">
       <div class="step">
         <div class="n">01</div>
         <h3>Submit once</h3>
-        <p>The broker completes one intake: contact, loan, property, borrower, consent. A few minutes, no documents.</p>
+        <p>One intake, a few minutes, no documents.</p>
       </div>
       <div class="step">
         <div class="n">02</div>
         <h3>Fit check</h3>
-        <p>The scenario is matched against each panel lender's niche lanes and current overlays. Lenders outside the box never see it.</p>
+        <p>Matched against each panel lender's niche. Lenders outside the box never see it.</p>
       </div>
       <div class="step">
         <div class="n">03</div>
         <h3>Rate requests</h3>
-        <p>Every fitting panel lender receives one structured rate request with everything needed to price the deal.</p>
+        <p>Every fitting lender gets one structured request.</p>
       </div>
       <div class="step">
         <div class="n">04</div>
         <h3>Side by side</h3>
-        <p>Every quote lands in one comparison (rate, points, prepay, exceptions), and the broker chooses who to engage.</p>
+        <p>Quotes land in one comparison. You choose who to engage.</p>
       </div>
     </div>
   </div>
@@ -324,7 +318,7 @@
         <span class="eyebrow">Products</span>
         <h2>Lanes we route</h2>
       </div>
-      <p>Deals outside these lanes can still be submitted; they are reviewed by hand.</p>
+      <p>Outside these lanes? Submit anyway; it is reviewed by hand.</p>
     </div>
     <div class="lanes">
       <div class="lane"><span class="n">01</span><h3>DSCR rental</h3><p>Long-term rental loans qualified on the property's cash flow.</p></div>
@@ -332,230 +326,465 @@
       <div class="lane"><span class="n">03</span><h3>Bridge</h3><p>Fast interim financing while a deal transitions.</p></div>
       <div class="lane"><span class="n">04</span><h3>Ground-up construction</h3><p>Draw-based funding from lot to completion.</p></div>
       <div class="lane"><span class="n">05</span><h3>Cash-out refinance</h3><p>Pull equity out of an existing investment property.</p></div>
-      <div class="lane"><span class="n">06</span><h3>Conforming (agency)</h3><p>Conventional Fannie Mae / Freddie Mac loans, investment or owner-occupied, sized under the county conforming limit.</p></div>
+      <div class="lane"><span class="n">06</span><h3>Conforming (agency)</h3><p>Conventional Fannie / Freddie pricing, under the county limit.</p></div>
     </div>
-    <div class="callout"><strong>A note on conforming.</strong> Conforming loans on a primary or second home are consumer-purpose mortgages with their own rules; those scenarios are reviewed before any lender sees them. Investment-property conforming deals flow like every other lane.</div>
+    <div class="callout"><strong>A note on conforming.</strong> Owner-occupied conforming loans are consumer-purpose mortgages with their own rules; those scenarios are reviewed before any lender sees them. Investment-property conforming deals flow like every other lane.</div>
   </div>
 </section>
-
 <section id="intake">
-  <div class="wrap two-col">
-    <div>
-      <span class="eyebrow">For brokers</span>
-      <h2>One form, once</h2>
-      <p style="margin-top:16px;color:var(--muted);font-size:15px;max-width:44ch">The intake asks for the deal, not documents. It reaches only the lenders whose niche fits, and only with the consent box checked.</p>
-      <div class="hero-cta" style="margin-top:28px">
-        <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSf4aSnVUgbuLZBY7al9B7nZREiuUOY6RG76RujXuQgLqkVZVQ/viewform?usp=header" target="_blank" rel="noopener">Open the intake form</a>
-      </div>
-    </div>
-    <ul class="check-list">
-      <li>Contact details and role (borrower or broker)</li>
-      <li>Loan purpose, product, amount, and target closing date</li>
-      <li>Property address, type, units, price or value, rehab budget, ARV</li>
-      <li>Borrower entity, credit band, experience, and liquidity</li>
-      <li>DSCR deals: rent, taxes, insurance, HOA</li>
-      <li>Conforming deals: occupancy and loan size vs. the county limit</li>
-      <li>Exit strategy and anything else worth knowing</li>
-    </ul>
-  </div>
-  <div class="wrap">
-    <div class="after">
-      <div class="lab">After you submit</div>
-      <div class="ph">
-        <h4>Fit check</h4>
-        <p>The scenario is checked against each panel lender's niche and current overlays. Lenders outside the box never see it.</p>
-      </div>
-      <div class="ph">
-        <h4>Rate requests out</h4>
-        <p>Each fitting panel lender gets one structured request. The borrower's name stays back.</p>
-      </div>
-      <div class="ph">
-        <h4>Quotes, side by side</h4>
-        <p>Rate, points, prepay and exceptions in one comparison, sent to the contact on the scenario. The broker chooses who to engage.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="faq">
   <div class="wrap">
     <div class="sec-head">
       <div>
-        <span class="eyebrow">Questions</span>
-        <h2>What brokers ask</h2>
+        <span class="eyebrow">Submit a scenario</span>
+        <h2>Three minutes. No documents.</h2>
       </div>
+      <p>Test mode: your entry is checked on this page and shown to you as the exact record we would send. Nothing leaves your browser until submissions are switched on.</p>
     </div>
-    <div class="faq-list">
-      <details class="faq">
-        <summary>What does this cost a broker?</summary>
-        <p>Nothing. Submitting a scenario and receiving quotes is free for brokers.</p>
-      </details>
-      <details class="faq">
-        <summary>Who sees my scenario?</summary>
-        <p>Only panel lenders whose niche it fits, and only after you consent on the intake. Your name and contact details stay with the exchange until you choose a lender and decide to engage it.</p>
-      </details>
-      <details class="faq">
-        <summary>What do I need to submit?</summary>
-        <p>The deal itself: loan, property, borrower profile, exit strategy. No personal documents, no bank statements, no credit pull.</p>
-      </details>
-      <details class="faq">
-        <summary>Can my AI agent submit for me?</summary>
-        <p>Yes. Agents are first-class submitters: they read the same intake, fill it field for field, and name themselves in the notes. Your quotes still come back to you. See <a href="#agents">For agents</a>.</p>
-      </details>
-      <details class="faq">
-        <summary>What if my deal fits no lane?</summary>
-        <p>Submit it anyway. Anything outside a listed lane is reviewed by hand and routed where it fits, or declined with a reason.</p>
-      </details>
-      <details class="faq">
-        <summary>Is a submission a loan application?</summary>
-        <p>No. It is a request for indicative pricing. No commitment to lend is created on either side until you engage a lender directly.</p>
-      </details>
-    </div>
+    <form class="form-card" id="ilx-form" novalidate>
+      <div class="f-progress"><div class="f-bar" id="f-bar"></div></div>
+      <div class="f-meta"><span id="f-stepname">Product</span><span id="f-stepno">Step 1 of 8</span></div>
+
+      <fieldset class="f-step on" data-step="1" data-name="Product">
+        <h3>What kind of deal is it?</h3>
+        <p class="sub">Pick one product and the purpose.</p>
+        <div class="f-field full">
+          <span class="f-label">Product <span class="req">*</span></span>
+          <div class="pills" data-group="product">
+            <input type="radio" name="product" id="p-dscr" value="dscr_rental"><label for="p-dscr">DSCR rental</label>
+            <input type="radio" name="product" id="p-flip" value="fix_flip"><label for="p-flip">Fix &amp; flip</label>
+            <input type="radio" name="product" id="p-bridge" value="bridge"><label for="p-bridge">Bridge</label>
+            <input type="radio" name="product" id="p-guc" value="ground_up_construction"><label for="p-guc">Ground-up construction</label>
+            <input type="radio" name="product" id="p-cashout" value="cash_out_refi"><label for="p-cashout">Cash-out refi</label>
+            <input type="radio" name="product" id="p-conf" value="conforming_agency"><label for="p-conf">Conforming (agency)</label>
+          </div>
+        </div>
+        <div class="f-field full" style="margin-top:18px">
+          <span class="f-label">Purpose <span class="req">*</span></span>
+          <div class="pills" data-group="purpose">
+            <input type="radio" name="purpose" id="u-purchase" value="purchase"><label for="u-purchase">Purchase</label>
+            <input type="radio" name="purpose" id="u-refi" value="refinance"><label for="u-refi">Refinance</label>
+            <input type="radio" name="purpose" id="u-cashout" value="cash_out"><label for="u-cashout">Cash-out refinance</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="2" data-name="Property">
+        <h3>The property</h3>
+        <p class="sub">No address needed at this stage.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <label for="prop-type">Property type <span class="req">*</span></label>
+            <select id="prop-type" name="property_type" required>
+              <option value="">Select...</option>
+              <option>Single family</option>
+              <option>2-4 unit</option>
+              <option>Condo</option>
+              <option>Townhome</option>
+              <option>Small multifamily (5+)</option>
+              <option>Mixed use</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="f-field">
+            <label for="occ">Occupancy <span class="req">*</span></label>
+            <select id="occ" name="occupancy" required>
+              <option value="">Select...</option>
+              <option value="investment">Investment (non-owner-occupied)</option>
+              <option value="owner_occupied">Owner-occupied</option>
+            </select>
+          </div>
+          <div class="f-field">
+            <label for="state">State <span class="req">*</span></label>
+            <input type="text" id="state" name="state" maxlength="2" placeholder="NJ" required>
+          </div>
+          <div class="f-field">
+            <label for="zip">ZIP</label>
+            <input type="text" id="zip" name="zip" maxlength="10" placeholder="Optional">
+          </div>
+          <div class="f-field">
+            <label for="value">Est. value / purchase price <span class="req">*</span></label>
+            <input type="number" id="value" name="est_value_usd" min="1000" step="1000" placeholder="450000" required>
+          </div>
+          <div class="f-field" id="units-wrap">
+            <label for="units">Units</label>
+            <input type="number" id="units" name="units" min="1" max="40" placeholder="1">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="3" data-name="Numbers">
+        <h3>The numbers</h3>
+        <p class="sub">Rough figures are fine; lenders price the range.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <label for="amount">Loan amount <span class="req">*</span></label>
+            <input type="number" id="amount" name="loan_amount_usd" min="1000" step="1000" placeholder="337500" required>
+          </div>
+          <div class="f-field">
+            <label for="fico">Credit (FICO band) <span class="req">*</span></label>
+            <select id="fico" name="credit_band" required>
+              <option value="">Select...</option>
+              <option>780+</option>
+              <option>740-779</option>
+              <option>700-739</option>
+              <option>660-699</option>
+              <option>620-659</option>
+              <option>Below 620</option>
+            </select>
+          </div>
+          <div class="f-field">
+            <label for="vesting">Vesting</label>
+            <select id="vesting" name="vesting">
+              <option value="">Select...</option>
+              <option>LLC</option>
+              <option>Personal name</option>
+              <option>Trust</option>
+              <option>Other entity</option>
+            </select>
+          </div>
+          <div class="f-field">
+            <label for="close">Target close</label>
+            <input type="date" id="close" name="target_close">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="4" data-name="DSCR" data-show-if="dscr_rental">
+        <h3>Rental cash flow</h3>
+        <p class="sub">Only for DSCR rental deals.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <label for="rent">Monthly rent <span class="req">*</span></label>
+            <input type="number" id="rent" name="monthly_rent_usd" min="0" step="50" placeholder="3200">
+          </div>
+          <div class="f-field">
+            <label for="dscr">Known DSCR</label>
+            <input type="text" id="dscr" name="known_dscr" placeholder="Optional, e.g. 1.25">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="5" data-name="Conforming" data-show-if="conforming_agency">
+        <h3>Conforming check</h3>
+        <p class="sub">Only for conforming (agency) deals.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <span class="f-label">Under the county conforming limit? <span class="req">*</span></span>
+            <div class="pills" data-group="under_limit">
+              <input type="radio" name="under_limit" id="cl-yes" value="yes"><label for="cl-yes">Yes</label>
+              <input type="radio" name="under_limit" id="cl-no" value="no"><label for="cl-no">No / not sure</label>
+            </div>
+          </div>
+          <div class="f-field">
+            <span class="f-label">Owner-occupied? <span class="req">*</span></span>
+            <div class="pills" data-group="owner_occ">
+              <input type="radio" name="owner_occ" id="oo-no" value="no"><label for="oo-no">No, investment</label>
+              <input type="radio" name="owner_occ" id="oo-yes" value="yes"><label for="oo-yes">Yes</label>
+            </div>
+          </div>
+          <div class="f-field full">
+            <label for="conf-note">Anything lenders should know</label>
+            <textarea id="conf-note" name="conforming_note" placeholder="Optional"></textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="6" data-name="About you">
+        <h3>About you</h3>
+        <p class="sub">This stays back from lenders until you choose to engage.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <span class="f-label">You are a <span class="req">*</span></span>
+            <div class="pills" data-group="role">
+              <input type="radio" name="role" id="r-broker" value="broker"><label for="r-broker">Broker</label>
+              <input type="radio" name="role" id="r-borrower" value="borrower"><label for="r-borrower">Borrower</label>
+            </div>
+          </div>
+          <div class="f-field">
+            <label for="contact">Email or phone <span class="req">*</span></label>
+            <input type="text" id="contact" name="contact" placeholder="Where quotes come back to" required>
+          </div>
+          <div class="f-field full">
+            <label for="notes">Notes for lenders</label>
+            <textarea id="notes" name="notes" placeholder="Optional. Please leave out names, SSNs, account numbers, and documents."></textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="7" data-name="Review">
+        <h3>Review</h3>
+        <p class="sub">This is the exact record that goes to fitting lenders.</p>
+        <div class="f-review" id="f-review"></div>
+        <label class="f-consent" for="consent">
+          <input type="checkbox" id="consent" name="consent">
+          <span>Share this scenario with fitting panel lenders for pricing. My contact details stay back until I choose to engage with a lender. <span class="req">*</span></span>
+        </label>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="8" data-name="Done">
+        <div class="f-done" id="f-done">
+          <span class="f-badge">Test mode - not sent</span>
+          <h3>Checked. Here is your record.</h3>
+          <p>This is the structured scenario a lender or an agent would work from. Copy it, or submit it again once live intake is switched on.</p>
+          <div class="pre-head" style="margin-top:18px"><span>scenario.json</span><button class="copy-btn-light" id="f-copy" type="button">Copy</button></div>
+          <pre id="f-json"></pre>
+        </div>
+      </fieldset>
+
+      <div class="f-nav">
+        <button type="button" class="btn ghost" id="f-back">Back</button>
+        <button type="button" class="btn" id="f-next">Continue</button>
+      </div>
+    </form>
   </div>
 </section>
-
 <section id="lenders">
   <div class="wrap">
     <div class="sec-head">
       <div>
         <span class="eyebrow">For lenders</span>
-        <h2>How lenders plug in</h2>
+        <h2>Deals inside your niche, none outside it.</h2>
       </div>
-      <p>Each lender picks how its rates get answered, from plain email replies to a fully automatic agent.</p>
     </div>
     <div class="cards">
       <div class="card">
-        <span class="tag">Week one</span>
-        <h3>Reply by email</h3>
-        <p>Each fitting scenario lands with the lender's account executive as one structured rate request. The AE replies with pricing; every quote is logged.</p>
+        <span class="tag">Fit</span>
+        <h3>Only your lane</h3>
+        <p>Tell us the box you price in. Scenarios outside it never reach your desk.</p>
       </div>
       <div class="card">
-        <span class="tag">Integrated</span>
-        <h3>Guidelines on file</h3>
-        <p>The lender's niche rules and current rate sheets are kept on file, so fit and indicative pricing are answered automatically, straight from the current sheet.</p>
+        <span class="tag">Speed</span>
+        <h3>One structured request</h3>
+        <p>The same fields every time, so pricing takes minutes, not an email chain.</p>
       </div>
       <div class="card">
-        <span class="tag">Most automatic</span>
-        <h3>The lender's own agent</h3>
-        <p>The lender runs its own agent holding its guidelines and rates. It answers fit and pricing directly as scenarios arrive, under the lender's own sharing rules.</p>
+        <span class="tag">Volume</span>
+        <h3>Broker flow</h3>
+        <p>Brokers send one scenario and stop shopping inboxes. You see that volume first.</p>
       </div>
     </div>
-    <div class="callout" style="margin-top:32px"><strong>What a lender needs to join:</strong> its niche lanes (products, states, property types, loan size range), a current rate sheet or named pricing contact, one inbox for scenario requests, and a typical quote turnaround time. In return it sees only scenarios that fit, each as one structured request, with a log of everything it was sent and every quote it returned.</div>
     <div class="lender-sample">
       <h3>What a rate request looks like</h3>
-      <pre class="pre-light">RATE REQUEST #1042 - DSCR RENTAL - NJ
-Loan:      $412,500 purchase - target close 2026-12-15
-Property:  SFR, 1 unit - value $550,000 - rent $3,400/mo
-Borrower:  LLC - 720-739 credit band - 4+ deals closed - $85,000 liquidity
-DSCR:      taxes $620/mo - insurance $140/mo - no HOA
-Exit:      hold
-Reply with: rate - points - LTV - prepay - exceptions</pre>
+      <pre class="pre-light">{
+  "request": "rate_request",
+  "product": "dscr_rental",
+  "purpose": "purchase",
+  "state": "NJ",
+  "est_value_usd": 450000,
+  "loan_amount_usd": 337500,
+  "ltv": 0.75,
+  "credit_band": "740-779",
+  "monthly_rent_usd": 3200,
+  "vesting": "LLC",
+  "target_close": "within 30 days"
+}</pre>
     </div>
   </div>
 </section>
 
-<section class="agents" id="agents">
+<section id="agents" class="agents">
   <div class="wrap">
     <div class="sec-head">
       <div>
         <span class="eyebrow">For AI agents</span>
-        <h2>Agents are first-class submitters</h2>
+        <h2>Readable by your agent</h2>
       </div>
-      <p>Any AI assistant that can fill a web form can work with the exchange directly.</p>
     </div>
-    <p class="lead">An agent submits the same way a person does: it reads the scenario format below and fills the same intake form, field for field. This page is plain, stable text, so any agent can read it end to end. One submission per deal; scenarios only, never personal documents.</p>
-    <p class="lead" style="margin-bottom:36px;margin-top:-24px;font-size:13.5px">Machine-readable: <a href="llms.txt" style="color:#c9d8e8;border-bottom:1px solid #3a5068">llms.txt</a> &middot; <a href="scenario.schema.json" style="color:#c9d8e8;border-bottom:1px solid #3a5068">scenario.schema.json</a></p>
-    <div class="pre-head">
-      <span>scenario.json - the intake format</span>
-      <button class="copy-btn" data-copy="schema" type="button">Copy</button>
-    </div>
-    <pre id="schema">{
-  "contact": {
-    "name": "", "company": "", "phone": "", "email": "",
-    "role": "borrower | broker | agent"
-  },
-  "loan": {
-    "purpose": "purchase | refinance",
-    "product": "DSCR rental | fix & flip | bridge | ground-up construction | cash-out refi | conforming | other",
-    "amount": 0, "target_close": "YYYY-MM-DD"
-  },
+    <p class="lead">The site ships a machine-readable <a class="inline" href="/investor-loan-exchange/llms.txt">llms.txt</a> and a JSON <a class="inline" href="/investor-loan-exchange/scenario.schema.json">scenario schema</a>. An agent can build a valid scenario from a conversation and hand you the file to submit here.</p>
+    <div class="pre-head"><span>scenario.json - worked example</span><button class="copy-btn" id="copy-scenario" type="button">Copy</button></div>
+    <pre id="scenario-example">{
+  "schema_version": "1.1",
+  "prepared_by": "your-agent",
+  "product": "dscr_rental",
+  "purpose": "purchase",
   "property": {
-    "address": "", "type": "SFR | 2-4 units | condo | multifamily 5+ | mixed use",
-    "units": 1, "price_or_value": 0, "rehab_budget": 0, "arv": 0
+    "type": "single_family",
+    "state": "NJ",
+    "est_value_usd": 450000
   },
-  "borrower": {
-    "entity": "LLC | personal",
-    "credit_band": "", "experience": "0 | 1-3 | 4+", "liquidity": 0
-  },
-  "dscr": { "rent": 0, "taxes": 0, "insurance": 0, "hoa": 0 },
-  "conforming": { "occupancy": "investment | second home | primary", "at_or_under_county_limit": true },
-  "exit_strategy": "sell | refinance | hold",
-  "notes": ""
+  "loan_amount_usd": 337500,
+  "credit_band": "740-779",
+  "monthly_rent_usd": 3200,
+  "vesting": "LLC"
 }</pre>
-    <div class="agent-grid">
-      <div>
-        <h3>Submitting by voice</h3>
-        <p style="margin-bottom:14px">A voice note reaches the exchange through an assistant that can hear it:</p>
-        <ol>
-          <li>The broker's own agent transcribes the voice note and fills the intake form from it. Works today, no setup on this side.</li>
-          <li>Planned: the broker sends the voice note by WhatsApp to the exchange's assistant, which transcribes it and replies with the filled-in scenario to confirm before anything is submitted.</li>
-        </ol>
-      </div>
-      <div>
-        <h3>Ground rules for agents</h3>
-        <p style="margin-bottom:14px">The contact fields carry the broker's or borrower's details, not the agent's. Name the preparing agent under "anything else" in the form. Quotes and questions always come back to the person on the scenario - the agent prepares, the broker decides.</p>
-        <div class="callout" style="margin-top:0"><strong>Same consent.</strong> Agent submissions are covered by the same consent checkbox: scenarios are shared with lenders only, no personal documents, and the broker can be contacted about the deal.</div>
-      </div>
-    </div>
-    <div style="margin-top:44px">
-      <h3 style="font-family:'Fraunces',serif;font-weight:560;font-size:19px;color:#fff;margin-bottom:12px">Hand your assistant one line</h3>
-      <p style="font-size:14.5px;color:#9fb0c3;margin-bottom:14px;max-width:64ch">A broker using any AI assistant can start with this prompt. The assistant reads the machine-readable brief, interviews for the fields, and prepares the submission - the broker reviews before anything goes.</p>
-      <div class="pre-head">
-        <span>broker-prompt.txt</span>
-        <button class="copy-btn" data-copy="brokerPrompt" type="button">Copy</button>
-      </div>
-      <pre id="brokerPrompt">Read https://thehistoryhotseat.github.io/investor-loan-exchange/llms.txt
-and the scenario format it links to. Interview me for each field of my
-deal, fill the intake form field for field, and show me the filled
-scenario before submitting. The contact fields carry my details, not
-yours. Name yourself as the preparing agent in the notes.</pre>
-    </div>
+    <div class="callout"><strong>For your agent:</strong> fetch <a class="inline" href="/investor-loan-exchange/llms.txt">/investor-loan-exchange/llms.txt</a> and <a class="inline" href="/investor-loan-exchange/scenario.schema.json">/investor-loan-exchange/scenario.schema.json</a>, validate against the schema, and present the result for review. Never include SSNs, account numbers, or documents.</div>
   </div>
 </section>
-
-<div class="mobile-cta"><a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSf4aSnVUgbuLZBY7al9B7nZREiuUOY6RG76RujXuQgLqkVZVQ/viewform?usp=header" target="_blank" rel="noopener">Submit a scenario</a></div>
 
 <footer>
   <div class="wrap foot">
     <div>
       <div class="brandline">Investor Loan Exchange</div>
-      <p class="small">A scenario routing desk for investment-property lending. Submitting a scenario is a request for indicative pricing, not a loan application or a commitment to lend. Scenarios are shared with lenders only with the submitter's consent.</p>
+      <p class="small">A scenario-routing desk for investment-property lending. Not a lender and not a broker; quotes come from panel lenders, and any loan is between you and the lender you choose.</p>
     </div>
-    <a class="btn ghost sm" href="https://docs.google.com/forms/d/e/1FAIpQLSf4aSnVUgbuLZBY7al9B7nZREiuUOY6RG76RujXuQgLqkVZVQ/viewform?usp=header" target="_blank" rel="noopener">Submit a scenario</a>
+    <p class="small">Sample figures on this page are illustrative, not rates or offers.</p>
   </div>
 </footer>
 
-<script>
-document.querySelectorAll('.menu-links a').forEach(function(a){
-  a.addEventListener('click', function(){ a.closest('details').removeAttribute('open'); });
-});
-document.querySelectorAll('.copy-btn').forEach(function (btn) {
-  btn.addEventListener('click', function () {
-  var text = document.getElementById(btn.getAttribute('data-copy')).innerText;
-  function done(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1800); }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(done, function(){ fallback(); });
-  } else { fallback(); }
-  function fallback(){
-    var ta = document.createElement('textarea');
-    ta.value = text; document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); done(); } catch(e) { btn.textContent = 'Copy failed'; }
-    document.body.removeChild(ta);
-  }
-  });
-});
-</script>
+<div class="mobile-cta"><a class="btn" href="#intake">Submit a scenario</a></div>
 
+<script>
+(function(){
+  var form = document.getElementById('ilx-form');
+  var steps = Array.prototype.slice.call(form.querySelectorAll('.f-step'));
+  var bar = document.getElementById('f-bar');
+  var stepName = document.getElementById('f-stepname');
+  var stepNo = document.getElementById('f-stepno');
+  var backBtn = document.getElementById('f-back');
+  var nextBtn = document.getElementById('f-next');
+  var current = 0;
+
+  function product(){
+    var el = form.querySelector('input[name="product"]:checked');
+    return el ? el.value : '';
+  }
+  function visibleSteps(){
+    var p = product();
+    return steps.filter(function(s){
+      var cond = s.getAttribute('data-show-if');
+      return !cond || cond === p;
+    });
+  }
+  function show(i){
+    var vis = visibleSteps();
+    if (i < 0) i = 0;
+    if (i > vis.length - 1) i = vis.length - 1;
+    current = i;
+    steps.forEach(function(s){ s.classList.remove('on'); });
+    var s = vis[i];
+    s.classList.add('on');
+    stepName.textContent = s.getAttribute('data-name');
+    stepNo.textContent = 'Step ' + (i + 1) + ' of ' + vis.length;
+    bar.style.width = Math.round(((i + 1) / vis.length) * 100) + '%';
+    backBtn.disabled = (i === 0);
+    var last = (i === vis.length - 1);
+    var review = s.getAttribute('data-name') === 'Review';
+    nextBtn.textContent = review ? 'Check my entry' : (last ? 'Done' : 'Continue');
+    nextBtn.style.display = last ? 'none' : '';
+    if (review) renderReview();
+    form.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  function validate(step){
+    var ok = true;
+    var name = step.getAttribute('data-name');
+    if (name === 'Done') return true;
+    var radios = {};
+    step.querySelectorAll('input[type=radio]').forEach(function(r){ radios[r.name] = true; });
+    Object.keys(radios).forEach(function(n){
+      if (!step.querySelector('input[name="' + n + '"]:checked')) ok = false;
+    });
+    step.querySelectorAll('[required]').forEach(function(f){
+      if (!f.value || (f.type === 'number' && isNaN(parseFloat(f.value)))) ok = false;
+    });
+    if (name === 'Review' && !document.getElementById('consent').checked) ok = false;
+    if (!ok) {
+      step.style.outline = '2px solid #b3432e';
+      setTimeout(function(){ step.style.outline = 'none'; }, 900);
+    }
+    return ok;
+  }
+  function val(n){
+    var el = form.querySelector('[name="' + n + '"]');
+    if (!el) return '';
+    if (el.type === 'radio') {
+      var c = form.querySelector('input[name="' + n + '"]:checked');
+      return c ? c.value : '';
+    }
+    return el.value || '';
+  }
+  function label(map, v){ return map[v] || v || '-'; }
+  var productLabels = {dscr_rental:'DSCR rental', fix_flip:'Fix & flip', bridge:'Bridge', ground_up_construction:'Ground-up construction', cash_out_refi:'Cash-out refi', conforming_agency:'Conforming (agency)'};
+  function money(n){
+    var v = parseFloat(n);
+    if (isNaN(v)) return n || '-';
+    return '$' + v.toLocaleString('en-US');
+  }
+  function renderReview(){
+    var rows = [];
+    function row(k, v){ rows.push('<div class="r-row"><span class="k">' + k + '</span><span>' + (v || '-') + '</span></div>'); }
+    row('Product', label(productLabels, val('product')));
+    row('Purpose', val('purpose').replace('_', ' '));
+    row('Property', [val('property_type'), val('occupancy') === 'investment' ? 'investment' : (val('occupancy') || '')].filter(Boolean).join(' - '));
+    row('Location', (val('state') || '') + (val('zip') ? ' ' + val('zip') : ''));
+    row('Value / price', money(val('est_value_usd')));
+    if (val('units')) row('Units', val('units'));
+    row('Loan amount', money(val('loan_amount_usd')));
+    row('Credit band', val('credit_band'));
+    if (val('vesting')) row('Vesting', val('vesting'));
+    if (val('target_close')) row('Target close', val('target_close'));
+    if (product() === 'dscr_rental' && val('monthly_rent_usd')) row('Monthly rent', money(val('monthly_rent_usd')));
+    if (product() === 'conforming_agency') {
+      row('Under county limit', val('under_limit'));
+      row('Owner-occupied', val('owner_occ'));
+    }
+    row('You are a', val('role'));
+    row('Quotes to', val('contact'));
+    if (val('notes')) row('Notes', val('notes'));
+    document.getElementById('f-review').innerHTML = rows.join('');
+  }
+  function buildJson(){
+    var obj = {
+      schema_version: '1.1',
+      prepared_by: 'ilx-intake',
+      product: val('product'),
+      purpose: val('purpose'),
+      property: {
+        type: val('property_type'),
+        occupancy: val('occupancy'),
+        state: (val('state') || '').toUpperCase(),
+        est_value_usd: parseFloat(val('est_value_usd')) || null
+      },
+      loan_amount_usd: parseFloat(val('loan_amount_usd')) || null,
+      credit_band: val('credit_band'),
+      consent: { share_with_lenders: true, contact_withheld_until_engaged: true }
+    };
+    if (val('zip')) obj.property.zip = val('zip');
+    if (val('units')) obj.property.units = parseInt(val('units'), 10);
+    if (val('vesting')) obj.vesting = val('vesting');
+    if (val('target_close')) obj.target_close = val('target_close');
+    if (product() === 'dscr_rental' && val('monthly_rent_usd')) obj.monthly_rent_usd = parseFloat(val('monthly_rent_usd'));
+    if (product() === 'conforming_agency') {
+      obj.conforming = { under_county_limit: val('under_limit'), owner_occupied: val('owner_occ') };
+    }
+    if (val('notes')) obj.notes = val('notes');
+    return JSON.stringify(obj, null, 2);
+  }
+  function finish(){
+    document.getElementById('f-json').textContent = buildJson();
+    document.getElementById('f-done').classList.add('on');
+  }
+  nextBtn.addEventListener('click', function(){
+    var vis = visibleSteps();
+    var step = vis[current];
+    var name = step.getAttribute('data-name');
+    if (name === 'Done') return;
+    if (!validate(step)) return;
+    if (name === 'Review') {
+      finish();
+      show(current + 1);
+      return;
+    }
+    show(current + 1);
+  });
+  backBtn.addEventListener('click', function(){ show(current - 1); });
+  form.addEventListener('change', function(e){
+    if (e.target.name === 'product') { show(0); }
+  });
+  form.addEventListener('submit', function(e){ e.preventDefault(); });
+
+  document.getElementById('f-copy').addEventListener('click', function(){
+    navigator.clipboard.writeText(document.getElementById('f-json').textContent).then(function(){
+      document.getElementById('f-copy').textContent = 'Copied';
+    });
+  });
+  var copyScenario = document.getElementById('copy-scenario');
+  if (copyScenario) copyScenario.addEventListener('click', function(){
+    navigator.clipboard.writeText(document.getElementById('scenario-example').textContent).then(function(){
+      copyScenario.textContent = 'Copied';
+    });
+  });
+  show(0);
+})();
+</script>
 </body>
 </html>
-
