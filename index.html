@@ -1618,6 +1618,7 @@
       var n = rs[i === -1 ? (d === 1 ? 0 : rs.length - 1) : (i + d + rs.length) % rs.length];
       n.checked = true;
       n.focus();
+      n.dispatchEvent(new Event('input', {bubbles: true}));
       n.dispatchEvent(new Event('change', {bubbles: true}));
     });
   });
