@@ -115,6 +115,7 @@
   .f-meta{display:flex;justify-content:space-between;padding:20px 30px 0;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   .f-step{display:none;padding:6px 30px;border:none}
   .f-step.on{display:block}
+  .f-step.on + .f-step.on{border-top:1px solid var(--line);margin-top:14px;padding-top:22px}
   .f-step h3{font-family:'Fraunces',serif;font-weight:560;font-size:25px;margin:12px 0 6px}
   .f-step .sub{font-size:14px;color:var(--muted);margin-bottom:24px}
   .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -772,27 +773,39 @@
     var el = form.querySelector('input[name="product"]:checked');
     return el ? el.value : '';
   }
-  function visibleSteps(){
-    var p = product();
-    return steps.filter(function(s){
-      var cond = s.getAttribute('data-show-if');
-      return !cond || cond === p;
+  function screensFor(p){
+    var defs = [
+      {name:'The deal', names:['Product','Property']},
+      {name:'Numbers', names:['Numbers']},
+      {name:'Details', names:['DSCR','Rehab','Conforming','Preferences']},
+      {name:'Review & you', names:['About you','Review']},
+      {name:'Done', names:['Done']}
+    ];
+    var out = [];
+    defs.forEach(function(d){
+      var els = steps.filter(function(s){
+        if (d.names.indexOf(s.getAttribute('data-name')) < 0) return false;
+        var cond = s.getAttribute('data-show-if');
+        return !cond || cond === p;
+      });
+      if (els.length) out.push({name:d.name, els:els});
     });
+    return out;
   }
   function show(i){
-    var vis = visibleSteps();
+    var scr = screensFor(product());
     if (i < 0) i = 0;
-    if (i > vis.length - 1) i = vis.length - 1;
+    if (i > scr.length - 1) i = scr.length - 1;
     current = i;
     steps.forEach(function(s){ s.classList.remove('on'); });
-    var s = vis[i];
-    s.classList.add('on');
-    stepName.textContent = s.getAttribute('data-name');
-    stepNo.textContent = 'Step ' + (i + 1) + ' of ' + vis.length;
-    bar.style.width = Math.round(((i + 1) / vis.length) * 100) + '%';
+    var sc = scr[i];
+    sc.els.forEach(function(s){ s.classList.add('on'); });
+    stepName.textContent = sc.name;
+    stepNo.textContent = 'Step ' + (i + 1) + ' of ' + scr.length;
+    bar.style.width = Math.round(((i + 1) / scr.length) * 100) + '%';
     backBtn.disabled = (i === 0);
-    var last = (i === vis.length - 1);
-    var review = s.getAttribute('data-name') === 'Review';
+    var last = (i === scr.length - 1);
+    var review = sc.name === 'Review & you';
     nextBtn.textContent = review ? 'Check my entry' : (last ? 'Done' : 'Continue');
     nextBtn.style.display = last ? 'none' : '';
     if (review) renderReview();
@@ -1043,12 +1056,13 @@
     document.getElementById('f-done').classList.add('on');
   }
   nextBtn.addEventListener('click', function(){
-    var vis = visibleSteps();
-    var step = vis[current];
-    var name = step.getAttribute('data-name');
-    if (name === 'Done') return;
-    if (!validate(step)) return;
-    if (name === 'Review') {
+    var scr = screensFor(product());
+    var sc = scr[current];
+    if (sc.name === 'Done') return;
+    var ok = true;
+    sc.els.forEach(function(s){ if (!validate(s)) ok = false; });
+    if (!ok) return;
+    if (sc.name === 'Review & you') {
       finish();
       show(current + 1);
       return;
