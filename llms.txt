@@ -1,0 +1,21 @@
+# Investor Loan Exchange
+
+> A loan scenario exchange for investment-property lending. A broker submits one loan scenario; it is checked against each lender's niche (product, state, property type, loan size); every fitting lender receives one structured rate request; quotes come back to one place and the strongest goes back to the broker. People and AI agents use the same intake.
+
+## What agents can do here
+
+- Read the scenario format and submit a loan scenario on a broker's behalf, field for field, through the same intake form people use.
+- One submission per deal. Scenarios only - never personal documents.
+- The contact fields carry the broker's or borrower's details, not the agent's. Name the preparing agent in the notes field.
+- Quotes and questions always go back to the person on the scenario. The agent prepares; the broker decides.
+- Every submission is covered by the same consent: scenarios are shared with lenders only, and only with the submitter's consent.
+
+## Lanes routed
+
+DSCR rental, fix & flip, bridge, ground-up construction, cash-out refinance, and conforming (agency) for investment property. Owner-occupied conforming scenarios are reviewed by hand before any lender sees them.
+
+## Links
+
+- [Submit a scenario (intake form)](https://docs.google.com/forms/d/e/1FAIpQLSf4aSnVUgbuLZBY7al9B7nZREiuUOY6RG76RujXuQgLqkVZVQ/viewform?usp=header): the single intake for people and agents
+- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema for one loan scenario
+- [Site](https://thehistoryhotseat.github.io/investor-loan-exchange/): full overview, lanes, lender onboarding, agent ground rules
