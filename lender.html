@@ -6,6 +6,15 @@
 <title>Investor Loan Exchange - For lenders: join the panel</title>
 <meta name="description" content="Lenders: tell us the box you price in. Test mode - nothing is sent yet.">
 <meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:title" content="Investor Loan Exchange - For lenders: join the panel">
+<meta property="og:description" content="Tell us the box you price in. Matching scenarios come to you as one structured rate request. Test mode - nothing is sent yet.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thehistoryhotseat.github.io/investor-loan-exchange/lender.html">
+<meta property="og:image" content="https://thehistoryhotseat.github.io/investor-loan-exchange/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://thehistoryhotseat.github.io/investor-loan-exchange/lender.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,420;9..144,560&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -88,8 +97,16 @@
   section[id],header[id]{scroll-margin-top:84px}
   .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:40px;flex-wrap:wrap}
   .sec-head .eyebrow{display:block;margin-bottom:12px}
-  h2{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(28px,3.6vw,40px);line-height:1.1;letter-spacing:-.015em}
+  h1,h2{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(28px,3.6vw,40px);line-height:1.1;letter-spacing:-.015em}
   .sec-head p{max-width:42ch;color:var(--muted);font-size:15px}
+  .test-badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8a5a12;border:1px solid rgba(154,123,63,.5);background:#faf3e3;border-radius:99px;padding:5px 12px}
+  .pitch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:34px}
+  .pitch-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 24px}
+  .pitch-card h3{font-weight:600;font-size:16.5px;letter-spacing:-.01em;margin-bottom:6px}
+  .pitch-card p{font-size:14px;color:var(--ink-2);line-height:1.55}
+  .pitch-card a.inline{color:var(--ink);border-bottom:1px solid var(--line);text-decoration:none}
+  .pitch-card a.inline:hover{border-bottom-color:var(--ink)}
+  @media (max-width:760px){.pitch-grid{grid-template-columns:1fr}}
 
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
   .step{padding:0}
@@ -136,6 +153,7 @@
   .pills label:active{transform:scale(.97)}
   .pills label:hover{border-color:#a8a091}
   .pills input:checked + label{border-color:var(--ink);background:var(--ink);color:#fff;font-weight:600}
+  .pills input[type="checkbox"]:checked + label::before{content:"\2713\a0";font-weight:600}
   .pills input:focus-visible + label, .pills input.is-programmatic-focus + label{outline:2px solid var(--brass);outline-offset:2px}
   .ltv-line{display:flex;justify-content:flex-end;align-items:baseline;gap:10px;flex-wrap:wrap}
   .ltv-k{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
@@ -301,13 +319,13 @@
       <span class="brand-name">Investor Loan Exchange</span>
     </a>
     <div class="nav-links">
-      <a href="./#lenders">For lenders</a>
+      <a href="./#how">How it works</a>
       <a href="./#intake">Submit a scenario</a>
       <a href="./portal.html">Lender sign in</a>
       <details class="menu">
         <summary>Menu</summary>
         <div class="menu-links">
-          <a href="./#lenders">For lenders</a>
+          <a href="./#how">How it works</a>
           <a href="./#intake">Submit a scenario</a>
           <a href="./portal.html">Lender sign in</a>
         </div>
@@ -322,9 +340,24 @@
     <div class="sec-head">
       <div>
         <span class="eyebrow">For lenders</span>
-        <h2>Join the panel.</h2>
+        <h1>Join the panel.</h1>
       </div>
-      <p>Test mode: this page checks your entry and shows you the exact interest record kept for when lender onboarding opens. Nothing leaves your browser.</p>
+      <p><span class="test-badge">Test mode - nothing is sent yet</span></p>
+    </div>
+
+    <div class="pitch-grid">
+      <div class="pitch-card">
+        <h3>Deals in your box</h3>
+        <p>Every request matches your lanes, LTV and ticket. Scenarios outside the box never reach your desk.</p>
+      </div>
+      <div class="pitch-card">
+        <h3>One structured request</h3>
+        <p>The same fields every time, so a deal can be priced without an email chain. <a class="inline" href="./#lenders">See a sample</a>.</p>
+      </div>
+      <div class="pitch-card">
+        <h3>Free while the panel forms</h3>
+        <p>No fee to join the list. Panel lenders see broker volume first when submissions open.</p>
+      </div>
     </div>
 
     <form class="form-card" id="ilx-lender-form" novalidate>
@@ -376,7 +409,7 @@
         <h3>The box you price in</h3>
         <p class="sub">Scenarios outside it never reach your desk. Rough ranges are fine.</p>
         <div class="f-field full">
-          <span class="f-label" id="lbl-products">Products you price <span class="req">*</span></span>
+          <span class="f-label" id="lbl-products">Products you price <span class="req">*</span> <span style="font-weight:400;color:var(--muted)">- select all that apply</span></span>
           <div class="pills" role="group" aria-labelledby="lbl-products" data-group="products">
             <input type="checkbox" name="products" id="lp-dscr" value="dscr_rental"><label for="lp-dscr">DSCR rental</label>
             <input type="checkbox" name="products" id="lp-flip" value="fix_flip"><label for="lp-flip">Fix &amp; flip</label>
@@ -443,7 +476,7 @@
         <p class="sub" style="margin-top:14px">No documents now. Guideline sheets upload later, in the lender portal, after your invite and sign-in.</p>
         <label class="f-consent" for="l-consent">
           <input type="checkbox" id="l-consent" name="consent">
-          <span>Keep this record for when lender onboarding opens. Test mode: it stays in this browser and is not sent anywhere. <span class="req">*</span></span>
+          <span>Keep this record for when lender onboarding opens. It stays in this browser and is not sent anywhere. <span class="req">*</span></span>
         </label>
         <span class="f-msg" id="l-consent-msg" style="display:none">Tick the box to continue.</span>
       </fieldset>
@@ -479,6 +512,7 @@
 <footer>
   <div class="wrap">
     <p>Investor Loan Exchange. Test mode preview; lender onboarding is not open yet.</p>
+    <p style="margin-top:8px"><a href="./" style="color:inherit;border-bottom:1px solid var(--line);text-decoration:none">Site</a> &nbsp;&middot;&nbsp; <a href="./#intake" style="color:inherit;border-bottom:1px solid var(--line);text-decoration:none">Submit a scenario</a> &nbsp;&middot;&nbsp; <a href="./portal.html" style="color:inherit;border-bottom:1px solid var(--line);text-decoration:none">Lender sign in</a></p>
   </div>
 </footer>
 
