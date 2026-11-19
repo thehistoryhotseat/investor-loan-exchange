@@ -301,6 +301,8 @@
     html{scroll-behavior:auto}
     *,*::before,*::after{transition:none !important;animation:none !important}
   }
+  @keyframes stepIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .f-step.step-in{animation:stepIn .28s cubic-bezier(.22,.61,.21,1)}
   /* Reveal-on-scroll, only when JS adds .js-reveal; no-JS keeps everything visible */
   html.js-reveal .reveal{opacity:0;transform:translateY(9px);transition:opacity .45s ease,transform .45s cubic-bezier(.22,.61,.21,1)}
   html.js-reveal .reveal.on{opacity:1;transform:none}
@@ -1029,10 +1031,18 @@
     var scr = screensFor(product());
     if (i < 0) i = 0;
     if (i > scr.length - 1) i = scr.length - 1;
+    var moved = (i !== current);
     current = i;
     steps.forEach(function(s){ s.classList.remove('on'); });
     var sc = scr[i];
-    sc.els.forEach(function(s){ s.classList.add('on'); });
+    sc.els.forEach(function(s){
+      s.classList.add('on');
+      if (moved) {
+        s.classList.remove('step-in');
+        void s.offsetWidth;
+        s.classList.add('step-in');
+      }
+    });
     var laneFs = null;
     sc.els.forEach(function(s){ if (!laneFs && s.getAttribute('data-show-if')) laneFs = s; });
     stepName.textContent = (sc.name === 'Details' && laneFs) ? laneFs.getAttribute('data-name') : sc.name;
