@@ -82,6 +82,7 @@ async function loadApp(){
   $('p-email').value = lender.email || '';
   $('p-contact').value = lender.contact_name || '';
   $('p-phone').value = lender.phone || '';
+  savedContact = { name: $('p-contact').value.trim(), phone: $('p-phone').value.trim() };
 
   renderVersions();
   prefillForm();
@@ -140,6 +141,13 @@ function renderVersions(){
 
 $('app-print').addEventListener('click', () => window.print());
 
+let savedContact = { name: '', phone: '' };
+const contactDirty = () => $('p-contact').value.trim() !== savedContact.name || $('p-phone').value.trim() !== savedContact.phone;
+window.addEventListener('beforeprint', () => { $('p-dirty').classList.toggle('on', contactDirty()); });
+window.addEventListener('afterprint', () => { $('p-dirty').classList.remove('on'); });
+
+
+
 $('si-email').addEventListener('keydown', e => {
   if (e.key === 'Enter') { e.preventDefault(); $('si-send').click(); }
 });
@@ -166,6 +174,7 @@ $('p-save').addEventListener('click', async () => {
   }).eq('id', lender.id);
   $('p-save').disabled = false;
   if (error) { showMsg('err', mapDbError(error) || 'Could not save. Try again.'); return; }
+  savedContact = { name: $('p-contact').value.trim(), phone: $('p-phone').value.trim() };
   showMsg('ok', 'Contact saved.');
 });
 
