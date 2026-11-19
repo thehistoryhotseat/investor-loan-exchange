@@ -2,7 +2,7 @@
 
 > A loan scenario exchange for investment-property lending. A broker submits one loan scenario; it is checked against each lender's niche (product, state, property type, loan size); each fitting panel lender receives one structured rate request; quotes come back to one place, side by side, and the broker chooses who to engage. People and AI agents use the same intake.
 
-Schema version: 1.4 (scenario.schema.json)
+Schema version: 1.5 (scenario.schema.json)
 
 ## What agents can do here
 
@@ -21,24 +21,44 @@ Schema version: 1.4 (scenario.schema.json)
 - Borrower or guarantor names (in notes or anywhere lender-facing)
 - Documents of any kind - scenarios only
 
-## Lanes routed
+## Required base fields
 
-DSCR rental, fix & flip, bridge, ground-up construction, cash-out refinance, and conforming (agency) for investment property only. Owner-occupied (consumer-purpose) scenarios are not accepted.
+schema_version ("1.5"), product, purpose, property, loan_amount_usd, credit_band, citizenship. property requires type, occupancy, state and est_value_usd. Extra fields are rejected (additionalProperties is false everywhere).
+
+Formats that trip validators:
+
+- state: two uppercase letters ("NJ"). zip optional.
+- occupancy: the literal string "investment". Owner-occupied (consumer-purpose) scenarios are not accepted.
+- Money fields are numbers, not strings (450000, not "450,000").
+- ltv is a decimal (0.75, not 75). Same for estimated_dscr as a ratio (1.21).
+- product: dscr_rental, fix_flip, bridge, ground_up_construction, cash_out_refi, conforming_agency.
+- purpose: purchase, refinance, rate_term_refi, cash_out.
+- credit_band keeps its display form: 780+, 740-779, 700-739, 660-699, 620-659, below_620.
+- citizenship: us_person, foreign_national.
+- property.condition: turnkey, light_rehab, heavy_rehab, shell.
+- property.type: free string, e.g. single_family, 2-4 unit, condo, townhome, small multifamily, mixed use.
+- liquidity_band: 3_months, 6_months, 12_plus_months. vesting: llc, personal_name, trust, other_entity.
 
 ## Lane-specific fields
 
 - dscr_rental: monthly_rent_usd (required); monthly_taxes_usd, monthly_insurance_usd, monthly_hoa_usd sharpen the DSCR estimate.
-- fix_flip: arv_usd and rehab_budget_usd (required); exit_strategy, flip_experience.
-- bridge: bridge_exit_strategy and bridge_term (required).
-- ground_up_construction: project_budget_usd, build_timeline and guc_exit_strategy (required); land_status optional.
+- fix_flip: arv_usd and rehab_budget_usd (required); exit_strategy (sell, refinance_into_dscr, undecided); flip_experience free string.
+- bridge: bridge_exit_strategy (sell, refinance_into_dscr, refinance_into_conventional, undecided) and bridge_term (up_to_6_months, 6_12_months, 12_24_months), both required. Note the bridge exit enum adds refinance_into_conventional; the fix & flip exit_strategy enum does not have it.
+- ground_up_construction: project_budget_usd, build_timeline (under_9_months, 9_12_months, 12_18_months, over_18_months) and guc_exit_strategy (sell, refinance_into_dscr, undecided), all required; land_status (owned, under_contract, not_yet) optional.
 - cash_out_refi: no extra fields.
-- conforming_agency: conforming.under_county_limit.
+- conforming_agency: conforming.under_county_limit is required and is the string "yes" or "no" (not a boolean). conforming.dti_band optional: under_36, 36_43, 43_50, over_50, not_sure.
 
 ## Preferences by lane
 
-preferences.structure, preferences.rate_type and preferences.prepay_tolerance are optional. Short-term lanes (bridge, ground_up_construction) take month-scale prepay (none, up_to_6mo, up_to_12mo, flexible) and Fixed or Floating rate types; long lanes take year-scale prepay (up_to_3yr, up_to_5yr) and 30-yr fixed or ARM. Values that do not fit the lane are dropped at intake with a note to the reviewer.
+preferences.structure, preferences.rate_type and preferences.prepay_tolerance are optional. Exact tokens:
+
+- structure: amortizing, interest_only, either. amortizing is dropped on short lanes.
+- rate_type (string, exact casing): "30-yr fixed", "ARM", "Interest-only ARM" on long lanes; "Fixed", "Floating" on short lanes; "No preference" on both.
+- prepay_tolerance: long lanes none, up_to_3yr, up_to_5yr, flexible; short lanes none, up_to_6mo, up_to_12mo, flexible.
+
+Short lanes are bridge and ground_up_construction. Long lanes are dscr_rental, fix_flip, cash_out_refi and conforming_agency. Values that do not fit the lane are dropped at intake with a note to the reviewer.
 
 ## Links
 
 - [Site and intake form](https://thehistoryhotseat.github.io/investor-loan-exchange/#intake): the single intake for people and agents
-- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema v1.4 for one loan scenario
+- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema v1.5 for one loan scenario

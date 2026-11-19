@@ -726,6 +726,17 @@
               <input type="radio" name="under_limit" id="cl-no" value="no"><label for="cl-no">No / not sure</label>
             </div>
           </div>
+          <div class="f-field">
+            <label for="dti-band">DTI band</label>
+            <select id="dti-band" name="dti_band">
+              <option value="">Select...</option>
+              <option value="under_36">Under 36%</option>
+              <option value="36_43">36-43%</option>
+              <option value="43_50">43-50%</option>
+              <option value="over_50">Over 50%</option>
+              <option value="not_sure">Not sure</option>
+            </select>
+          </div>
           <div class="f-field full">
             <label for="conf-note">Anything lenders should know</label>
             <textarea id="conf-note" name="conforming_note" placeholder="Optional"></textarea>
@@ -861,7 +872,7 @@
     <div class="lender-sample">
       <h3>What a rate request looks like</h3>
       <pre class="pre-light">{
-  "schema_version": "1.4",
+  "schema_version": "1.5",
   "product": "dscr_rental",
   "purpose": "purchase",
   "property": {
@@ -1195,6 +1206,7 @@
     if (val('prepay')) row('Prepay tolerance', label({none:'None', up_to_6mo:'Up to 6 mo', up_to_12mo:'Up to 12 mo', up_to_3yr:'Up to 3 yr', up_to_5yr:'Up to 5 yr', flexible:'Flexible'}, val('prepay')), 'Preferences');
     if (product() === 'conforming_agency') {
       row('Under county limit', val('under_limit'), 'Conforming');
+      if (val('dti_band')) row('DTI band', label({under_36:'Under 36%', '36_43':'36-43%', '43_50':'43-50%', over_50:'Over 50%', not_sure:'Not sure'}, val('dti_band')), 'Conforming');
     }
     if (val('notes')) row('Notes', val('notes'), 'About you');
     document.getElementById('f-review').innerHTML = rows.join('');
@@ -1217,7 +1229,7 @@
   function snake(x){ return (x || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }
   function buildJson(){
     var obj = {
-      schema_version: '1.4',
+      schema_version: '1.5',
       prepared_by: 'ilx-intake',
       product: val('product'),
       purpose: val('purpose'),
@@ -1276,6 +1288,7 @@
     }
     if (product() === 'conforming_agency') {
       obj.conforming = { under_county_limit: val('under_limit') };
+      if (val('dti_band')) obj.conforming.dti_band = val('dti_band');
     }
     if (val('notes')) obj.notes = val('notes');
     return JSON.stringify(obj, null, 2);
@@ -1530,6 +1543,7 @@
     setField('prepay', pf.prepay_tolerance);
     var cf = d.conforming || {};
     setField('under_limit', cf.under_county_limit);
+    setField('dti_band', cf.dti_band);
     setField('role', d.role);
     setField('notes', d.notes);
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();

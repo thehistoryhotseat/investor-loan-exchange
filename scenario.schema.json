@@ -17,7 +17,7 @@
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.4"
+      "const": "1.5"
     },
     "prepared_by": {
       "type": "string",
@@ -229,8 +229,22 @@
             "yes",
             "no"
           ]
+        },
+        "dti_band": {
+          "type": "string",
+          "enum": [
+            "under_36",
+            "36_43",
+            "43_50",
+            "over_50",
+            "not_sure"
+          ],
+          "description": "Conforming (agency): debt-to-income band. Agency investment loans price on DTI."
         }
-      }
+      },
+      "required": [
+        "under_county_limit"
+      ]
     },
     "notes": {
       "type": "string",
