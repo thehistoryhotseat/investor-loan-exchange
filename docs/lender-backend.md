@@ -15,16 +15,16 @@ Test-mode backend for lender onboarding. Nothing lender-facing is live; test dat
 
 ## Schema (v1)
 
-- `lenders` - one row per lender: company, contact, email (unique), phone,
+- `lenders` - one row per lender: company, contact_name, email (unique), phone,
   lender_type, nmls_id.
 - `lender_guidelines` - versioned guideline records per lender: products[],
-  property_types[], states[], max_ltv_pct, min/max loan, min_fico, notes,
+  property_types[], states[], max_ltv_pct, min/max loan (usd), min_fico, notes,
   pdf_path, created_at. `unique (lender_id, version)`. A lender's "last
   updated" is the newest `created_at`; anything older than 90 days counts as
   stale (computed in the UI, not stored).
 - `lender_users` - maps Supabase Auth users to lenders
   (auth_user_id -> lender_id), used by RLS.
-- `lender_interest` - raw join-the-panel interest records (jsonb). No client
+- `lender_interest` - raw join-the-panel interest records (jsonb `record`). No client
   access in test mode; service role only.
 - Storage bucket `guidelines` - private, for guideline PDFs.
 
@@ -47,3 +47,23 @@ intake stays in test mode.
 4. If a full move to his own org is preferred instead: export with
    `pg_dump` using the vaulted DB password, create a project in his org,
    restore, and update the URL + publishable key here and in the portal code.
+
+## Hardening (applied)
+
+- `supabase/schema.sql` and `supabase/policies.sql` hold the full schema and
+  policy set; both idempotent and re-runnable.
+- Lenders can update only `contact_name` and `phone` on their own row
+  (column-level grant). Company, email, lender type and NMLS ID change
+  through the owner.
+- `lender_users` has no client write path; the owner maps a login to a
+  lender (service role) after verifying them.
+- Guideline versions are insert-only: no update or delete policies.
+- `pdf_path` on insert must point inside the lender's own storage folder.
+- Storage policies scope the private `guidelines` bucket to
+  `{lender_id}/...` per lender for read, write, update and delete.
+- Public signups are disabled in Auth settings; lender logins are created
+  by the owner (invite-only).
+- When live intake opens: write `lender_interest` through a server function
+  with rate limiting, not an anon insert policy.
+- Before any real lender data: move the project to Aryeh's own Supabase
+  account (see above) and re-check Free plan pause/backup terms.
