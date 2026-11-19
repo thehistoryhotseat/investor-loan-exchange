@@ -17,7 +17,7 @@
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.5"
+      "const": "1.6"
     },
     "prepared_by": {
       "type": "string",
@@ -31,7 +31,8 @@
         "bridge",
         "ground_up_construction",
         "cash_out_refi",
-        "conforming_agency"
+        "conforming_agency",
+        "home_equity"
       ]
     },
     "purpose": {
@@ -60,9 +61,10 @@
         "occupancy": {
           "type": "string",
           "enum": [
-            "investment"
+            "investment",
+            "owner_occupied"
           ],
-          "description": "Investment properties only. Owner-occupied (consumer-purpose) scenarios are not accepted."
+          "description": "\"investment\" on every lane except home_equity, which also accepts \"owner_occupied\" (primary home)."
         },
         "state": {
           "type": "string",
@@ -329,6 +331,14 @@
         "undecided"
       ],
       "description": "Ground-up construction: how the loan gets taken out"
+    },
+    "home_equity_type": {
+      "type": "string",
+      "enum": [
+        "heloc",
+        "home_equity_loan"
+      ],
+      "description": "Home equity lane: HELOC (line of credit) or home equity loan (lump sum). Primary or investment property."
     }
   },
   "allOf": [
@@ -336,7 +346,9 @@
       "if": {
         "properties": {
           "product": {
-            "const": "dscr_rental"
+            "not": {
+              "const": "home_equity"
+            }
           }
         },
         "required": [
@@ -344,81 +356,15 @@
         ]
       },
       "then": {
-        "required": [
-          "monthly_rent_usd"
-        ]
-      }
-    },
-    {
-      "if": {
         "properties": {
-          "product": {
-            "const": "fix_flip"
+          "property": {
+            "properties": {
+              "occupancy": {
+                "const": "investment"
+              }
+            }
           }
-        },
-        "required": [
-          "product"
-        ]
-      },
-      "then": {
-        "required": [
-          "arv_usd",
-          "rehab_budget_usd"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "product": {
-            "const": "conforming_agency"
-          }
-        },
-        "required": [
-          "product"
-        ]
-      },
-      "then": {
-        "required": [
-          "conforming"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "product": {
-            "const": "bridge"
-          }
-        },
-        "required": [
-          "product"
-        ]
-      },
-      "then": {
-        "required": [
-          "bridge_exit_strategy",
-          "bridge_term"
-        ]
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "product": {
-            "const": "ground_up_construction"
-          }
-        },
-        "required": [
-          "product"
-        ]
-      },
-      "then": {
-        "required": [
-          "project_budget_usd",
-          "build_timeline",
-          "guc_exit_strategy"
-        ]
+        }
       }
     }
   ]

@@ -413,8 +413,9 @@
       <div class="lane"><h3>Ground-up construction</h3><p>Draw-based funding from lot to completion. Priced on budget, experience and the exit.</p></div>
       <div class="lane"><h3>Cash-out refinance</h3><p>Pull equity out of an existing investment property. Priced on LTV, credit and cash flow.</p></div>
       <div class="lane"><h3>Conforming (agency)</h3><p>Conventional Fannie / Freddie pricing, under the county limit. Priced on credit, LTV and DTI.</p></div>
+      <div class="lane"><h3>Home equity</h3><p>HELOCs and home equity loans, on a primary home or an investment property. Priced on equity, credit and the draw.</p></div>
     </div>
-    <div class="callout"><strong>A note on conforming.</strong> The conforming lane covers investment properties only. Owner-occupied homes are consumer-purpose mortgages and aren't accepted in this draft.</div>
+    <div class="callout"><strong>A note on occupancy.</strong> Every lane except home equity covers investment properties only. Owner-occupied primary homes are accepted in the home equity lane.</div>
   </div>
 </section>
 <section id="intake">
@@ -450,6 +451,7 @@
             <input type="radio" name="product" id="p-guc" value="ground_up_construction"><label for="p-guc">Ground-up construction</label>
             <input type="radio" name="product" id="p-cashout" value="cash_out_refi"><label for="p-cashout">Cash-out refi</label>
             <input type="radio" name="product" id="p-conf" value="conforming_agency"><label for="p-conf">Conforming (agency)</label>
+              <input type="radio" name="product" id="p-he" value="home_equity"><label for="p-he">Home equity</label>
           </div>
         </div>
         <div class="f-field full" style="margin-top:18px">
@@ -745,6 +747,20 @@
         </div>
       </fieldset>
 
+      <fieldset class="f-step" data-step="6c" data-name="Home equity" data-show-if="home_equity">
+        <h3>Home equity</h3>
+        <p class="sub">Line or lump sum, on a primary home or an investment property.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <span class="f-label" id="lbl-hetype">Product type <span class="req">*</span></span>
+            <div class="pills" role="radiogroup" aria-labelledby="lbl-hetype" data-group="home_equity_type">
+              <input type="radio" name="home_equity_type" id="he-heloc" value="heloc"><label for="he-heloc">HELOC (line of credit)</label>
+              <input type="radio" name="home_equity_type" id="he-loan" value="home_equity_loan"><label for="he-loan">Home equity loan (lump sum)</label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
       <fieldset class="f-step" data-step="7" data-name="Preferences">
         <h3>Preferences</h3>
         <p class="sub">Optional. Helps lenders lead with the right quote.</p>
@@ -831,11 +847,15 @@
               <p>What happens next: the panel lenders whose box this fits get one rate request. Quotes come back side by side. Your name stays back until you choose to reply.</p>
             </div>
           </div>
-          <div class="pre-head" style="margin-top:18px"><span>scenario.json</span><button class="copy-btn-light" id="f-copy" type="button">Copy</button></div>
-          <pre id="f-json"></pre>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button type="button" class="btn ghost" id="f-restart">Start a new scenario</button>
+          <div class="f-review f-sheet" id="f-sheet" style="margin-top:8px"></div>
+          <details class="load-json" style="margin-top:22px">
+            <summary>For agents: the raw scenario.json</summary>
+            <div class="pre-head" style="margin-top:14px"><span>scenario.json</span><button class="copy-btn-light" id="f-copy" type="button">Copy</button></div>
+            <pre id="f-json"></pre>
             <button type="button" class="btn ghost" id="f-download">Download .json</button>
+          </details>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
+            <button type="button" class="btn ghost" id="f-restart">Start a new scenario</button>
           </div>
         </div>
       </fieldset>
@@ -873,8 +893,22 @@
     </div>
     <div class="lender-sample">
       <h3>What a rate request looks like</h3>
-      <pre class="pre-light">{
-  "schema_version": "1.5",
+      <div class="f-review f-sheet">
+        <div class="r-row"><span class="k">Product</span><span>DSCR rental</span></div>
+        <div class="r-row"><span class="k">Purpose</span><span>Purchase</span></div>
+        <div class="r-row"><span class="k">Property</span><span>Single family, investment, NJ</span></div>
+        <div class="r-row"><span class="k">Value / price</span><span>$450,000</span></div>
+        <div class="r-row"><span class="k">Loan amount</span><span>$337,500</span></div>
+        <div class="r-row"><span class="k">LTV</span><span>75%</span></div>
+        <div class="r-row"><span class="k">Credit band</span><span>740-779</span></div>
+        <div class="r-row"><span class="k">Monthly rent</span><span>$3,200</span></div>
+        <div class="r-row"><span class="k">Vesting</span><span>LLC</span></div>
+        <div class="r-row"><span class="k">Contact</span><span>Withheld until the broker engages</span></div>
+      </div>
+      <details class="load-json" style="margin-top:16px">
+        <summary>For agents: the raw scenario.json</summary>
+        <pre class="pre-light" style="margin-top:12px">{
+  "schema_version": "1.6",
   "product": "dscr_rental",
   "purpose": "purchase",
   "property": {
@@ -890,6 +924,7 @@
   "monthly_rent_usd": 3200,
   "vesting": "llc"
 }</pre>
+      </details>
     </div>
   </div>
 </section>
@@ -959,7 +994,7 @@
     var defs = [
       {name:'The deal', names:['Product','Property']},
       {name:'Numbers', names:['Numbers']},
-      {name:'Details', names:['DSCR','Rehab','Transition','The build','Conforming','Preferences']},
+      {name:'Details', names:['DSCR','Rehab','Transition','The build','Conforming','Home equity','Preferences']},
       {name:'Review & you', names:['About you','Review']},
       {name:'Done', names:['Done']}
     ];
@@ -1053,7 +1088,7 @@
       var ct = step.querySelector('#contact');
       if (ct && ct.value && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ct.value) || /^[+()\-.\s\d]{7,}$/.test(ct.value))) { ct.classList.add('f-invalid'); fieldMsg(ct, 'Enter an email or a phone number.'); ok = false; }
       var occ = step.querySelector('#occ');
-      if (occ && occ.value === 'owner_occupied') { occ.classList.add('f-invalid'); ok = false; }
+      if (occ && occ.value === 'owner_occupied' && product() !== 'home_equity') { occ.classList.add('f-invalid'); ok = false; }
     }
     if (name === 'Review' && !document.getElementById('consent').checked) ok = false;
     return ok;
@@ -1069,7 +1104,7 @@
     return el.value || '';
   }
   function label(map, v){ return map[v] || v || '-'; }
-  var productLabels = {dscr_rental:'DSCR rental', fix_flip:'Fix & flip', bridge:'Bridge', ground_up_construction:'Ground-up construction', cash_out_refi:'Cash-out refi', conforming_agency:'Conforming (agency)'};
+  var productLabels = {dscr_rental:'DSCR rental', fix_flip:'Fix & flip', bridge:'Bridge', ground_up_construction:'Ground-up construction', cash_out_refi:'Cash-out refi', conforming_agency:'Conforming (agency)', home_equity:'Home equity'};
   function num(n){ var v = parseFloat(val(n)); return isNaN(v) ? 0 : v; }
   function updateLtv(){
     var v = num('est_value_usd'), a = num('loan_amount_usd');
@@ -1101,7 +1136,7 @@
   function updateOoWarn(){
     var w = document.getElementById('oo-warn');
     if (!w) return;
-    var show = val('occupancy') === 'owner_occupied' && product() !== '';
+    var show = val('occupancy') === 'owner_occupied' && product() !== '' && product() !== 'home_equity';
     w.style.display = show ? '' : 'none';
   }
   function updateRateType(){
@@ -1225,6 +1260,7 @@
     if (product() === 'conforming_agency') {
       row('Under county limit', val('under_limit'), 'Conforming');
       if (val('dti_band')) row('DTI band', label({under_36:'Under 36%', '36_43':'36-43%', '43_50':'43-50%', over_50:'Over 50%', not_sure:'Not sure'}, val('dti_band')), 'Conforming');
+      if (val('home_equity_type')) row('Product type', label({heloc:'HELOC (line of credit)', home_equity_loan:'Home equity loan (lump sum)'}, val('home_equity_type')), 'Home equity');
     }
     if (val('notes')) row('Notes', val('notes'), 'About you');
     document.getElementById('f-review').innerHTML = rows.join('');
@@ -1247,7 +1283,7 @@
   function snake(x){ return (x || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }
   function buildJson(){
     var obj = {
-      schema_version: '1.5',
+      schema_version: '1.6',
       prepared_by: val('prepared_by') || 'ilx-intake',
       product: val('product'),
       purpose: val('purpose'),
@@ -1307,6 +1343,7 @@
     if (product() === 'conforming_agency') {
       obj.conforming = { under_county_limit: val('under_limit') };
       if (val('dti_band')) obj.conforming.dti_band = val('dti_band');
+      if (val('home_equity_type')) obj.home_equity_type = val('home_equity_type');
     }
     if (val('notes')) obj.notes = val('notes');
     return JSON.stringify(obj, null, 2);
@@ -1380,6 +1417,7 @@
     clearDraft();
     document.getElementById('f-done').classList.remove('on');
     document.getElementById('f-json').textContent = '';
+    document.getElementById('f-sheet').innerHTML = '';
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType();
     form.querySelectorAll('.f-invalid, .f-invalid-label').forEach(function(e){ e.classList.remove('f-invalid', 'f-invalid-label'); });
     form.querySelectorAll('.pills[aria-invalid]').forEach(function(p){ p.setAttribute('aria-invalid', 'false'); });
@@ -1390,6 +1428,10 @@
   function finish(){
     var json = buildJson();
     document.getElementById('f-json').textContent = json;
+    var sheet = document.getElementById('f-sheet');
+    var rv = document.getElementById('f-review').cloneNode(true);
+    rv.querySelectorAll('.r-edit').forEach(function(b){ b.remove(); });
+    sheet.innerHTML = rv.innerHTML;
     var lj = document.querySelector('.load-json');
     if (lj) lj.removeAttribute('open');
     var jst = document.getElementById('json-status');
@@ -1563,13 +1605,14 @@
     var cf = d.conforming || {};
     setField('under_limit', cf.under_county_limit);
     setField('dti_band', cf.dti_band);
+    setField('home_equity_type', d.home_equity_type);
     setField('role', d.role);
     setField('prepared_by', d.prepared_by);
     setField('notes', d.notes);
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     var changeNotes = [];
-    if (d.schema_version && d.schema_version !== '1.5') changeNotes.push('updated it from v' + d.schema_version + ' to v1.5');
-    var knownTop = ['schema_version','prepared_by','consent','product','purpose','property','loan_amount_usd','ltv','role','credit_band','citizenship','experience','liquidity_band','vesting','target_close','monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','estimated_dscr','arv_usd','rehab_budget_usd','exit_strategy','flip_experience','bridge_exit_strategy','bridge_term','project_budget_usd','build_timeline','land_status','guc_exit_strategy','loan_to_cost','loan_to_arv','preferences','conforming','notes'];
+    if (d.schema_version && d.schema_version !== '1.6') changeNotes.push('updated it from v' + d.schema_version + ' to v1.6');
+    var knownTop = ['schema_version','prepared_by','consent','product','purpose','property','loan_amount_usd','ltv','role','credit_band','citizenship','experience','liquidity_band','vesting','target_close','monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','estimated_dscr','arv_usd','rehab_budget_usd','exit_strategy','flip_experience','bridge_exit_strategy','bridge_term','project_budget_usd','build_timeline','land_status','guc_exit_strategy','loan_to_cost','loan_to_arv','preferences','conforming','notes','home_equity_type'];
     var unknownTop = Object.keys(d).filter(function(k){ return knownTop.indexOf(k) < 0; });
     var knownProp = ['type','occupancy','state','zip','est_value_usd','units','condition'];
     unknownTop = unknownTop.concat(Object.keys(p).filter(function(k){ return knownProp.indexOf(k) < 0; }).map(function(k){ return 'property.' + k; }));
@@ -1586,7 +1629,7 @@
     if (pf.prepay_tolerance && !form.querySelector('input[name="prepay"]:checked')) droppedPrefs.push(dropLabels[pf.prepay_tolerance] || pf.prepay_tolerance);
     saveDraft();
     show(0);
-    if (d && d.property && d.property.occupancy === 'owner_occupied') {
+    if (d && d.property && d.property.occupancy === 'owner_occupied' && d.product !== 'home_equity') {
         status.textContent = 'Loaded, but this scenario is owner-occupied. This draft takes investment properties only - change Occupancy to continue.';
       } else {
         var laneMissing = [];
@@ -1604,6 +1647,7 @@
           if (!d.rehab_budget_usd) laneMissing.push('rehab budget');
         }
         if (d.product === 'dscr_rental' && !d.monthly_rent_usd) laneMissing.push('monthly rent');
+        if (d.product === 'home_equity' && !d.home_equity_type) laneMissing.push('product type (HELOC or home equity loan)');
         var dropNote = droppedPrefs.length ? ' Preferences that do not fit this lane were dropped: ' + droppedPrefs.join(', ') + '.' : '';
         if (changeNotes.length) dropNote += ' Changes on load: ' + changeNotes.join('; ') + '.';
         status.textContent = (laneMissing.length
