@@ -1532,11 +1532,11 @@
     setField('under_limit', cf.under_county_limit);
     setField('role', d.role);
     setField('notes', d.notes);
+    updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     var droppedPrefs = [];
     if (pf.structure && !form.querySelector('input[name="structure"]:checked')) droppedPrefs.push(pf.structure);
     if (pf.rate_type && !val('rate_type')) droppedPrefs.push(pf.rate_type);
     if (pf.prepay_tolerance && !form.querySelector('input[name="prepay"]:checked')) droppedPrefs.push(pf.prepay_tolerance);
-    updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     saveDraft();
     show(0);
     if (d && d.property && d.property.occupancy === 'owner_occupied') {
