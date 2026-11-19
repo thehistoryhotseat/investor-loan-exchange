@@ -47,7 +47,8 @@
   .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
   .skip-link{position:absolute;left:-999px;top:0;background:var(--btn);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
   .skip-link:focus{left:0}
-  [tabindex="-1"]:focus{outline:none}
+  h3[tabindex="-1"]:focus{outline:none}
+  .pills:focus{outline:2px solid var(--btn);outline-offset:4px;border-radius:10px}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   [id]{scroll-margin-top:76px}
 
@@ -238,7 +239,7 @@
     .hero h1{order:2}
     .hero p{order:3}
     .hero-cta{order:4}
-    .hero-note{order:5}
+    .hero p.hero-note{order:5}
     .quote-card{order:6}
     .trust-row{order:7}
     .steps{grid-template-columns:1fr 1fr;gap:24px}
@@ -440,8 +441,8 @@
         <h3>What kind of deal is it?</h3>
         <p class="sub">Pick one product and the purpose. Your progress is saved in this browser as you go.</p>
         <div class="f-field full">
-          <span class="f-label">Product <span class="req">*</span></span>
-          <div class="pills" data-group="product">
+          <span class="f-label" id="lbl-product">Product <span class="req">*</span></span>
+          <div class="pills" role="radiogroup" aria-labelledby="lbl-product" data-group="product">
             <input type="radio" name="product" id="p-dscr" value="dscr_rental"><label for="p-dscr">DSCR rental</label>
             <input type="radio" name="product" id="p-flip" value="fix_flip"><label for="p-flip">Fix &amp; flip</label>
             <input type="radio" name="product" id="p-bridge" value="bridge"><label for="p-bridge">Bridge</label>
@@ -451,8 +452,8 @@
           </div>
         </div>
         <div class="f-field full" style="margin-top:18px">
-          <span class="f-label">Purpose <span class="req">*</span></span>
-          <div class="pills" data-group="purpose">
+          <span class="f-label" id="lbl-purpose">Purpose <span class="req">*</span></span>
+          <div class="pills" role="radiogroup" aria-labelledby="lbl-purpose" data-group="purpose">
             <input type="radio" name="purpose" id="u-purchase" value="purchase"><label for="u-purchase">Purchase</label>
             <input type="radio" name="purpose" id="u-refi" value="refinance"><label for="u-refi">Refinance</label>
             <input type="radio" name="purpose" id="u-rateterm" value="rate_term_refi"><label for="u-rateterm">Rate-term refi</label>
@@ -558,8 +559,8 @@
             <input type="date" id="close" name="target_close">
           </div>
           <div class="f-field full">
-            <span class="f-label">Citizenship <span class="req">*</span> <span style="font-weight:400;color:var(--muted)">(foreign nationals price differently)</span></span>
-            <div class="pills" data-group="citizenship">
+            <span class="f-label" id="lbl-citizenship">Citizenship <span class="req">*</span> <span style="font-weight:400;color:var(--muted)">(foreign nationals price differently)</span></span>
+            <div class="pills" role="radiogroup" aria-labelledby="lbl-citizenship" data-group="citizenship">
               <input type="radio" name="citizenship" id="c-us" value="us_person"><label for="c-us">US citizen / resident</label>
               <input type="radio" name="citizenship" id="c-fn" value="foreign_national"><label for="c-fn">Foreign national</label>
             </div>
@@ -654,15 +655,15 @@
         <p class="sub">Only for conforming (agency) deals.</p>
         <div class="f-grid">
           <div class="f-field">
-            <span class="f-label">Under the county conforming limit? <span class="req">*</span></span>
-            <div class="pills" data-group="under_limit">
+            <span class="f-label" id="lbl-under_limit">Under the county conforming limit? <span class="req">*</span></span>
+            <div class="pills" role="radiogroup" aria-labelledby="lbl-under_limit" data-group="under_limit">
               <input type="radio" name="under_limit" id="cl-yes" value="yes"><label for="cl-yes">Yes</label>
               <input type="radio" name="under_limit" id="cl-no" value="no"><label for="cl-no">No / not sure</label>
             </div>
           </div>
           <div class="f-field">
-            <span class="f-label">Owner-occupied? <span class="req">*</span></span>
-            <div class="pills" data-group="owner_occ">
+            <span class="f-label" id="lbl-owner_occ">Owner-occupied? <span class="req">*</span></span>
+            <div class="pills" role="radiogroup" aria-labelledby="lbl-owner_occ" data-group="owner_occ">
               <input type="radio" name="owner_occ" id="oo-no" value="no"><label for="oo-no">No, investment</label>
               <input type="radio" name="owner_occ" id="oo-yes" value="yes"><label for="oo-yes">Yes</label>
             </div>
@@ -679,8 +680,8 @@
         <p class="sub">Optional. Helps lenders lead with the right quote.</p>
         <div class="f-grid">
           <div class="f-field">
-            <span class="f-label">Structure</span>
-            <div class="pills" data-group="structure" data-optional="1">
+            <span class="f-label" id="lbl-structure">Structure</span>
+            <div class="pills" role="radiogroup" aria-labelledby="lbl-structure" data-group="structure" data-optional="1">
               <input type="radio" name="structure" id="s-am" value="amortizing"><label for="s-am">Amortizing</label>
               <input type="radio" name="structure" id="s-io" value="interest_only"><label for="s-io">Interest-only</label>
               <input type="radio" name="structure" id="s-either" value="either"><label for="s-either">Either</label>
@@ -697,8 +698,8 @@
             </select>
           </div>
           <div class="f-field full">
-            <span class="f-label">Prepayment penalty tolerance</span>
-            <div class="pills" data-group="prepay" data-optional="1">
+            <span class="f-label" id="lbl-prepay">Prepayment penalty tolerance</span>
+            <div class="pills" role="radiogroup" aria-labelledby="lbl-prepay" data-group="prepay" data-optional="1">
               <input type="radio" name="prepay" id="pp-none" value="none"><label for="pp-none">None</label>
               <input type="radio" name="prepay" id="pp-3" value="up_to_3yr"><label for="pp-3">Up to 3 yr</label>
               <input type="radio" name="prepay" id="pp-5" value="up_to_5yr"><label for="pp-5">Up to 5 yr</label>
@@ -713,8 +714,8 @@
         <p class="sub">This stays back from lenders until you choose to engage.</p>
         <div class="f-grid">
           <div class="f-field">
-            <span class="f-label">You are a <span class="req">*</span></span>
-            <div class="pills" data-group="role">
+            <span class="f-label" id="lbl-role">You are a <span class="req">*</span></span>
+            <div class="pills" role="radiogroup" aria-labelledby="lbl-role" data-group="role">
               <input type="radio" name="role" id="r-broker" value="broker"><label for="r-broker">Broker</label>
               <input type="radio" name="role" id="r-borrower" value="borrower"><label for="r-borrower">Borrower</label>
             </div>
@@ -930,6 +931,7 @@
       var missing = !step.querySelector('input[name="' + n + '"]:checked');
       if (pills) {
         pills.classList.toggle('f-invalid', missing);
+        pills.setAttribute('aria-invalid', missing ? 'true' : 'false');
         var gl = pills.previousElementSibling;
         if (gl && gl.classList.contains('f-label')) gl.classList.toggle('f-invalid-label', missing);
         var pm = pills.parentNode.querySelector('.pills-msg');
@@ -1200,6 +1202,7 @@
     var p = e.target.closest('.pills');
     if (p) {
       p.classList.remove('f-invalid');
+      p.setAttribute('aria-invalid', 'false');
       var gl = p.previousElementSibling;
       if (gl && gl.classList.contains('f-label')) gl.classList.remove('f-invalid-label');
       var pm = p.parentNode.querySelector('.pills-msg');
