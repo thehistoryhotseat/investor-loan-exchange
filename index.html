@@ -1053,7 +1053,7 @@
       product: val('product'),
       purpose: val('purpose'),
       property: {
-        type: val('property_type'),
+        type: (val('property_type') || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''),
         occupancy: val('occupancy'),
         state: (val('state') || '').toUpperCase(),
         est_value_usd: parseFloat(val('est_value_usd')) || null
