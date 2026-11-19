@@ -290,7 +290,7 @@
     .qc-cols,.qc-row{grid-template-columns:1fr 1fr 1.1fr .8fr .6fr}
   }
   @media print{
-    nav,.mobile-cta,.load-json,.f-nav,.f-progress,.f-meta,header.hero,section:not(#intake),footer{display:none !important}
+    nav,.mobile-cta,.load-json,.f-nav,.f-progress,.f-meta,header.hero,section:not(#intake),footer,.no-print{display:none !important}
     body{background:#fff;padding-bottom:0}
     section#intake{border:none;padding:0}
     .f-step{display:none !important}
@@ -873,6 +873,7 @@
             <button type="button" class="btn ghost" id="f-download">Download .json</button>
           </details>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
+            <button type="button" class="btn ghost no-print" id="f-print">Print or save as PDF</button>
             <button type="button" class="btn ghost" id="f-restart">Start a new scenario</button>
           </div>
         </div>
@@ -1486,6 +1487,7 @@
       new IntersectionObserver(function(en){ mcta.style.visibility = en[0].isIntersecting ? 'hidden' : ''; }).observe(band);
     }
   })();
+  document.getElementById('f-print').addEventListener('click', function(){ window.print(); });
   document.getElementById('f-restart').addEventListener('click', function(){
     form.reset();
     document.getElementById('prepared-by').value = '';
