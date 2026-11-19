@@ -7,12 +7,12 @@ window.__sb = sb; // TEST MODE ONLY - remove before any live launch
 
 const PRODUCTS = [
   ['bridge','Bridge'],['ground_up_construction','Ground-up construction'],['fix_flip','Fix & flip'],
-  ['dscr_rental','DSCR rental'],['cash_out_refi','Cash-out refi'],['conforming_agency','Conforming / agency'],
+  ['dscr_rental','DSCR rental'],['cash_out_refi','Cash-out refi'],['conforming_agency','Conforming (agency)'],
   ['home_equity','Home equity']
 ];
 const PROPS = [
-  ['single_family','Single-family'],['2_4_unit','2-4 unit'],['condo','Condo'],['townhome','Townhome'],
-  ['small_multifamily_5','Small multifamily (5+)'],['mixed_use','Mixed-use'],['other','Other']
+  ['single_family','Single family'],['2_4_unit','2-4 unit'],['condo','Condo'],['townhome','Townhome'],
+  ['small_multifamily_5','Small multifamily (5+)'],['mixed_use','Mixed use'],['other','Other']
 ];
 
 const $ = id => document.getElementById(id);
@@ -35,11 +35,19 @@ function mapDbError(e){
 }
 const friendly = e => mapDbError(e) || 'Something went wrong. Check the fields and try again.';
 
-function showMsg(kind, text){
-  const el = $(kind === 'err' ? 'msg-err' : 'msg-ok');
+function showMsg(kind, text, scope){
+  const el = $((scope === 'g' ? 'g-' : '') + (kind === 'err' ? 'msg-err' : 'msg-ok'));
   el.textContent = text; el.classList.add('on');
-  setTimeout(() => el.classList.remove('on'), 6000);
+  clearTimeout(el._t);
+  if (kind !== 'err') el._t = setTimeout(() => el.classList.remove('on'), 6000);
 }
+function clearMsg(scope){
+  for (const id of [(scope === 'g' ? 'g-msg-err' : 'msg-err'), (scope === 'g' ? 'g-msg-ok' : 'msg-ok')]) {
+    const el = $(id); if (el) { el.textContent = ''; el.classList.remove('on'); }
+  }
+}
+const moneyNum = v => { const c = String(v || '').replace(/[^\d.]/g, ''); return c === '' ? null : Number(c); };
+const moneyFmt = n => n == null ? '' : Number(n).toLocaleString('en-US');
 
 function buildPills(el, pairs){
   el.innerHTML = pairs.map(([v, label], i) =>
@@ -98,8 +106,8 @@ function prefillForm(){
   setPills($('g-props'), v.property_types || []);
   $('g-states').value = (v.states || []).join(', ');
   $('g-ltv').value = v.max_ltv_pct != null ? v.max_ltv_pct : '';
-  $('g-min').value = v.min_loan_usd != null ? v.min_loan_usd : '';
-  $('g-max').value = v.max_loan_usd != null ? v.max_loan_usd : '';
+  $('g-min').value = moneyFmt(v.min_loan_usd);
+  $('g-max').value = moneyFmt(v.max_loan_usd);
   $('g-fico').value = v.min_fico != null ? v.min_fico : '';
   $('g-notes').value = v.notes || '';
 }
@@ -178,35 +186,45 @@ $('p-save').addEventListener('click', async () => {
   showMsg('ok', 'Contact saved.');
 });
 
+for (const id of ['g-min','g-max']) {
+  $(id).addEventListener('input', e => {
+    const raw = String(e.target.value).replace(/[^\d.]/g, '');
+    const parts = raw.split('.');
+    e.target.value = parts.length > 1 ? Number(parts[0] || 0).toLocaleString('en-US') + '.' + parts.slice(1).join('').slice(0, 2) : (raw === '' ? '' : Number(raw).toLocaleString('en-US'));
+  });
+}
+$('card-new').addEventListener('input', () => clearMsg('g'));
+
 $('g-publish').addEventListener('click', async () => {
+  clearMsg('g');
   if (!lender) return;
   const products = pillValues($('g-products'));
   const props = pillValues($('g-props'));
   const states = parseStates($('g-states').value);
   const ltv = $('g-ltv').value === '' ? null : Number($('g-ltv').value);
-  const min = $('g-min').value === '' ? null : Number($('g-min').value);
-  const max = $('g-max').value === '' ? null : Number($('g-max').value);
+  const min = moneyNum($('g-min').value);
+  const max = moneyNum($('g-max').value);
   const fico = $('g-fico').value === '' ? null : Number($('g-fico').value);
   const notes = $('g-notes').value.trim() || null;
   const file = $('g-pdf').files[0] || null;
 
-  for (const id of ['g-ltv','g-min','g-max','g-fico']) {
-    if ($(id).validity && $(id).validity.badInput) { showMsg('err', 'Numbers only in the LTV, loan, and FICO fields.'); return; }
+  for (const id of ['g-ltv','g-fico']) {
+    if ($(id).validity && $(id).validity.badInput) { showMsg('err', 'Numbers only in the LTV and FICO fields.', 'g'); return; }
   }
-  if (!products.length) { showMsg('err', 'Pick at least one product.'); return; }
-  if (!props.length) { showMsg('err', 'Pick at least one property type.'); return; }
-  if (states.includes('Nationwide') && states.length > 1) { showMsg('err', 'Nationwide cannot be combined with individual states.'); return; }
-  if (states.some(s => s !== 'Nationwide' && !/^[A-Z]{2}$/.test(s))) { showMsg('err', 'States must be 2-letter codes (or Nationwide).'); return; }
-  if (!states.length) { showMsg('err', 'Enter states, or Nationwide.'); return; }
-  if (ltv != null && (ltv < 0 || ltv > 100)) { showMsg('err', 'Max LTV must be 0-100.'); return; }
-  if (fico != null && (fico < 300 || fico > 850)) { showMsg('err', 'FICO must be 300-850.'); return; }
-  if (min != null && max != null && min > max) { showMsg('err', 'Min loan is above max loan.'); return; }
-  if (file && file.type !== 'application/pdf') { showMsg('err', 'Guideline sheet must be a PDF.'); return; }
-  if (file && file.size > 10 * 1024 * 1024) { showMsg('err', 'PDF is over 10 MB.'); return; }
+  if (!products.length) { showMsg('err', 'Pick at least one product.', 'g'); return; }
+  if (!props.length) { showMsg('err', 'Pick at least one property type.', 'g'); return; }
+  if (states.includes('Nationwide') && states.length > 1) { showMsg('err', 'Nationwide cannot be combined with individual states.', 'g'); return; }
+  if (states.some(s => s !== 'Nationwide' && !/^[A-Z]{2}$/.test(s))) { showMsg('err', 'States must be 2-letter codes (or Nationwide).', 'g'); return; }
+  if (!states.length) { showMsg('err', 'Enter states, or Nationwide.', 'g'); return; }
+  if (ltv != null && (ltv < 0 || ltv > 100)) { showMsg('err', 'Max LTV must be 0-100.', 'g'); return; }
+  if (fico != null && (fico < 300 || fico > 850)) { showMsg('err', 'FICO must be 300-850.', 'g'); return; }
+  if (min != null && max != null && min > max) { showMsg('err', 'Min loan is above max loan.', 'g'); return; }
+  if (file && file.type !== 'application/pdf') { showMsg('err', 'Guideline sheet must be a PDF.', 'g'); return; }
+  if (file && file.size > 10 * 1024 * 1024) { showMsg('err', 'PDF is over 10 MB.', 'g'); return; }
 
   $('g-publish').disabled = true;
   try {
-    let pdfPath = null;
+    let pdfPath = (versions.length && versions[0].pdf_path) || null;
     const nextVersion = (versions.length ? versions[0].version : 0) + 1;
     if (file) {
       pdfPath = lender.id + '/v' + nextVersion + '-' + Date.now() + '.pdf';
@@ -221,13 +239,14 @@ $('g-publish').addEventListener('click', async () => {
       notes, pdf_path: pdfPath
     });
     if (ierr) throw ierr;
-    showMsg('ok', 'Version ' + nextVersion + ' published.');
-    $('g-notes').value = ''; $('g-pdf').value = '';
+    $('g-pdf').value = '';
     const { data: vrows } = await sb.from('lender_guidelines').select('*').eq('lender_id', lender.id).order('version', { ascending: false });
     versions = vrows || [];
+    prefillForm();
     renderVersions();
+    showMsg('ok', 'Version ' + nextVersion + ' published.', 'g');
   } catch (e) {
-    showMsg('err', friendly(e));
+    showMsg('err', friendly(e), 'g');
   } finally {
     $('g-publish').disabled = false;
   }
@@ -235,10 +254,10 @@ $('g-publish').addEventListener('click', async () => {
 
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) { try { await loadApp(); } catch (e) { showMsg('err', 'Load failed: ' + (e.message || e)); } }
+  if (session) { try { await loadApp(); } catch (e) { showMsg('err', 'Couldn\u2019t load your account. Reload, or sign out and back in.'); } }
   sb.auth.onAuthStateChange(async (event, sess) => {
     if (event === 'SIGNED_IN' && sess && $('view-app').hidden) {
-      try { await loadApp(); } catch (e) { showMsg('err', 'Load failed: ' + (e.message || e)); }
+      try { await loadApp(); } catch (e) { showMsg('err', 'Couldn\u2019t load your account. Reload, or sign out and back in.'); }
     }
   });
 })();
