@@ -47,6 +47,8 @@
   .menu-links{position:absolute;right:0;top:calc(100% + 8px);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px;min-width:210px;box-shadow:0 14px 34px rgba(16,24,32,.14);display:flex;flex-direction:column;z-index:60}
   .menu-links a{padding:11px 12px;color:var(--ink-2);text-decoration:none;font-size:14.5px;font-weight:500;border-radius:4px}
   .menu-links a:hover{background:var(--paper);color:var(--ink)}
+  .menu-links a.cta{display:none;background:var(--ink);color:var(--paper);text-align:center;font-weight:600;margin-bottom:6px}
+  .menu-links a.cta:hover{background:var(--navy);color:var(--paper)}
   .btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:600;font-size:14.5px;padding:12px 22px;border-radius:4px;letter-spacing:.01em;transition:background .15s ease}
   .btn:hover{background:var(--navy)}
   .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
@@ -147,8 +149,13 @@
     .fit{grid-template-columns:1fr}
     .nav-links a:not(.btn){display:none}
     .menu{display:block}
+    .menu-links a.cta{display:block}
+    .brand-name{white-space:nowrap}
   }
   @media (max-width:560px){
+    .nav-links > a.btn{display:none}
+    .brand-name{font-size:14px}
+    .nav-in{gap:10px}
     .steps{grid-template-columns:1fr}
     .step{border-right:none;border-bottom:1px solid var(--line)}
     .step:last-child{border-bottom:none}
@@ -176,6 +183,7 @@
       <details class="menu">
         <summary>Menu</summary>
         <div class="menu-links">
+          <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSf4aSnVUgbuLZBY7al9B7nZREiuUOY6RG76RujXuQgLqkVZVQ/viewform?usp=header" target="_blank" rel="noopener">Submit a scenario</a>
           <a href="#how">How it works</a>
           <a href="#lanes">Products</a>
           <a href="#intake">For brokers</a>
