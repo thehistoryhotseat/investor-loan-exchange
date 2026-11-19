@@ -5,84 +5,309 @@
   "description": "One loan scenario as submitted to the Investor Loan Exchange intake. Scenarios only, never personal documents. All money figures in USD. This is the lender-facing record: the submitter's contact details are collected separately and withheld until they choose to engage.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "product", "purpose", "property", "loan_amount_usd", "credit_band", "citizenship", "consent"],
+  "required": [
+    "schema_version",
+    "product",
+    "purpose",
+    "property",
+    "loan_amount_usd",
+    "credit_band",
+    "citizenship"
+  ],
   "properties": {
-    "schema_version": { "type": "string", "const": "1.1" },
-    "prepared_by": { "type": "string", "description": "Name of the person or agent that prepared this file, e.g. your-agent. Never the borrower's name." },
-    "product": { "type": "string", "enum": ["dscr_rental", "fix_flip", "bridge", "ground_up_construction", "cash_out_refi", "conforming_agency"] },
-    "purpose": { "type": "string", "enum": ["purchase", "refinance", "rate_term_refi", "cash_out"] },
+    "schema_version": {
+      "type": "string",
+      "const": "1.1"
+    },
+    "prepared_by": {
+      "type": "string",
+      "description": "Name of the person or agent that prepared this file, e.g. your-agent. Never the borrower's name."
+    },
+    "product": {
+      "type": "string",
+      "enum": [
+        "dscr_rental",
+        "fix_flip",
+        "bridge",
+        "ground_up_construction",
+        "cash_out_refi",
+        "conforming_agency"
+      ]
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "purchase",
+        "refinance",
+        "rate_term_refi",
+        "cash_out"
+      ]
+    },
     "property": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type", "occupancy", "state", "est_value_usd"],
+      "required": [
+        "type",
+        "occupancy",
+        "state",
+        "est_value_usd"
+      ],
       "properties": {
-        "type": { "type": "string", "description": "e.g. single_family, 2-4 unit, condo, townhome, small multifamily, mixed use" },
-        "occupancy": { "type": "string", "enum": ["investment", "owner_occupied"] },
-        "state": { "type": "string", "pattern": "^[A-Z]{2}$" },
-        "zip": { "type": "string" },
-        "est_value_usd": { "type": "number", "exclusiveMinimum": 0 },
-        "units": { "type": "integer", "minimum": 1 },
-        "condition": { "type": "string", "enum": ["Turnkey", "Light rehab", "Heavy rehab", "Shell"] }
+        "type": {
+          "type": "string",
+          "description": "e.g. single_family, 2-4 unit, condo, townhome, small multifamily, mixed use"
+        },
+        "occupancy": {
+          "type": "string",
+          "enum": [
+            "investment",
+            "owner_occupied"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "zip": {
+          "type": "string"
+        },
+        "est_value_usd": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "units": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "condition": {
+          "type": "string",
+          "enum": [
+            "Turnkey",
+            "Light rehab",
+            "Heavy rehab",
+            "Shell"
+          ]
+        }
       }
     },
-    "loan_amount_usd": { "type": "number", "exclusiveMinimum": 0 },
-    "ltv": { "type": "number", "exclusiveMinimum": 0, "maximum": 1.5, "description": "loan_amount_usd / est_value_usd" },
-    "role": { "type": "string", "enum": ["broker", "borrower"] },
-    "credit_band": { "type": "string", "enum": ["780+", "740-779", "700-739", "660-699", "620-659", "Below 620"] },
-    "citizenship": { "type": "string", "enum": ["us_person", "foreign_national"], "description": "Foreign nationals price differently on most panels" },
-    "experience": { "type": "string" },
-    "liquidity_band": { "type": "string" },
-    "vesting": { "type": "string", "enum": ["LLC", "Personal name", "Trust", "Other entity"] },
-    "target_close": { "type": "string", "format": "date" },
-    "monthly_rent_usd": { "type": "number", "minimum": 0 },
-    "monthly_taxes_usd": { "type": "number", "minimum": 0 },
-    "monthly_insurance_usd": { "type": "number", "minimum": 0 },
-    "monthly_hoa_usd": { "type": "number", "minimum": 0 },
-    "estimated_dscr": { "type": "number", "description": "Illustrative estimate, not a lender figure" },
-    "arv_usd": { "type": "number", "exclusiveMinimum": 0, "description": "After-repair value, fix & flip" },
-    "rehab_budget_usd": { "type": "number", "minimum": 0 },
-    "exit_strategy": { "type": "string", "enum": ["Sell", "Refinance into DSCR", "Undecided"] },
-    "flip_experience": { "type": "string" },
+    "loan_amount_usd": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "ltv": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 1.5,
+      "description": "loan_amount_usd / est_value_usd"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "broker",
+        "borrower"
+      ]
+    },
+    "credit_band": {
+      "type": "string",
+      "enum": [
+        "780+",
+        "740-779",
+        "700-739",
+        "660-699",
+        "620-659",
+        "Below 620"
+      ]
+    },
+    "citizenship": {
+      "type": "string",
+      "enum": [
+        "us_person",
+        "foreign_national"
+      ],
+      "description": "Foreign nationals price differently on most panels"
+    },
+    "experience": {
+      "type": "string"
+    },
+    "liquidity_band": {
+      "type": "string"
+    },
+    "vesting": {
+      "type": "string",
+      "enum": [
+        "LLC",
+        "Personal name",
+        "Trust",
+        "Other entity"
+      ]
+    },
+    "target_close": {
+      "type": "string",
+      "format": "date"
+    },
+    "monthly_rent_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "monthly_taxes_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "monthly_insurance_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "monthly_hoa_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "estimated_dscr": {
+      "type": "number",
+      "description": "Illustrative estimate, not a lender figure"
+    },
+    "arv_usd": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "description": "After-repair value, fix & flip"
+    },
+    "rehab_budget_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "exit_strategy": {
+      "type": "string",
+      "enum": [
+        "Sell",
+        "Refinance into DSCR",
+        "Undecided"
+      ]
+    },
+    "flip_experience": {
+      "type": "string"
+    },
     "preferences": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "structure": { "type": "string", "enum": ["amortizing", "interest_only", "either"] },
-        "rate_type": { "type": "string" },
-        "prepay_tolerance": { "type": "string", "enum": ["none", "up_to_3yr", "up_to_5yr", "flexible"] }
+        "structure": {
+          "type": "string",
+          "enum": [
+            "amortizing",
+            "interest_only",
+            "either"
+          ]
+        },
+        "rate_type": {
+          "type": "string"
+        },
+        "prepay_tolerance": {
+          "type": "string",
+          "enum": [
+            "none",
+            "up_to_3yr",
+            "up_to_5yr",
+            "flexible"
+          ]
+        }
       }
     },
     "conforming": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "under_county_limit": { "type": "string", "enum": ["yes", "no"] },
-        "owner_occupied": { "type": "string", "enum": ["yes", "no"] }
+        "under_county_limit": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no"
+          ]
+        },
+        "owner_occupied": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no"
+          ]
+        }
       }
     },
-    "notes": { "type": "string", "description": "Free text for lenders. Never names, SSNs, dates of birth, account numbers, or documents." },
+    "notes": {
+      "type": "string",
+      "description": "Free text for lenders. Never names, SSNs, dates of birth, account numbers, or documents."
+    },
     "consent": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["share_with_lenders", "contact_withheld_until_engaged"],
+      "required": [
+        "share_with_lenders",
+        "contact_withheld_until_engaged"
+      ],
       "properties": {
-        "share_with_lenders": { "type": "boolean", "const": true, "description": "Checked personally by the human submitter; an agent must never set this on a person's behalf" },
-        "contact_withheld_until_engaged": { "type": "boolean", "const": true }
-      }
+        "share_with_lenders": {
+          "type": "boolean",
+          "const": true,
+          "description": "Checked personally by the human submitter; an agent must never set this on a person's behalf"
+        },
+        "contact_withheld_until_engaged": {
+          "type": "boolean",
+          "const": true
+        }
+      },
+      "description": "Added by the human submitter in the intake form. An agent preparing this file leaves consent out entirely; it is never the agent's to give."
     }
   },
   "allOf": [
     {
-      "if": { "properties": { "product": { "const": "dscr_rental" } }, "required": ["product"] },
-      "then": { "required": ["monthly_rent_usd"] }
+      "if": {
+        "properties": {
+          "product": {
+            "const": "dscr_rental"
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "required": [
+          "monthly_rent_usd"
+        ]
+      }
     },
     {
-      "if": { "properties": { "product": { "const": "fix_flip" } }, "required": ["product"] },
-      "then": { "required": ["arv_usd", "rehab_budget_usd"] }
+      "if": {
+        "properties": {
+          "product": {
+            "const": "fix_flip"
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "required": [
+          "arv_usd",
+          "rehab_budget_usd"
+        ]
+      }
     },
     {
-      "if": { "properties": { "product": { "const": "conforming_agency" } }, "required": ["product"] },
-      "then": { "required": ["conforming"] }
+      "if": {
+        "properties": {
+          "product": {
+            "const": "conforming_agency"
+          }
+        },
+        "required": [
+          "product"
+        ]
+      },
+      "then": {
+        "required": [
+          "conforming"
+        ]
+      }
     }
   ]
 }

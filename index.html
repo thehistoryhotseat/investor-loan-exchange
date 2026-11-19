@@ -1196,6 +1196,8 @@
     if (!raw) { status.textContent = 'Paste a scenario.json first.'; return; }
     var d;
     try { d = JSON.parse(raw); } catch(e) { status.textContent = 'That is not valid JSON.'; return; }
+    form.reset();
+    try { localStorage.removeItem('ilx-draft'); } catch(e) {}
     setField('product', d.product);
     form.dispatchEvent(new Event('change', {bubbles:true}));
     setField('purpose', d.purpose);
