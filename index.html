@@ -18,7 +18,7 @@
 <meta name="twitter:description" content="Send the deal once. Every fitting panel lender gets one rate request. Quotes come back side by side; you choose.">
 <meta name="twitter:image" content="https://thehistoryhotseat.github.io/investor-loan-exchange/og-image.png">
 <link rel="canonical" href="https://thehistoryhotseat.github.io/investor-loan-exchange/">
-<link rel="icon" type="image/svg+xml" href="assets/logo-mark.svg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1b2d'/%3E%3Ccircle cx='26' cy='32' r='5' fill='%23b3975e'/%3E%3Cpath d='M26 32h16M42 32l10-10M42 32l10 10' stroke='%23f6f4ee' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -54,7 +54,7 @@
   nav{position:sticky;top:0;z-index:50;background:rgba(246,244,238,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
   .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
-  .mark{width:30px;height:30px;border-radius:7px;display:block}
+  .mark{font-family:'Fraunces',serif;font-weight:560;font-size:23px;letter-spacing:-.01em;line-height:1}
   .brand-name{font-weight:600;font-size:15px;letter-spacing:.01em;white-space:nowrap}
   .nav-links{display:flex;gap:26px;align-items:center}
   .nav-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500}
@@ -113,7 +113,7 @@
 
   .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
   .step{padding:0}
-    .step-icon{width:34px;height:34px;display:block;margin-bottom:16px}
+    .step .n{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.08em;margin-bottom:14px}
   .step h3{font-weight:600;font-size:18px;margin-bottom:8px;line-height:1.3;letter-spacing:-.01em}
   .step p{font-size:14px;color:var(--muted)}
 
@@ -302,7 +302,7 @@
 <nav>
   <div class="wrap nav-in">
     <a class="brand" href="#top">
-      <img class="mark" src="assets/logo-mark.svg" alt="Investor Loan Exchange logo">
+      <span class="mark">ILX</span>
       <span class="brand-name">Investor Loan Exchange</span>
     </a>
     <div class="nav-links">
@@ -366,22 +366,22 @@
     </div>
     <div class="steps">
       <div class="step">
-        <img class="step-icon" src="assets/icon-scenario.svg" alt="">
+        <div class="n">01</div>
         <h3>Submit once</h3>
         <p>One intake, a few minutes, no documents.</p>
       </div>
       <div class="step">
-        <img class="step-icon" src="assets/icon-privacy.svg" alt="">
+        <div class="n">02</div>
         <h3>Fit check</h3>
         <p>Matched against each panel lender's niche. Lenders outside the box never see it.</p>
       </div>
       <div class="step">
-        <img class="step-icon" src="assets/icon-lenders.svg" alt="">
+        <div class="n">03</div>
         <h3>Rate requests</h3>
         <p>Every fitting lender gets one structured request.</p>
       </div>
       <div class="step">
-        <img class="step-icon" src="assets/icon-compare.svg" alt="">
+        <div class="n">04</div>
         <h3>Side by side</h3>
         <p>Quotes land in one comparison. You choose who to engage.</p>
       </div>
@@ -490,6 +490,10 @@
               <option>Shell</option>
             </select>
           </div>
+          <div class="f-field" id="units-wrap">
+            <label for="units">Units</label>
+            <input type="number" id="units" name="units" min="1" max="40" placeholder="1">
+          </div>
           <div class="f-pair">
           <div class="f-field">
             <label for="state">State <span class="req">*</span></label>
@@ -510,10 +514,6 @@
           <div class="f-field">
             <label for="amount">Loan amount <span class="req">*</span></label>
             <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="amount" name="loan_amount_usd" placeholder="e.g. 337,500" required></div>
-          </div>
-          <div class="f-field" id="units-wrap">
-            <label for="units">Units</label>
-            <input type="number" id="units" name="units" min="1" max="40" placeholder="1">
           </div>
           <div class="f-field full">
             <span class="ltv-line" id="ltv-line"><span class="ltv-note">LTV shows once value and loan amount are in</span></span>
@@ -1272,7 +1272,10 @@
         firstBad = sc.els[bi].querySelector('.pills.f-invalid input, .f-invalid');
       }
       if (firstBad) {
-        try { firstBad.focus({preventScroll:true}); } catch(e) {}
+        var pg = firstBad.closest ? firstBad.closest('.pills') : null;
+        var focusEl = pg || firstBad;
+        if (pg) pg.setAttribute('tabindex', '-1');
+        try { focusEl.focus({preventScroll:true}); } catch(e) {}
         var by = firstBad.getBoundingClientRect().top + window.pageYOffset - 120;
         window.scrollTo({top: by, behavior: 'smooth'});
       }
