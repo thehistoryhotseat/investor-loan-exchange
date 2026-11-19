@@ -731,16 +731,21 @@
       <h3>What a rate request looks like</h3>
       <pre class="pre-light">{
   "request": "rate_request",
+  "schema_version": "1.1",
   "product": "dscr_rental",
   "purpose": "purchase",
-  "state": "NJ",
-  "est_value_usd": 450000,
+  "property": {
+    "type": "single_family",
+    "occupancy": "investment",
+    "state": "NJ",
+    "est_value_usd": 450000
+  },
   "loan_amount_usd": 337500,
   "ltv": 0.75,
   "credit_band": "740-779",
+  "citizenship": "us_person",
   "monthly_rent_usd": 3200,
-  "vesting": "LLC",
-  "target_close": "within 30 days"
+  "vesting": "LLC"
 }</pre>
     </div>
   </div>
