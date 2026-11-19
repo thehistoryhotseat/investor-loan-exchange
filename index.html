@@ -298,6 +298,9 @@
     html{scroll-behavior:auto}
     *,*::before,*::after{transition:none !important;animation:none !important}
   }
+  /* Reveal-on-scroll, only when JS adds .js-reveal; no-JS keeps everything visible */
+  html.js-reveal .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s cubic-bezier(.22,.61,.21,1)}
+  html.js-reveal .reveal.on{opacity:1;transform:none}
 </style>
 </head>
 <body>
@@ -1742,6 +1745,27 @@
     var syncBar = function(){ mcta.style.display = (heroOn || intakeOn) ? 'none' : ''; };
     new IntersectionObserver(function(es){ heroOn = es[0].isIntersecting; syncBar(); }).observe(document.querySelector('header.hero'));
     new IntersectionObserver(function(es){ intakeOn = es[0].isIntersecting; syncBar(); }).observe(document.getElementById('intake'));
+  }
+  // Reveal-on-scroll: quiet section entrances. Reduced-motion users get instant transitions via the media query; without IntersectionObserver nothing is hidden.
+  if ('IntersectionObserver' in window) {
+    document.documentElement.classList.add('js-reveal');
+    var revealEls = [];
+    ['#how .sec-head', '#how .step', '#lanes .sec-head', '#lanes .lane', '#lenders .sec-head', '#lenders .card', '#lenders .lender-sample', '#agents .sec-head', '#agents .lead', '#agents .callout', '.cta-band .cta-in'].forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){ revealEls.push(el); });
+    });
+    var ro = new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if (en.isIntersecting) { en.target.classList.add('on'); ro.unobserve(en.target); }
+      });
+    }, {rootMargin: '0px 0px -10% 0px', threshold: 0.08});
+    var groupCounts = new Map();
+    revealEls.forEach(function(el){
+      var n = groupCounts.get(el.parentNode) || 0;
+      groupCounts.set(el.parentNode, n + 1);
+      el.style.transitionDelay = Math.min(n * 70, 280) + 'ms';
+      el.classList.add('reveal');
+      ro.observe(el);
+    });
   }
   show(0);
 })();
