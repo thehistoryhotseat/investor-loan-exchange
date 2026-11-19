@@ -1396,7 +1396,7 @@
       var pm = p.parentNode.querySelector('.pills-msg');
       if (pm) pm.style.display = 'none';
     }
-    var fb = el.closest ? el.closest('.f-field') : null;
+    var fb = e.target.closest ? e.target.closest('.f-field') : null;
     var fm = fb && fb.querySelector('.f-msg');
     if (fm) fm.style.display = 'none';
   });
