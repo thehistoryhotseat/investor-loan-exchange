@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Investor Loan Exchange - Send one deal. The lenders who fit it compete for it.</title>
 <meta name="description" content="Send the deal once. Every fitting panel lender gets one rate request. Quotes come back side by side; you choose.">
 <meta name="theme-color" content="#14263c">
@@ -88,7 +89,7 @@
   .hero h1 em{font-style:normal;color:inherit}
   .hero p{max-width:52ch;font-size:18px;color:var(--ink-2)}
   .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;align-items:center}
-  .hero-note{font-size:13px;color:var(--muted);margin-top:14px}
+  .hero p.hero-note{font-size:13px;color:var(--muted);margin-top:14px}
   .trust-row{display:flex;gap:8px 22px;flex-wrap:wrap;margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
   .trust-row span{font-size:12.5px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:8px;white-space:nowrap}
   .trust-row span::before{content:"";width:6px;height:6px;border-radius:50%;background:#b7af9e;flex:none}
@@ -334,6 +335,8 @@
       <a href="#lanes">Products</a>
       <a href="#lenders">For lenders</a>
       <a href="#agents">For agents</a>
+      <a href="lender.html">For lenders</a>
+      <a href="portal.html">Lender sign in</a>
       <a class="btn sm" href="#intake">Submit a scenario</a>
       <details class="menu">
         <summary>Menu</summary>
@@ -368,7 +371,7 @@
     </div>
    </div>
    <div class="quote-card" aria-label="Sample anonymized quote comparison">
-    <div class="qc-head"><span class="t">Sample quotes - DSCR rental, NJ</span></div>
+    <div class="qc-head"><span class="t">Sample quotes: DSCR rental, NJ</span></div>
     <div role="table" aria-label="Sample quote comparison">
     <div role="row" class="qc-cols"><span>Lender</span><span>Rate</span><span>Term</span><span>LTV</span><span>Pts</span><span>Prepay</span></div>
     <div role="row" class="qc-row"><span class="who">Lender A</span><span class="rate">6.875%</span><span class="num">30-yr fix</span><span class="num">75%</span><span class="num">1.50</span><span class="num">3 yr</span></div>
@@ -513,7 +516,7 @@
             </select>
           </div>
           <div class="f-field full" id="oo-warn" style="display:none">
-            <span class="f-label" style="color:#b3432e">Owner-occupied homes are consumer-purpose mortgages and can't be submitted in this draft. Investment properties only.</span>
+            <span class="f-label" style="color:#b3432e">Owner-occupied homes are consumer-purpose mortgages and can't be submitted in this product. Investment properties only; the home equity lane accepts a primary home.</span>
           </div>
           <div class="f-field">
             <label for="cond">Condition</label>
@@ -866,7 +869,7 @@
       <fieldset class="f-step" data-step="8" data-name="Done">
         <div class="f-done" id="f-done">
           <div id="f-done-test">
-            <span class="f-badge">Test mode - not sent</span>
+            <span class="f-badge">Test mode: not sent</span>
             <h3 tabindex="-1" id="f-done-h">Checked. Here is your record.</h3>
             <p>This is the structured scenario a lender or an agent would work from. Copy it, or submit it again once live intake is switched on.</p>
           </div>
@@ -930,7 +933,7 @@
     <div class="lender-sample">
       <h3>What a rate request looks like</h3>
       <div class="req-card" aria-label="Sample rate request">
-      <div class="qc-head"><span class="t">Sample rate request - DSCR rental, NJ</span></div>
+      <div class="qc-head"><span class="t">Sample rate request: DSCR rental, NJ</span></div>
       <div class="f-review f-sheet">
         <div class="r-row"><span class="k">Product</span><span>DSCR rental</span></div>
         <div class="r-row"><span class="k">Purpose</span><span>Purchase</span></div>
@@ -1798,7 +1801,7 @@
     saveDraft();
     show(0);
     if (d && d.property && d.property.occupancy === 'owner_occupied' && d.product !== 'home_equity') {
-        status.textContent = 'Loaded, but this scenario is owner-occupied. This draft takes investment properties only - change Occupancy to continue.';
+        status.textContent = 'Loaded, but this scenario is owner-occupied. This product takes investment properties only; the home equity lane accepts a primary home. Change Occupancy or the product to continue.';
       } else {
         var laneMissing = [];
         if (d.product === 'bridge') {
