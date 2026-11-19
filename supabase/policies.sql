@@ -48,7 +48,8 @@ create policy guidelines_insert_own on public.lender_guidelines
   for insert to authenticated
   with check (
     lender_id = public.my_lender_id()
-    and (pdf_path is null or pdf_path like public.my_lender_id()::text || '/%')
+    and (pdf_path is null
+         or pdf_path ~ ('^' || public.my_lender_id()::text || '/[^/]+\.pdf$'))
   );
 
 -- lender_users: a lender reads their own mapping row; no client writes -
@@ -72,13 +73,8 @@ create policy guidelines_bucket_write_own on storage.objects
   for insert to authenticated
   with check (bucket_id = 'guidelines' and (storage.foldername(name))[1] = public.my_lender_id()::text);
 
+-- Files are immutable like the versions they belong to: no update or delete
+-- policies. Each version gets a new path; an old PDF can never be swapped or
+-- removed behind its record.
 drop policy if exists guidelines_bucket_update_own on storage.objects;
-create policy guidelines_bucket_update_own on storage.objects
-  for update to authenticated
-  using (bucket_id = 'guidelines' and (storage.foldername(name))[1] = public.my_lender_id()::text)
-  with check (bucket_id = 'guidelines' and (storage.foldername(name))[1] = public.my_lender_id()::text);
-
 drop policy if exists guidelines_bucket_delete_own on storage.objects;
-create policy guidelines_bucket_delete_own on storage.objects
-  for delete to authenticated
-  using (bucket_id = 'guidelines' and (storage.foldername(name))[1] = public.my_lender_id()::text);

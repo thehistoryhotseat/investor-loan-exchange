@@ -67,3 +67,20 @@ intake stays in test mode.
   with rate limiting, not an anon insert policy.
 - Before any real lender data: move the project to Aryeh's own Supabase
   account (see above) and re-check Free plan pause/backup terms.
+
+## Hardening v2 (applied, from committed-SQL review)
+
+- Guideline `id` and `created_at` are set by a BEFORE INSERT trigger
+  (`now()`, `gen_random_uuid()`); a client cannot backdate or future-date a
+  version to dodge the 90-day stale flag or stay "newest".
+- Guideline files are immutable: storage has read + insert policies only.
+  Each version writes a new path.
+- Check constraints on `lender_guidelines`: LTV 0-100, FICO 300-850,
+  min <= max loan, products and property types restricted to the schema's
+  slug lists, states must be 2-letter uppercase codes.
+- `pdf_path` must match `^{lender_id}/file.pdf$` (regex, no `../`).
+  The portal signs download URLs with the lender's own session, never the
+  service role.
+- The `guidelines` bucket accepts only `application/pdf`, 10 MB max.
+- Lender emails are unique case-insensitively (unique index on
+  `lower(email)`).
