@@ -1379,7 +1379,7 @@
     if (!ok) {
       var firstBad = null;
       for (var bi = 0; bi < sc.els.length && !firstBad; bi++) {
-        firstBad = sc.els[bi].querySelector('.pills.f-invalid input, .f-invalid');
+        firstBad = sc.els[bi].querySelector('.pills.f-invalid input, input.f-invalid, select.f-invalid, textarea.f-invalid');
       }
       if (firstBad) {
         try { firstBad.focus({preventScroll:true}); } catch(e) {}
