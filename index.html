@@ -1848,7 +1848,7 @@
         var dropNote = droppedPrefs.length ? ' Preferences that do not fit this lane were dropped: ' + droppedPrefs.join(', ') + '.' : '';
         if (changeNotes.length) dropNote += ' Changes on load: ' + changeNotes.join('; ') + '.';
         status.textContent = (laneMissing.length
-          ? 'Loaded, but the file has no ' + laneMissing.join(' or ') + ', the lane screen will ask for ' + (laneMissing.length > 1 ? 'them' : 'it') + '.'
+          ? 'Loaded, but the file has no ' + laneMissing.join(' or ') + '. The lane screen will ask for ' + (laneMissing.length > 1 ? 'them' : 'it') + '.'
           : 'Loaded. Review each screen; contact and consent stay yours to fill.') + dropNote;
     updateRateType(); updatePurpose(); updateLtv(); updateFlip(); updateDscr(); updateCltv();
       }
