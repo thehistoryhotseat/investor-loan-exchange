@@ -97,3 +97,22 @@ for each row execute function public.force_row_stamps();
 update storage.buckets
 set allowed_mime_types = array['application/pdf'], file_size_limit = 10485760
 where id = 'guidelines';
+
+-- v3: canonical states (real codes + one "Nationwide" value), non-empty arrays
+create or replace function public.valid_state_codes(vals text[])
+returns boolean language sql immutable as $$
+  select coalesce(bool_and(
+    v = 'Nationwide' or v = any(array[
+      'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA',
+      'KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
+      'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT',
+      'VA','WA','WV','WI','WY','DC'
+    ])
+  ), true) from unnest(vals) v $$;
+
+alter table public.lender_guidelines drop constraint if exists guidelines_states_nationwide_only;
+alter table public.lender_guidelines add constraint guidelines_states_nationwide_only
+  check (not ('Nationwide' = any(states)) or cardinality(states) = 1);
+alter table public.lender_guidelines drop constraint if exists guidelines_arrays_nonempty;
+alter table public.lender_guidelines add constraint guidelines_arrays_nonempty
+  check (cardinality(products) > 0 and cardinality(property_types) > 0 and cardinality(states) > 0);
