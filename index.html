@@ -1256,12 +1256,6 @@
       document.getElementById('f-copy').textContent = 'Copied';
     });
   });
-  var copyScenario = document.getElementById('copy-scenario');
-  if (copyScenario) copyScenario.addEventListener('click', function(){
-    navigator.clipboard.writeText(document.getElementById('scenario-example').textContent).then(function(){
-      copyScenario.textContent = 'Copied';
-    });
-  });
   var mcta = document.querySelector('.mobile-cta');
   if (mcta && 'IntersectionObserver' in window) {
     var heroOn = false, intakeOn = false;
