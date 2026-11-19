@@ -347,7 +347,7 @@
 
       <fieldset class="f-step on" data-step="1" data-name="Product">
         <h3>What kind of deal is it?</h3>
-        <p class="sub">Pick one product and the purpose.</p>
+        <p class="sub">Pick one product and the purpose. Your progress is saved in this browser as you go.</p>
         <div class="f-field full">
           <span class="f-label">Product <span class="req">*</span></span>
           <div class="pills" data-group="product">
@@ -649,6 +649,7 @@
           <p>This is the structured scenario a lender or an agent would work from. Copy it, or submit it again once live intake is switched on.</p>
           <div class="pre-head" style="margin-top:18px"><span>scenario.json</span><button class="copy-btn-light" id="f-copy" type="button">Copy</button></div>
           <pre id="f-json"></pre>
+          <button type="button" class="btn ghost" id="f-restart">Start a new scenario</button>
         </div>
       </fieldset>
 
@@ -946,7 +947,45 @@
     if (val('notes')) obj.notes = val('notes');
     return JSON.stringify(obj, null, 2);
   }
+  var DRAFT_KEY = 'ilx-draft';
+  function saveDraft(){
+    var d = {};
+    form.querySelectorAll('[name]').forEach(function(el){
+      if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; }
+      else if (el.type === 'checkbox') { d[el.name] = el.checked; }
+      else d[el.name] = el.value;
+    });
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch(e) {}
+  }
+  function restoreDraft(){
+    var raw;
+    try { raw = localStorage.getItem(DRAFT_KEY); } catch(e) { return; }
+    if (!raw) return;
+    var d;
+    try { d = JSON.parse(raw); } catch(e) { return; }
+    Object.keys(d).forEach(function(n){
+      form.querySelectorAll('[name="' + n + '"]').forEach(function(el){
+        if (el.type === 'radio') { el.checked = (el.value === d[n]); }
+        else if (el.type === 'checkbox') { el.checked = !!d[n]; }
+        else el.value = d[n];
+      });
+    });
+    updateLtv();
+    updateDscr();
+  }
+  function clearDraft(){ try { localStorage.removeItem(DRAFT_KEY); } catch(e) {} }
+  form.addEventListener('input', saveDraft);
+  form.addEventListener('change', saveDraft);
+  restoreDraft();
+  document.getElementById('f-restart').addEventListener('click', function(){
+    form.reset();
+    clearDraft();
+    document.getElementById('f-done').classList.remove('on');
+    document.getElementById('f-json').textContent = '';
+    show(0);
+  });
   function finish(){
+    clearDraft();
     document.getElementById('f-json').textContent = buildJson();
     document.getElementById('f-done').classList.add('on');
   }
