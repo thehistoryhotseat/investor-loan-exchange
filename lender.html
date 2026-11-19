@@ -363,49 +363,7 @@
     <form class="form-card" id="ilx-lender-form" novalidate>
       <div class="f-meta" aria-live="polite"><span id="l-stepname">Your company</span><span id="l-stepno"></span></div>
 
-      <fieldset class="f-step on" data-name="Your company">
-        <h3>Your company</h3>
-        <p class="sub">Who we would be routing deals to.</p>
-        <div class="f-grid">
-          <div class="f-field">
-            <label class="f-label" for="company">Company <span class="req">*</span></label>
-            <input type="text" id="company" name="company" autocomplete="organization" required>
-            <p class="f-msg" style="display:none"></p>
-          </div>
-          <div class="f-field">
-            <label class="f-label" for="contact_name">Your name <span class="req">*</span></label>
-            <input type="text" id="contact_name" name="contact_name" autocomplete="name" required>
-            <p class="f-msg" style="display:none"></p>
-          </div>
-          <div class="f-field">
-            <label class="f-label" for="email">Work email <span class="req">*</span></label>
-            <input type="email" id="email" name="email" autocomplete="email" required>
-            <p class="f-msg" style="display:none"></p>
-          </div>
-          <div class="f-field">
-            <label class="f-label" for="phone">Phone <span class="opt">(optional)</span></label>
-            <input type="tel" id="phone" name="phone" autocomplete="tel">
-            <p class="f-msg" style="display:none"></p>
-          </div>
-          <div class="f-field full">
-            <span class="f-label" id="lbl-ltype">Lender type <span class="opt">(optional)</span></span>
-            <div class="pills" role="radiogroup" aria-labelledby="lbl-ltype" data-group="lender_type">
-              <input type="radio" name="lender_type" id="lt-direct" value="direct_lender"><label for="lt-direct">Direct lender</label>
-              <input type="radio" name="lender_type" id="lt-bank" value="bank"><label for="lt-bank">Bank</label>
-              <input type="radio" name="lender_type" id="lt-cu" value="credit_union"><label for="lt-cu">Credit union</label>
-              <input type="radio" name="lender_type" id="lt-fund" value="private_fund"><label for="lt-fund">Private fund</label>
-              <input type="radio" name="lender_type" id="lt-other" value="other"><label for="lt-other">Other</label>
-            </div>
-          </div>
-          <div class="f-field">
-            <label class="f-label" for="nmls_id">Company NMLS ID <span class="opt">(optional)</span></label>
-            <input type="text" inputmode="numeric" id="nmls_id" name="nmls_id" placeholder="e.g. 123456">
-            <p class="f-msg" style="display:none"></p>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset class="f-step" data-name="The box you price in">
+      <fieldset class="f-step on" data-name="The box you price in">
         <h3>The box you price in</h3>
         <p class="sub">Scenarios outside it never reach your desk. Rough ranges are fine.</p>
         <div class="f-field full">
@@ -467,6 +425,48 @@
           </div>
         </div>
         <p class="sub" style="margin-top:14px">One range across the products you picked; use the notes for per-product exceptions.</p>
+      </fieldset>
+
+      <fieldset class="f-step" data-name="Your company">
+        <h3>Your company</h3>
+        <p class="sub">Who we would be routing deals to.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <label class="f-label" for="company">Company <span class="req">*</span></label>
+            <input type="text" id="company" name="company" autocomplete="organization" required>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="contact_name">Your name <span class="req">*</span></label>
+            <input type="text" id="contact_name" name="contact_name" autocomplete="name" required>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="email">Work email <span class="req">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="phone">Phone <span class="opt">(optional)</span></label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel">
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field full">
+            <span class="f-label" id="lbl-ltype">Lender type <span class="opt">(optional)</span></span>
+            <div class="pills" role="radiogroup" aria-labelledby="lbl-ltype" data-group="lender_type">
+              <input type="radio" name="lender_type" id="lt-direct" value="direct_lender"><label for="lt-direct">Direct lender</label>
+              <input type="radio" name="lender_type" id="lt-bank" value="bank"><label for="lt-bank">Bank</label>
+              <input type="radio" name="lender_type" id="lt-cu" value="credit_union"><label for="lt-cu">Credit union</label>
+              <input type="radio" name="lender_type" id="lt-fund" value="private_fund"><label for="lt-fund">Private fund</label>
+              <input type="radio" name="lender_type" id="lt-other" value="other"><label for="lt-other">Other</label>
+            </div>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="nmls_id">Company NMLS ID <span class="opt">(optional)</span></label>
+            <input type="text" inputmode="numeric" id="nmls_id" name="nmls_id" placeholder="e.g. 123456">
+            <p class="f-msg" style="display:none"></p>
+          </div>
+        </div>
       </fieldset>
 
       <fieldset class="f-step" data-name="Review">
