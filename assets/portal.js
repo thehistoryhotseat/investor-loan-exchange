@@ -86,7 +86,8 @@ async function loadApp(){
 
   $('app-company').textContent = lender.company || 'Your company';
   $('p-company').value = lender.company || '';
-  $('p-type').value = lender.lender_type || '';
+  var LTYPE_LABELS = {direct_lender:'Direct lender', bank:'Bank', credit_union:'Credit union', private_fund:'Private fund', other:'Other'};
+  $('p-type').value = LTYPE_LABELS[lender.lender_type] || lender.lender_type || '';
   $('p-email').value = lender.email || '';
   $('p-contact').value = lender.contact_name || '';
   $('p-phone').value = lender.phone || '';
