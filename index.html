@@ -1343,7 +1343,7 @@
   function snake(x){ return (x || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }
   function buildJson(){
     var obj = {
-      schema_version: '1.6',
+      schema_version: '1.7',
       prepared_by: val('prepared_by') || 'ilx-intake',
       product: val('product'),
       purpose: val('purpose'),
@@ -1730,7 +1730,7 @@
     setField('notes', d.notes);
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     var changeNotes = [];
-    if (d.schema_version && d.schema_version !== '1.6') changeNotes.push('updated it from v' + d.schema_version + ' to v1.6');
+    if (d.schema_version && d.schema_version !== '1.7') changeNotes.push('updated it from v' + d.schema_version + ' to v1.7');
     var knownTop = ['schema_version','prepared_by','consent','product','purpose','property','loan_amount_usd','ltv','role','credit_band','citizenship','experience','liquidity_band','vesting','target_close','monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','estimated_dscr','arv_usd','rehab_budget_usd','exit_strategy','flip_experience','bridge_exit_strategy','bridge_term','project_budget_usd','build_timeline','land_status','guc_exit_strategy','loan_to_cost','loan_to_arv','preferences','conforming','notes','home_equity_type','first_mortgage_balance_usd'];
     var unknownTop = Object.keys(d).filter(function(k){ return knownTop.indexOf(k) < 0; });
     var knownProp = ['type','occupancy','state','zip','est_value_usd','units','condition'];

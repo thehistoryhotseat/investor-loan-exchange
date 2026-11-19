@@ -56,7 +56,7 @@
       "properties": {
         "type": {
           "type": "string",
-          "description": "e.g. single_family, 2-4 unit, condo, townhome, small multifamily, mixed use",
+          "description": "Property type slug. One of the enum values.",
           "enum": [
             "single_family",
             "2_4_unit",
