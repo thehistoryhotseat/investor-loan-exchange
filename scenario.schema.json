@@ -17,7 +17,7 @@
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.6"
+      "const": "1.7"
     },
     "prepared_by": {
       "type": "string",
@@ -56,7 +56,16 @@
       "properties": {
         "type": {
           "type": "string",
-          "description": "e.g. single_family, 2-4 unit, condo, townhome, small multifamily, mixed use"
+          "description": "e.g. single_family, 2-4 unit, condo, townhome, small multifamily, mixed use",
+          "enum": [
+            "single_family",
+            "2_4_unit",
+            "condo",
+            "townhome",
+            "small_multifamily_5",
+            "mixed_use",
+            "other"
+          ]
         },
         "occupancy": {
           "type": "string",

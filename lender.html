@@ -510,10 +510,22 @@
     var c = form.querySelector('input[name="' + n + '"]:checked');
     return c ? c.value : '';
   }
+  var STATE_CODES = 'AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY'.split(' ');
   function statesList(){
     var s = val('states');
     if (/^nationwide$/i.test(s)) return ['Nationwide'];
-    return s.split(',').map(function(x){ return x.trim().toUpperCase(); }).filter(Boolean);
+    var seen = {};
+    return s.split(',').map(function(x){ return x.trim().toUpperCase(); }).filter(function(x){
+      if (!x || seen[x]) return false;
+      seen[x] = true;
+      return true;
+    });
+  }
+  function statesValid(){
+    var s = val('states');
+    if (/^nationwide$/i.test(s)) return true;
+    if (!/^[A-Za-z]{2}(\s*,\s*[A-Za-z]{2})*$/.test(s)) return false;
+    return s.split(',').every(function(x){ return STATE_CODES.indexOf(x.trim().toUpperCase()) !== -1; });
   }
   function record(){
     return {
@@ -584,9 +596,9 @@
       if (!pillGroupOk('property_types')) ok = false;
       var st = form.querySelector('[name="states"]');
       var sv = st.value.trim();
-      var badSt = !sv || !/^(nationwide|[A-Za-z]{2}(\s*,\s*[A-Za-z]{2})*)$/i.test(sv);
+      var badSt = !sv || !statesValid();
       st.classList.toggle('f-invalid', badSt);
-      fieldMsg(st, badSt ? 'Two-letter codes, comma separated, or Nationwide.' : '');
+      fieldMsg(st, badSt ? 'Real two-letter state codes, comma separated, or Nationwide.' : '');
       if (badSt) ok = false;
       var lt = form.querySelector('[name="max_ltv_pct"]');
       var lv = lt.value.trim();

@@ -2,7 +2,7 @@
 
 > A loan scenario exchange for investment-property and home equity lending. A broker submits one loan scenario; it is checked against each lender's niche (product, state, property type, loan size); each fitting panel lender receives one structured rate request; quotes come back to one place, side by side, and the broker chooses who to engage. People and AI agents use the same intake.
 
-Schema version: 1.6 (scenario.schema.json)
+Schema version: 1.7 (scenario.schema.json)
 
 ## What agents can do here
 
@@ -23,7 +23,7 @@ Schema version: 1.6 (scenario.schema.json)
 
 ## Required base fields
 
-schema_version ("1.6"), product, purpose, property, loan_amount_usd, credit_band, citizenship. property requires type, occupancy, state and est_value_usd. Extra fields are rejected (additionalProperties is false everywhere).
+schema_version ("1.7"), product, purpose, property, loan_amount_usd, credit_band, citizenship. property requires type, occupancy, state and est_value_usd. Extra fields are rejected (additionalProperties is false everywhere).
 
 Formats that trip validators:
 
@@ -36,7 +36,7 @@ Formats that trip validators:
 - credit_band keeps its display form: 780+, 740-779, 700-739, 660-699, 620-659, below_620.
 - citizenship: us_person, foreign_national.
 - property.condition: turnkey, light_rehab, heavy_rehab, shell.
-- property.type: free string, e.g. single_family, 2-4 unit, condo, townhome, small multifamily, mixed use.
+- property.type: one of single_family, 2_4_unit, condo, townhome, small_multifamily_5, mixed_use, other.
 - liquidity_band: 3_months, 6_months, 12_plus_months. vesting: llc, personal_name, trust, other_entity.
 
 ## Lane-specific fields
@@ -62,4 +62,4 @@ Short lanes are bridge, ground_up_construction and fix_flip. Long lanes are dscr
 ## Links
 
 - [Site and intake form](https://thehistoryhotseat.github.io/investor-loan-exchange/#intake): the single intake for people and agents
-- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema v1.6 for one loan scenario
+- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema v1.7 for one loan scenario
