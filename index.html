@@ -1263,6 +1263,13 @@
     if (!raw) { status.textContent = 'Paste a scenario.json first.'; return; }
     var d;
     try { d = JSON.parse(raw); } catch(e) { status.textContent = 'That is not valid JSON.'; return; }
+    var known = ['dscr_rental','fix_flip','bridge','ground_up_construction','cash_out_refi','conforming_agency'];
+    if (!d.product || known.indexOf(d.product) < 0) {
+      status.textContent = d.product
+        ? 'This file\'s product ("' + d.product + '") is not one we route; nothing was loaded.'
+        : 'That file has no product; it does not look like a scenario. Nothing was loaded.';
+      return;
+    }
     form.reset();
     try { localStorage.removeItem('ilx-draft'); } catch(e) {}
     setField('product', d.product);
