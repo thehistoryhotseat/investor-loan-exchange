@@ -137,6 +137,9 @@
   .faq[open] summary::after{transform:rotate(45deg)}
   .faq p{padding:0 4px 22px;font-size:14.5px;color:var(--muted);max-width:64ch}
   .faq p a{color:var(--ink-2)}
+  .pre-light{background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:22px 24px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.6px;line-height:1.7;color:var(--ink-2)}
+  .lender-sample{margin-top:36px}
+  .lender-sample h3{font-family:'Fraunces',serif;font-weight:560;font-size:19px;margin-bottom:12px}
 
   /* agents */
   .agents{background:var(--navy);color:#e8ecf1;border-bottom:none}
@@ -421,6 +424,16 @@
       </div>
     </div>
     <div class="callout" style="margin-top:32px"><strong>What a lender needs to join:</strong> its niche lanes (products, states, property types, loan size range), a current rate sheet or named pricing contact, one inbox for scenario requests, and a typical quote turnaround time. In return it sees only scenarios that fit, each as one structured request, with a log of everything it was sent and every quote it returned.</div>
+    <div class="lender-sample">
+      <h3>What a rate request looks like</h3>
+      <pre class="pre-light">RATE REQUEST #1042 - DSCR RENTAL - NJ
+Loan:      $412,500 purchase - target close 2026-01-15
+Property:  SFR, 1 unit - value $550,000 - rent $3,400/mo
+Borrower:  LLC - 720-739 credit band - 4+ deals closed - $85,000 liquidity
+DSCR:      taxes $620/mo - insurance $140/mo - no HOA
+Exit:      hold
+Reply with: rate - points - LTV - prepay - exceptions</pre>
+    </div>
   </div>
 </section>
 
