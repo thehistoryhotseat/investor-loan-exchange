@@ -23,7 +23,7 @@ Schema version: 1.3 (scenario.schema.json)
 
 ## Lanes routed
 
-DSCR rental, fix & flip, bridge, ground-up construction, cash-out refinance, and conforming (agency) for investment property. Owner-occupied conforming scenarios are reviewed by hand before any lender sees them.
+DSCR rental, fix & flip, bridge, ground-up construction, cash-out refinance, and conforming (agency) for investment property only. Owner-occupied (consumer-purpose) scenarios are not accepted.
 
 ## Links
 

@@ -60,9 +60,9 @@
         "occupancy": {
           "type": "string",
           "enum": [
-            "investment",
-            "owner_occupied"
-          ]
+            "investment"
+          ],
+          "description": "Investment properties only. Owner-occupied (consumer-purpose) scenarios are not accepted."
         },
         "state": {
           "type": "string",
@@ -227,13 +227,6 @@
             "yes",
             "no"
           ]
-        },
-        "owner_occupied": {
-          "type": "string",
-          "enum": [
-            "yes",
-            "no"
-          ]
         }
       }
     },
@@ -311,6 +304,15 @@
         "not_yet"
       ],
       "description": "Ground-up construction: land status"
+    },
+    "guc_exit_strategy": {
+      "type": "string",
+      "enum": [
+        "sell",
+        "refinance_into_dscr",
+        "undecided"
+      ],
+      "description": "Ground-up construction: how the loan gets taken out"
     }
   },
   "allOf": [
@@ -398,7 +400,8 @@
       "then": {
         "required": [
           "project_budget_usd",
-          "build_timeline"
+          "build_timeline",
+          "guc_exit_strategy"
         ]
       }
     }

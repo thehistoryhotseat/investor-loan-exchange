@@ -48,7 +48,8 @@
   .skip-link{position:absolute;left:-999px;top:0;background:var(--btn);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
   .skip-link:focus{left:0}
   h3[tabindex="-1"]:focus{outline:none}
-  .pills:focus{outline:2px solid var(--btn);outline-offset:4px;border-radius:10px}
+  .pills input:focus-visible + label{outline:2px solid var(--btn);outline-offset:2px}
+  .pills input:focus + label{border-color:var(--ink)}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   [id]{scroll-margin-top:76px}
 
@@ -487,6 +488,9 @@
               <option value="owner_occupied">Owner-occupied</option>
             </select>
           </div>
+          <div class="f-field full" id="oo-warn" style="display:none">
+            <span class="f-label" style="color:#b3432e">Owner-occupied homes are consumer-purpose mortgages and can't be submitted in this draft. Investment properties only.</span>
+          </div>
           <div class="f-field">
             <label for="cond">Condition</label>
             <select id="cond" name="condition">
@@ -505,9 +509,6 @@
           <div class="f-field">
             <label for="state">State <span class="req">*</span></label>
             <input type="text" id="state" name="state" maxlength="2" placeholder="e.g. NJ" required>
-          </div>
-          <div class="f-field full" id="oo-warn" style="display:none">
-            <span class="f-label" style="color:#b3432e">Owner-occupied homes are consumer-purpose mortgages and can't be submitted in this draft. Investment properties only.</span>
           </div>
           <div class="f-field">
             <label for="zip">ZIP</label>
@@ -695,6 +696,15 @@
             </select>
           </div>
           <div class="f-field">
+            <label for="guc-exit">Exit strategy <span class="req">*</span></label>
+            <select id="guc-exit" name="guc_exit_strategy" required>
+              <option value="">Select...</option>
+              <option>Sell</option>
+              <option>Refinance into DSCR</option>
+              <option>Undecided</option>
+            </select>
+          </div>
+          <div class="f-field">
             <label for="guc-land">Land status</label>
             <select id="guc-land" name="land_status">
               <option value="">Select...</option>
@@ -715,13 +725,6 @@
             <div class="pills" role="radiogroup" aria-labelledby="lbl-under_limit" data-group="under_limit">
               <input type="radio" name="under_limit" id="cl-yes" value="yes"><label for="cl-yes">Yes</label>
               <input type="radio" name="under_limit" id="cl-no" value="no"><label for="cl-no">No / not sure</label>
-            </div>
-          </div>
-          <div class="f-field">
-            <span class="f-label" id="lbl-owner_occ">Owner-occupied? <span class="req">*</span></span>
-            <div class="pills" role="radiogroup" aria-labelledby="lbl-owner_occ" data-group="owner_occ">
-              <input type="radio" name="owner_occ" id="oo-no" value="no"><label for="oo-no">No, investment</label>
-              <input type="radio" name="owner_occ" id="oo-yes" value="yes"><label for="oo-yes">Yes</label>
             </div>
           </div>
           <div class="f-field full">
@@ -747,7 +750,7 @@
             <label for="ratetype">Rate type</label>
             <select id="ratetype" name="rate_type">
               <option value="">Select...</option>
-              <option>30-yr fixed</option>
+              <option data-long>30-yr fixed</option>
               <option>ARM</option>
               <option>Interest-only ARM</option>
               <option>No preference</option>
@@ -1001,7 +1004,11 @@
           pills.parentNode.appendChild(pm);
         }
         pm.textContent = 'Pick one to continue.';
+        if (!pm.id) pm.id = 'msg-' + n;
         pm.style.display = missing ? 'block' : 'none';
+        step.querySelectorAll('input[name="' + n + '"]').forEach(function(r){
+          if (missing) r.setAttribute('aria-describedby', pm.id); else r.removeAttribute('aria-describedby');
+        });
       }
       if (missing) ok = false;
     });
@@ -1068,6 +1075,15 @@
     var show = val('occupancy') === 'owner_occupied' && product() !== '';
     w.style.display = show ? '' : 'none';
   }
+  function updateRateType(){
+    var rt = document.getElementById('ratetype');
+    if (!rt) return;
+    var shortLane = product() === 'bridge' || product() === 'ground_up_construction';
+    Array.prototype.forEach.call(rt.options, function(o){
+      if (o.hasAttribute('data-long')) o.hidden = shortLane;
+    });
+    if (shortLane && rt.selectedOptions[0] && rt.selectedOptions[0].hasAttribute('data-long')) rt.value = '';
+  }
   function piMonthly(principal, annualRate, years){
     var r = annualRate / 12, n = years * 12;
     return principal * r / (1 - Math.pow(1 + r, -n));
@@ -1091,7 +1107,7 @@
     if (['est_value_usd','loan_amount_usd'].indexOf(n) >= 0) { updateLtv(); updateFlip(); }
     if (['monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','loan_amount_usd'].indexOf(n) >= 0) updateDscr();
     if (['arv_usd','rehab_budget_usd'].indexOf(n) >= 0) updateFlip();
-    if (n === 'occupancy' || n === 'product') updateOoWarn();
+    if (n === 'occupancy' || n === 'product') updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     var scr0 = screensFor(product());
     if (scr0[current] && scr0[current].name === 'Review & you') renderReview();
   });
@@ -1147,6 +1163,7 @@
     if (product() === 'ground_up_construction') {
       row('Project budget', money(val('project_budget_usd')), 'The build');
       row('Build timeline', val('build_timeline'), 'The build');
+      row('Exit strategy', val('guc_exit_strategy'), 'The build');
       if (val('land_status')) row('Land status', val('land_status'), 'The build');
     }
     if (val('structure')) row('Structure', val('structure').replace('_', ' '), 'Preferences');
@@ -1154,7 +1171,6 @@
     if (val('prepay')) row('Prepay tolerance', label({none:'None', up_to_3yr:'Up to 3 yr', up_to_5yr:'Up to 5 yr', flexible:'Flexible'}, val('prepay')), 'Preferences');
     if (product() === 'conforming_agency') {
       row('Under county limit', val('under_limit'), 'Conforming');
-      row('Owner-occupied', val('owner_occ'), 'Conforming');
     }
     if (val('notes')) row('Notes', val('notes'), 'About you');
     document.getElementById('f-review').innerHTML = rows.join('');
@@ -1231,10 +1247,11 @@
     if (product() === 'ground_up_construction') {
       obj.project_budget_usd = parseFloat(val('project_budget_usd')) || null;
       obj.build_timeline = snake(val('build_timeline'));
+      obj.guc_exit_strategy = snake(val('guc_exit_strategy'));
       if (val('land_status')) obj.land_status = snake(val('land_status'));
     }
     if (product() === 'conforming_agency') {
-      obj.conforming = { under_county_limit: val('under_limit'), owner_occupied: val('owner_occ') };
+      obj.conforming = { under_county_limit: val('under_limit') };
     }
     if (val('notes')) obj.notes = val('notes');
     return JSON.stringify(obj, null, 2);
@@ -1360,10 +1377,7 @@
         firstBad = sc.els[bi].querySelector('.pills.f-invalid input, .f-invalid');
       }
       if (firstBad) {
-        var pg = firstBad.closest ? firstBad.closest('.pills') : null;
-        var focusEl = pg || firstBad;
-        if (pg) pg.setAttribute('tabindex', '-1');
-        try { focusEl.focus({preventScroll:true}); } catch(e) {}
+        try { firstBad.focus({preventScroll:true}); } catch(e) {}
         var by = firstBad.getBoundingClientRect().top + window.pageYOffset - 120;
         window.scrollTo({top: by, behavior: 'smooth'});
       }
@@ -1384,7 +1398,7 @@
   backBtn.addEventListener('click', function(){ show(current - 1); });
   form.addEventListener('change', function(e){
     if (e.target.name === 'product') { show(0); }
-    if (e.target.name === 'product' || e.target.name === 'occupancy') updateOoWarn();
+    if (e.target.name === 'product' || e.target.name === 'occupancy') updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     if (e.target.name === 'product') { updateLtv(); updateFlip(); }
     var scr1 = screensFor(product());
     if (scr1[current] && scr1[current].name === 'Review & you') renderReview();
@@ -1472,13 +1486,16 @@
     setField('prepay', pf.prepay_tolerance);
     var cf = d.conforming || {};
     setField('under_limit', cf.under_county_limit);
-    setField('owner_occ', cf.owner_occupied);
     setField('role', d.role);
     setField('notes', d.notes);
-    updateLtv(); updateDscr(); updateFlip(); updateOoWarn();
+    updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
     saveDraft();
     show(0);
-    status.textContent = 'Loaded. Review each screen; contact and consent stay yours to fill.';
+    if (d && d.property && d.property.occupancy === 'owner_occupied') {
+        status.textContent = 'Loaded, but this scenario is owner-occupied. This draft takes investment properties only - change Occupancy to continue.';
+      } else {
+        status.textContent = 'Loaded. Review each screen; contact and consent stay yours to fill.';
+      }
   });
   document.getElementById('f-download').addEventListener('click', function(){
     var blob = new Blob([document.getElementById('f-json').textContent], {type:'application/json'});
