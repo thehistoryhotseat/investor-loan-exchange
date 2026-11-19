@@ -425,7 +425,7 @@
         <span class="eyebrow">Submit a scenario</span>
         <h2>Three minutes. No documents.</h2>
       </div>
-      <p>Test mode: your entry is checked on this page and shown to you as the exact record we would send. Nothing leaves your browser until submissions are switched on.</p>
+      <p>Test mode: your entry is checked on this page and shown to you as the exact envelope we would send. Nothing leaves your browser until submissions are switched on.</p>
     </div>
     <details class="load-json">
       <summary>Load a scenario.json from your agent</summary>
@@ -1288,6 +1288,7 @@
     if (product() === 'conforming_agency') {
       row('Under county limit', label({yes:'Yes', no:'No', not_sure:'Not sure'}, val('under_limit')), 'Conforming');
       if (val('dti_band')) row('DTI band', label({under_36:'Under 36%', '36_43':'36-43%', '43_50':'43-50%', over_50:'Over 50%', not_sure:'Not sure'}, val('dti_band')), 'Conforming');
+      if (val('conforming_note')) row('Note', val('conforming_note'), 'Conforming');
     }
     if (product() === 'home_equity') {
       if (val('home_equity_type')) row('Product type', label({heloc:'HELOC (line of credit)', home_equity_loan:'Home equity loan (lump sum)'}, val('home_equity_type')), 'Home equity');
@@ -1389,7 +1390,8 @@
     return JSON.stringify(obj, null, 2);
   }
   // Live intake endpoint. Empty keeps the form in test mode: nothing leaves the browser.
-  // On go-live, set this to the chosen intake URL; the record is POSTed as JSON and an optional {"reference": "..."} in the response is shown to the broker.
+  // On go-live, set this to the chosen intake URL. The envelope {submission_id, consent, scenario, contact} is POSTed as text/plain; a JSON reply with ok:true confirms receipt and an optional reference is shown to the broker.
+  var CONSENT_VERSION = '2026-11-19'; // date of the Review-step consent wording
   var SUBMIT_ENDPOINT = '';
   var DRAFT_KEY = 'ilx-draft';
   function saveDraft(){
@@ -1503,12 +1505,18 @@
     document.getElementById('f-send-err').style.display = 'none';
     doneEl.classList.add('on');
     setTimeout(function(){ document.getElementById('f-done-live-h').focus(); }, 60);
-    fetch(SUBMIT_ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain','Accept':'application/json'}, body: JSON.stringify({scenario: JSON.parse(json), contact: val('contact')})})
+    var envelope = {
+      submission_id: 'ILX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase(),
+      consent: { version: CONSENT_VERSION, given_at: new Date().toISOString() },
+      scenario: JSON.parse(json),
+      contact: val('contact')
+    };
+    fetch(SUBMIT_ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain','Accept':'application/json'}, body: JSON.stringify(envelope)})
       .then(function(r){ if (!r.ok) throw new Error('send failed'); return r.text(); })
       .then(function(t){
         var j = null, ref = '';
-        try { j = JSON.parse(t); ref = j.reference || j.id || ''; } catch(e) {}
-        if (!j || (j.ok !== true && !ref)) throw new Error('bad response');
+        try { j = JSON.parse(t); ref = j.reference || ''; } catch(e) {}
+        if (!j || j.ok !== true) throw new Error('bad response');
         clearDraft();
         var refLine = document.getElementById('f-ref-line');
         if (ref) { document.getElementById('f-ref').textContent = ref; refLine.style.display = ''; }
