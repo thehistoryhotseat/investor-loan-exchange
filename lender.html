@@ -620,7 +620,8 @@
   }
   function validate(i){
     var ok = true;
-    if (i === 0) {
+    var stepName = steps[i].getAttribute('data-name');
+    if (stepName === 'Your company') {
       ['company','contact_name','email'].forEach(function(n){
         var f = form.querySelector('[name="' + n + '"]');
         var bad = !f.value.trim() || (n === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value.trim()));
@@ -634,7 +635,7 @@
       fieldMsg(nm, badNm ? 'Digits only.' : '');
       if (badNm) ok = false;
     }
-    if (i === 1) {
+    if (stepName === 'The box you price in') {
       if (!pillGroupOk('products')) ok = false;
       if (!pillGroupOk('property_types')) ok = false;
       var st = form.querySelector('[name="states"]');
