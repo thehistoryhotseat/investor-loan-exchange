@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Investor Loan Exchange - For lenders: join the panel</title>
+<meta name="description" content="Lenders: tell us the box you price in. Test mode - nothing is sent yet.">
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --ink:#101820; --ink-2:#2a3542; --paper:#f6f4ee; --card:#fffdf8;
+    --line:#ddd6c8; --brass:#9a7b3f; --brass-ink:#7d6230; --brass-soft:#b3975e; --muted:#66707c;
+    --navy:#14263c; --btn:#0f1b2d; --btn-hover:#1b2c44; --field:#d9d3c7;
+    --e1:0 1px 2px rgba(17,24,39,.06),0 1px 1px rgba(17,24,39,.04);
+    --e2:0 4px 12px -2px rgba(17,24,39,.08),0 2px 4px -2px rgba(17,24,39,.05);
+    --e3:0 24px 48px -12px rgba(17,24,39,.18),0 0 0 1px rgba(17,24,39,.06);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .skip-link{position:absolute;left:-999px;top:0;background:var(--btn);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
+  .skip-link:focus{left:0}
+  h3[tabindex="-1"]:focus{outline:none}
+  .pills input:focus + label{border-color:var(--ink)}
+  a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  [id]{scroll-margin-top:76px}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(246,244,238,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+  .mark{font-family:'Fraunces',serif;font-weight:560;font-size:23px;letter-spacing:-.01em;line-height:1}
+  .mark-img{display:block;border-radius:7px}
+  .brand-name{font-weight:600;font-size:15px;letter-spacing:.01em;white-space:nowrap}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500}
+  .nav-links a:not(.btn){transition:color .15s ease}
+  .nav-links a:hover{color:var(--brass)}
+  .nav-links a.btn{color:var(--paper)}
+  .btn{display:inline-block;background:var(--btn);color:var(--paper);text-decoration:none;font-weight:600;font-size:14.5px;padding:13px 24px;border-radius:6px;letter-spacing:.01em;transition:background .16s ease,transform .16s ease,box-shadow .16s ease;border:none;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--btn-hover);transform:translateY(-1px);box-shadow:var(--e1)}
+  .btn:active{transform:translateY(0);box-shadow:0 2px 6px rgba(16,24,32,.12)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+  .btn.ghost:hover{background:var(--btn);border-color:var(--btn);color:var(--paper)}
+  .btn.sm{padding:9px 16px;font-size:13.5px}
+  .btn[disabled]{opacity:.4;pointer-events:none}
+  .menu{display:none;position:relative}
+  .menu summary{list-style:none;cursor:pointer;font-size:13.5px;font-weight:600;padding:9px 14px;border:1.5px solid var(--ink);border-radius:4px;color:var(--ink);user-select:none}
+  .menu summary::-webkit-details-marker{display:none}
+  .menu[open] summary{background:var(--btn);border-color:var(--btn);color:var(--paper)}
+  .menu:not([open]) .menu-links{display:none}
+  .menu-links{position:absolute;right:0;top:calc(100% + 8px);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px;min-width:210px;box-shadow:var(--e2);display:flex;flex-direction:column;z-index:60}
+  .menu-links a{padding:11px 12px;color:var(--ink-2);text-decoration:none;font-size:14.5px;font-weight:500;border-radius:4px}
+  .menu-links a:hover{background:var(--paper);color:var(--ink)}
+  .menu-links a.cta{display:none;background:var(--btn);color:var(--paper);text-align:center;font-weight:600;margin-bottom:6px}
+  .menu-links a.cta:hover{background:var(--btn-hover);color:var(--paper)}
+
+  header.hero{padding:88px 0 76px;background:url('assets/hero-background.svg') center/cover no-repeat,var(--paper)}
+  .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:60px;align-items:start}
+  .hero h1{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(40px,4vw + 1rem,64px);line-height:1.02;letter-spacing:-.02em;margin:20px 0 22px;max-width:16ch}
+  .hero h1 em{font-style:normal;color:inherit}
+  .hero p{max-width:52ch;font-size:18px;color:var(--ink-2)}
+  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;align-items:center}
+  .hero-note{font-size:14px;color:var(--muted);margin-top:16px}
+  .trust-row{display:flex;gap:10px 28px;flex-wrap:wrap;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
+  .trust-row span{font-size:13px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .trust-row span::before{content:"";width:6px;height:6px;border-radius:50%;background:#b7af9e;flex:none}
+  .quote-card{background:#0f1b2d;border:none;border-radius:10px;overflow:hidden;box-shadow:var(--e3);margin-top:24px;align-self:start}
+  .qc-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:18px 22px;border-bottom:1px solid rgba(246,244,238,.14)}
+  .qc-head .t{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#e8e4da;font-weight:600}
+      .qc-cols,.qc-row{display:grid;grid-template-columns:1fr 1fr 1.05fr .85fr .7fr .7fr;gap:8px;align-items:baseline;padding:14px 22px}
+  .qc-cols span:nth-child(n+2),.qc-row span:nth-child(n+2){text-align:right}
+  .qc-cols span:nth-child(3),.qc-row span:nth-child(3){padding-left:16px;white-space:nowrap;font-variant-numeric:normal}
+  .qc-row span:nth-child(4),.qc-row span:nth-child(5){font-variant-numeric:tabular-nums lining-nums}
+  .qc-cols{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8d9aa9;border-bottom:1px solid rgba(246,244,238,.1);padding-top:13px;padding-bottom:11px}
+  .qc-row{border-bottom:1px solid rgba(246,244,238,.1);font-size:13.5px;color:#c6d0dc}
+  .qc-row:last-of-type{border-bottom:none}
+  .qc-row .who{font-weight:600;color:#f6f4ee;font-size:13px}
+  .qc-row .rate{font-variant-numeric:tabular-nums lining-nums;font-size:20px;font-weight:600;color:#f6f4ee}
+  .qc-row .num{font-size:13.5px;white-space:nowrap}
+  .qc-foot{padding:13px 22px;font-size:12px;line-height:1.55;color:#8d9aa9;border-top:1px solid rgba(246,244,238,.1)}
+
+  section{padding:96px 0;border-top:1px solid var(--line)}
+  section[id],header[id]{scroll-margin-top:84px}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:40px;flex-wrap:wrap}
+  .sec-head .eyebrow{display:block;margin-bottom:12px}
+  h2{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(28px,3.6vw,40px);line-height:1.1;letter-spacing:-.015em}
+  .sec-head p{max-width:42ch;color:var(--muted);font-size:15px}
+
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+  .step{padding:0}
+    .step .n{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.08em;margin-bottom:10px}
+    .step-ic{display:block;width:30px;height:30px;margin-bottom:14px}
+  .step h3{font-weight:600;font-size:18px;margin-bottom:8px;line-height:1.3;letter-spacing:-.01em}
+  .step p{font-size:14px;color:var(--muted)}
+
+  .lanes{border-top:1px solid var(--ink)}
+  .lane{display:grid;grid-template-columns:1fr 1.6fr;gap:28px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+    .lane h3{font-weight:600;font-size:19px;letter-spacing:-.01em}
+  .lane p{font-size:14.5px;color:var(--muted)}
+  .callout{margin-top:28px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px 22px;font-size:13.5px;color:var(--ink-2)}
+  .callout strong{color:var(--ink)}
+
+  .form-card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:var(--e3)}
+  .f-progress{height:4px;background:var(--line)}
+  .f-bar{height:100%;background:var(--brass);width:8%;transition:width .3s cubic-bezier(.2,0,0,1)}
+  .f-meta{display:flex;justify-content:space-between;padding:20px 30px 0;font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .f-step{display:none;padding:6px 30px;border:none}
+  .f-step.on{display:block;animation:stepIn .24s cubic-bezier(.2,0,0,1)}
+  @keyframes stepIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .f-step.on + .f-step.on{border-top:1px solid var(--line);margin-top:14px;padding-top:22px}
+  .f-step h3{font-weight:600;font-size:22px;letter-spacing:-.015em;margin:12px 0 6px}
+  .f-step .sub{font-size:14px;color:var(--muted);margin-bottom:24px}
+  .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .f-field{display:flex;flex-direction:column;gap:7px}
+  .f-field.full{grid-column:1/-1}
+  .f-field > label, .f-label{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .f-field label .req, .f-label .req{color:var(--brass)}
+  .f-field input[type=text],.f-field input[type=email],.f-field input[type=tel],.f-field input[type=number],.f-field input[type=date],.f-field select,.f-field textarea{font:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--field);border-radius:8px;padding:0 14px;height:48px;outline:none;width:100%;transition:border-color .16s ease,box-shadow .16s ease}
+  .f-field textarea{height:auto;padding:12px 14px}
+  .f-field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%2366707c' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
+  .f-field input::placeholder,.f-field textarea::placeholder{color:rgba(16,24,39,.42)}
+  .f-pair{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .money{position:relative}
+  .money > span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;pointer-events:none}
+  .f-field .money input.money-in{padding-left:28px;font-variant-numeric:tabular-nums lining-nums}
+  .f-field input:focus,.f-field select:focus,.f-field textarea:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(154,123,63,.28)}
+  .f-field textarea{min-height:90px;resize:vertical}
+  .pills{display:flex;flex-wrap:wrap;gap:8px}
+  .pills input{position:absolute;opacity:0;pointer-events:none}
+  .pills label{font-size:13.5px;font-weight:500;padding:10px 16px;border:1px solid var(--field);border-radius:99px;cursor:pointer;color:var(--ink-2);background:#fff;transition:border-color .16s ease,background .16s ease,color .16s ease,transform .1s ease}
+  .pills label:active{transform:scale(.97)}
+  .pills label:hover{border-color:#a8a091}
+  .pills input:checked + label{border-color:var(--ink);background:var(--ink);color:#fff;font-weight:600}
+  .pills input:focus-visible + label, .pills input.is-programmatic-focus + label{outline:2px solid var(--brass);outline-offset:2px}
+  .ltv-line{display:flex;justify-content:flex-end;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .ltv-k{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .ltv-v{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums lining-nums;color:var(--ink)}
+  .ltv-v.over{color:#b4432e}
+  .ltv-note{font-size:13px;color:var(--muted)}
+  .f-consent{display:flex;gap:12px;align-items:flex-start;background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:16px 18px;font-size:13.5px;color:var(--ink-2);margin-top:22px;cursor:pointer}
+  .f-consent input{margin-top:3px;flex:none}
+  .f-nav{display:flex;justify-content:space-between;gap:12px;padding:22px 30px 28px;border-top:1px solid var(--line);margin-top:20px}
+  .f-error{margin:16px 30px 0;padding:12px 16px;border:1px solid rgba(178,58,44,.35);background:#fbeeec;color:#8a2b21;border-radius:6px;font-size:14px}
+  .f-field input.f-invalid,.f-field select.f-invalid{border-color:#b4432e}
+  .f-label.f-invalid-label{color:#b4432e}
+  .pills-msg{font-size:13px;color:#b4432e;margin-top:8px}
+  .f-nav .btn{white-space:nowrap}
+  #f-toreview{margin-left:auto}
+  .f-review .r-row{display:grid;grid-template-columns:170px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .r-edit{background:none;border:none;padding:0;font:inherit;font-size:12.5px;color:var(--brass-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;align-self:start}
+  .r-edit:hover{color:var(--brass)}
+  .f-review .r-row .k{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+  .f-err{color:#b3432e;font-size:13.5px;font-weight:500;margin-top:16px;display:none}
+  .f-done{display:none;padding:8px 0 30px}
+  .f-done.on{display:block}
+  .f-done h3{font-weight:600;font-size:22px;letter-spacing:-.015em;margin:10px 0 8px}
+  .f-done p{font-size:14.5px;color:var(--muted);max-width:56ch}
+  .f-done pre{margin:18px 0 14px}
+  .f-badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:5px 12px;margin-bottom:8px}
+  .copy-btn-light{background:transparent;border:1.5px solid var(--ink);color:var(--ink);font-size:13px;font-weight:600;padding:8px 16px;border-radius:6px;cursor:pointer;transition:background .16s ease,color .16s ease}
+  .copy-btn-light:hover{background:var(--btn);border-color:var(--btn);color:var(--paper)}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:28px 26px;display:flex;flex-direction:column;gap:12px;transition:border-color .16s ease,transform .18s ease,box-shadow .18s ease}
+  .card:hover{border-color:#a8a091}
+  @media (hover:hover) and (prefers-reduced-motion: no-preference){
+    .card:hover{transform:translateY(-3px);box-shadow:var(--e2)}
+  }
+  .card h3{font-weight:600;font-size:19px;letter-spacing:-.01em}
+  .card p{font-size:14.5px;color:var(--muted);flex:1}
+  .pre-light{background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:22px 24px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.6px;line-height:1.7;color:var(--ink-2)}
+  .lender-sample{margin-top:36px}
+  .lender-sample h3{font-weight:600;font-size:19px;letter-spacing:-.01em;margin-bottom:12px}
+
+  .agents p.lead{max-width:62ch;color:var(--ink-2);font-size:16px;margin-bottom:30px}
+  pre{background:#0c1a2b;border:1px solid #24384f;border-radius:6px;padding:26px 28px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.8px;line-height:1.65;color:#c9d8e8}
+  .f-done pre{background:#fbf8f1;border-color:var(--line);color:var(--ink-2)}
+  .load-json{margin-bottom:22px}
+  .load-json summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--ink-2);list-style:none;display:inline-flex;align-items:center;gap:7px}
+  .load-json summary::-webkit-details-marker{display:none}
+  .load-json summary::after{content:"\203A";font-size:15px;color:var(--muted);transition:transform .16s ease}
+  .load-json[open] summary::after{transform:rotate(90deg)}
+  .load-json summary:hover{color:var(--ink)}
+  .load-json textarea{width:100%;margin-top:12px;background:var(--card);border:1px solid var(--field);border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:12px 14px;color:var(--ink)}
+  .load-row{display:flex;gap:12px;align-items:center;margin-top:10px}
+  #json-status{font-size:13px;color:var(--muted)}
+  .pre-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;margin-top:34px;gap:14px}
+  .pre-head span{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .copy-btn{background:transparent;border:1.5px solid var(--ink);color:var(--ink);font-size:13px;font-weight:600;padding:8px 16px;border-radius:6px;cursor:pointer;flex:none;transition:background .16s ease,color .16s ease}
+  .copy-btn:hover{background:var(--btn);border-color:var(--btn);color:var(--paper)}
+  .agents a.inline{color:var(--ink);border-bottom:1px solid var(--line);text-decoration:none}
+  .agents a.inline:hover{border-bottom-color:var(--ink)}
+
+  footer{padding:56px 0 64px}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
+  footer .small{font-size:13px;color:var(--muted);max-width:52ch}
+  .cta-band{background:#0f1b2d;border-top:none;padding:72px 0}
+  .cta-band h2{color:#f6f4ee;max-width:22ch}
+  .cta-in{display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap}
+  .cta-band .btn{background:#f6f4ee;color:#0f1b2d}
+  .cta-band .btn:hover{background:#e3ded2;box-shadow:none}
+  .foot-links{display:flex;gap:22px;flex-wrap:wrap}
+  .foot-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500}
+  .foot-links a:hover{color:var(--ink)}
+  footer .brandline{font-family:'Fraunces',serif;font-size:17px;font-weight:560;margin-bottom:8px}
+
+  .mobile-cta{display:none}
+
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;scroll-behavior:auto !important}}
+
+  @media (max-width:900px){
+    .hero-grid{display:flex;flex-direction:column;gap:0}
+    .hero-grid > div:first-child{display:contents}
+    .hero .eyebrow{order:1}
+    .hero h1{order:2}
+    .hero p{order:3}
+    .hero-cta{order:4}
+    .hero p.hero-note{order:5}
+    .trust-row{order:6}
+    .quote-card{order:7}
+    .steps{grid-template-columns:1fr 1fr;gap:24px}
+    .hero h1{margin:16px 0 20px}
+    .cards{grid-template-columns:1fr}
+    .nav-links > a:not(.btn){display:none}
+    .menu{display:block}
+    .menu-links a.cta{display:block}
+    .quote-card{margin:26px 0 0}
+    .mobile-cta{display:block;position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(246,244,238,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+    .mobile-cta .btn{display:block;text-align:center}
+    body{padding-bottom:78px}
+  }
+  @media (max-width:640px){
+    .f-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .steps{grid-template-columns:1fr}
+    section{padding:64px 0}
+    .wrap{padding:0 16px}
+    .pills{display:grid;grid-template-columns:1fr 1fr}
+    .pills label{display:flex;align-items:center;justify-content:center;min-height:44px;text-align:center}
+    .lane{grid-template-columns:1fr;gap:6px}
+    header.hero{padding:64px 0 56px}
+    .nav-links > a.btn{display:none}
+    .brand-name{font-size:14px}
+    .nav-in{gap:10px}
+    .qc-cols,.qc-row{padding:12px 10px;gap:5px;grid-template-columns:.92fr .95fr 1fr .8fr .62fr .66fr}
+    .qc-row .who{font-size:12px;white-space:nowrap}
+    .qc-row .num{font-size:11.5px;white-space:nowrap}
+    .qc-head{flex-direction:column;gap:3px;align-items:flex-start}
+    .qc-head,.qc-illus,.qc-foot{padding-left:14px;padding-right:14px}
+    .qc-row .rate{font-size:17px}
+    .qc-row .num{font-size:12px}
+    .fullw{display:none}
+    .f-step,.f-meta,.f-nav,.f-done{padding-left:20px;padding-right:20px}
+    .f-review .r-row{grid-template-columns:1fr;gap:2px}
+    .r-edit{justify-self:start;margin-bottom:6px}
+    .f-nav{flex-wrap:wrap}
+    #f-toreview{order:4;flex-basis:100%;margin-left:0}
+  }
+  @media (max-width:420px){
+    .qc-cols span:last-child,.qc-row span:last-child{display:none}
+    .qc-cols,.qc-row{grid-template-columns:1fr 1fr 1.1fr .8fr .6fr}
+  }
+  @media print{
+    nav,.mobile-cta,.load-json,.f-nav,.f-progress,.f-meta,header.hero,section:not(#intake),footer,.no-print{display:none !important}
+    body{background:#fff;padding-bottom:0}
+    section#intake{border:none;padding:0}
+    .f-step{display:none !important}
+    .f-step.on{display:block !important;border:none}
+    .form-card{box-shadow:none;border:none}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{transition:none !important;animation:none !important}
+  }
+  @keyframes stepIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .f-step.step-in{animation:stepIn .28s cubic-bezier(.22,.61,.21,1)}
+  /* Reveal-on-scroll, only when JS adds .js-reveal; no-JS keeps everything visible */
+  html.js-reveal .reveal{opacity:0;transform:translateY(9px);transition:opacity .45s ease,transform .45s cubic-bezier(.22,.61,.21,1)}
+  html.js-reveal .reveal.on{opacity:1;transform:none}
+
+  .l-back{display:inline-block;margin-bottom:18px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none}
+  .l-back:hover{color:var(--ink)}
+  .pills input[type="checkbox"]{position:absolute;opacity:0}
+  @media print{
+    section#lender-intake{display:block !important;border:none;padding:0}
+    section#lender-intake .sec-head{display:none !important}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="/investor-loan-exchange/">
+      <img class="mark-img" src="assets/logo-mark.svg" alt="" width="30" height="30">
+      <span class="brand-name">Investor Loan Exchange</span>
+    </a>
+    <div class="nav-links">
+      <a href="/investor-loan-exchange/#lenders">For lenders</a>
+      <a href="/investor-loan-exchange/#intake">Submit a scenario</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+<section id="lender-intake" style="padding-top:60px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">For lenders</span>
+        <h2>Join the panel.</h2>
+      </div>
+      <p>Test mode: this page checks your entry and shows you the exact interest record kept for when lender onboarding opens. Nothing leaves your browser.</p>
+    </div>
+
+    <form class="form-card" id="ilx-lender-form" novalidate>
+      <div class="f-meta" aria-live="polite"><span id="l-stepname">Your company</span><span id="l-stepno"></span></div>
+
+      <fieldset class="f-step on" data-name="Your company">
+        <h3>Your company</h3>
+        <p class="sub">Who we would be routing deals to.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <label class="f-label" for="company">Company <span class="req">*</span></label>
+            <input type="text" id="company" name="company" autocomplete="organization" required>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="contact_name">Your name <span class="req">*</span></label>
+            <input type="text" id="contact_name" name="contact_name" autocomplete="name" required>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="email">Work email <span class="req">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="phone">Phone <span class="opt">(optional)</span></label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel">
+            <p class="f-msg" style="display:none"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-name="The box you price in">
+        <h3>The box you price in</h3>
+        <p class="sub">Scenarios outside it never reach your desk. Rough ranges are fine.</p>
+        <div class="f-field full">
+          <span class="f-label" id="lbl-products">Products you price <span class="req">*</span></span>
+          <div class="pills" role="group" aria-labelledby="lbl-products" data-group="products">
+            <input type="checkbox" name="products" id="lp-dscr" value="DSCR rental"><label for="lp-dscr">DSCR rental</label>
+            <input type="checkbox" name="products" id="lp-flip" value="Fix &amp; flip"><label for="lp-flip">Fix &amp; flip</label>
+            <input type="checkbox" name="products" id="lp-bridge" value="Bridge"><label for="lp-bridge">Bridge</label>
+            <input type="checkbox" name="products" id="lp-guc" value="Ground-up construction"><label for="lp-guc">Ground-up construction</label>
+            <input type="checkbox" name="products" id="lp-cashout" value="Cash-out refi"><label for="lp-cashout">Cash-out refi</label>
+            <input type="checkbox" name="products" id="lp-conf" value="Conforming (agency)"><label for="lp-conf">Conforming (agency)</label>
+            <input type="checkbox" name="products" id="lp-he" value="Home equity"><label for="lp-he">Home equity</label>
+          </div>
+          <p class="pills-msg" style="display:none"></p>
+        </div>
+        <div class="f-grid" style="margin-top:18px">
+          <div class="f-field">
+            <label class="f-label" for="states">States you lend in <span class="req">*</span></label>
+            <input type="text" id="states" name="states" placeholder="e.g. NY, NJ, CT, FL or Nationwide" required>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="max_ltv">Max LTV % <span class="opt">(optional)</span></label>
+            <input type="text" inputmode="decimal" id="max_ltv" name="max_ltv_pct" placeholder="e.g. 80">
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="min_loan">Min loan size <span class="opt">(optional)</span></label>
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="min_loan" name="min_loan_usd" placeholder="e.g. 100,000"></div>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field">
+            <label class="f-label" for="max_loan">Max loan size <span class="opt">(optional)</span></label>
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="max_loan" name="max_loan_usd" placeholder="e.g. 5,000,000"></div>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+          <div class="f-field full">
+            <label class="f-label" for="notes">Anything else about your box <span class="opt">(optional)</span></label>
+            <textarea id="notes" name="notes" placeholder="Niches, property types you avoid, turnaround time."></textarea>
+            <p class="f-msg" style="display:none"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-name="Review">
+        <h3>Review</h3>
+        <p class="sub">This is the interest record kept for when lender onboarding opens.</p>
+        <div class="f-review" id="l-review"></div>
+        <label class="f-consent" for="l-consent">
+          <input type="checkbox" id="l-consent" name="consent">
+          <span>Keep this record for when lender onboarding opens. Test mode: it stays in this browser and is not sent anywhere. <span class="req">*</span></span>
+        </label>
+        <span class="f-msg" id="l-consent-msg" style="display:none">Tick the box to continue.</span>
+      </fieldset>
+
+      <fieldset class="f-step" data-name="Done">
+        <div class="f-done">
+          <span class="f-badge">Test mode - not sent</span>
+          <h3 tabindex="-1" id="l-done-h">Noted. Here is your record.</h3>
+          <p>When lender onboarding opens, records like this one get the first invitation. Nothing was sent; this stayed in your browser.</p>
+          <div class="f-review f-sheet" id="l-sheet" style="margin-top:8px"></div>
+          <details class="load-json" style="margin-top:22px">
+            <summary>For agents: the raw record</summary>
+            <div class="pre-head" style="margin-top:14px"><span>lender-interest.json</span><button class="copy-btn-light" id="l-copy" type="button">Copy</button></div>
+            <pre id="l-json"></pre>
+          </details>
+          <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
+            <button type="button" class="btn ghost" id="l-print">Print or save as PDF</button>
+            <button type="button" class="btn ghost" id="l-restart">Start over</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="f-nav no-print">
+        <button type="button" class="btn ghost" id="l-back" disabled>Back</button>
+        <button type="button" class="btn" id="l-next">Continue</button>
+      </div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Investor Loan Exchange. Test mode preview; lender onboarding is not open yet.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var form = document.getElementById('ilx-lender-form');
+  var steps = Array.prototype.slice.call(form.querySelectorAll('.f-step'));
+  var backBtn = document.getElementById('l-back');
+  var nextBtn = document.getElementById('l-next');
+  var stepName = document.getElementById('l-stepname');
+  var stepNo = document.getElementById('l-stepno');
+  var current = 0;
+  var DRAFT_KEY = 'ilx-lender-draft';
+
+  function esc(x){ return String(x == null ? '' : x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function val(n){
+    var el = form.querySelector('[name="' + n + '"]');
+    return el ? el.value.trim() : '';
+  }
+  function moneyRaw(s){ return String(s || '').replace(/[^\d.]/g, ''); }
+  function moneyFmt(s){
+    var v = parseFloat(moneyRaw(s));
+    return isNaN(v) ? '' : '$' + v.toLocaleString('en-US');
+  }
+  function products(){
+    return Array.prototype.map.call(form.querySelectorAll('input[name="products"]:checked'), function(c){ return c.value; });
+  }
+  function record(){
+    return {
+      type: 'lender_interest',
+      mode: 'test',
+      company: val('company'),
+      contact_name: val('contact_name'),
+      email: val('email'),
+      phone: val('phone'),
+      products: products(),
+      states: val('states'),
+      max_ltv_pct: moneyRaw(val('max_ltv_pct')),
+      min_loan_usd: moneyRaw(val('min_loan_usd')),
+      max_loan_usd: moneyRaw(val('max_loan_usd')),
+      notes: val('notes')
+    };
+  }
+  function fieldMsg(f, text){
+    var box = f.closest('.f-field');
+    if (!box) return;
+    var m = box.querySelector('.f-msg');
+    if (m) { m.textContent = text || ''; m.style.display = text ? 'block' : 'none'; }
+  }
+  function clearInvalid(e){
+    e.target.classList.remove('f-invalid');
+    fieldMsg(e.target, '');
+    var p = e.target.closest('.pills');
+    if (p) {
+      p.classList.remove('f-invalid');
+      p.setAttribute('aria-invalid', 'false');
+      var pm = p.parentNode.querySelector('.pills-msg');
+      if (pm) pm.style.display = 'none';
+    }
+    if (e.target.id === 'l-consent' && e.target.checked) document.getElementById('l-consent-msg').style.display = 'none';
+  }
+  function validate(i){
+    var ok = true;
+    var step = steps[i];
+    if (i === 0) {
+      [['company'],['contact_name'],['email']].forEach(function(k){
+        var f = form.querySelector('[name="' + k[0] + '"]');
+        var bad = !f.value.trim() || (k[0] === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value.trim()));
+        f.classList.toggle('f-invalid', bad);
+        fieldMsg(f, bad ? (k[0] === 'email' && f.value.trim() ? 'Enter a valid email.' : 'Needed to continue.') : '');
+        if (bad) ok = false;
+      });
+    }
+    if (i === 1) {
+      var pg = form.querySelector('.pills[data-group="products"]');
+      var noProd = products().length === 0;
+      pg.classList.toggle('f-invalid', noProd);
+      pg.setAttribute('aria-invalid', noProd ? 'true' : 'false');
+      var pm = pg.parentNode.querySelector('.pills-msg');
+      if (pm) { pm.textContent = 'Pick at least one.'; pm.style.display = noProd ? 'block' : 'none'; }
+      if (noProd) ok = false;
+      var st = form.querySelector('[name="states"]');
+      var badSt = !st.value.trim();
+      st.classList.toggle('f-invalid', badSt);
+      fieldMsg(st, badSt ? 'Needed to continue.' : '');
+      if (badSt) ok = false;
+      var lt = form.querySelector('[name="max_ltv_pct"]');
+      var lv = moneyRaw(lt.value);
+      var badLt = lv && (isNaN(parseFloat(lv)) || parseFloat(lv) <= 0 || parseFloat(lv) > 100);
+      lt.classList.toggle('f-invalid', !!badLt);
+      fieldMsg(lt, badLt ? 'A percentage from 1 to 100.' : '');
+      if (badLt) ok = false;
+    }
+    if (i === 2) {
+      if (!document.getElementById('l-consent').checked) { ok = false; document.getElementById('l-consent-msg').style.display = ''; }
+    }
+    return ok;
+  }
+  function rows(){
+    var r = record();
+    var out = [
+      ['Company', r.company],
+      ['Contact', r.contact_name],
+      ['Email', r.email],
+      ['Phone', r.phone || '-'],
+      ['Products', r.products.join(', ') || '-'],
+      ['States', r.states],
+      ['Max LTV', r.max_ltv_pct ? r.max_ltv_pct + '%' : '-'],
+      ['Loan size', (r.min_loan_usd || r.max_loan_usd) ? (moneyFmt(r.min_loan_usd) || 'No min') + ' to ' + (moneyFmt(r.max_loan_usd) || 'no max') : '-'],
+      ['Notes', r.notes || '-']
+    ];
+    return out.map(function(pair){
+      return '<div class="r-row"><span class="k">' + esc(pair[0]) + '</span><span>' + esc(pair[1]) + '</span></div>';
+    }).join('');
+  }
+  function show(i){
+    if (i < 0) i = 0;
+    if (i > steps.length - 1) i = steps.length - 1;
+    var moved = (i !== current);
+    current = i;
+    steps.forEach(function(s){ s.classList.remove('on'); });
+    var s = steps[i];
+    s.classList.add('on');
+    if (moved) { s.classList.remove('step-in'); void s.offsetWidth; s.classList.add('step-in'); }
+    stepName.textContent = s.getAttribute('data-name');
+    stepNo.textContent = (i >= steps.length - 1) ? '' : ('Step ' + (i + 1) + ' of ' + (steps.length - 1));
+    backBtn.disabled = (i === 0);
+    var last = (i === steps.length - 1);
+    var review = (i === steps.length - 2);
+    nextBtn.textContent = review ? 'Check my entry' : 'Continue';
+    nextBtn.style.display = last ? 'none' : '';
+    if (review) document.getElementById('l-review').innerHTML = rows();
+    form.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  function saveDraft(){
+    try {
+      var d = record();
+      d.consent = document.getElementById('l-consent').checked;
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+    } catch(e) {}
+  }
+  function restoreDraft(){
+    var raw;
+    try { raw = localStorage.getItem(DRAFT_KEY); } catch(e) { return; }
+    if (!raw) return;
+    var d;
+    try { d = JSON.parse(raw); } catch(e) { return; }
+    ['company','contact_name','email','phone','states','max_ltv_pct','min_loan_usd','max_loan_usd','notes'].forEach(function(n){
+      var el = form.querySelector('[name="' + n + '"]');
+      if (el && d[n] != null) el.value = d[n];
+    });
+    (d.products || []).forEach(function(v){
+      var c = Array.prototype.find.call(form.querySelectorAll('input[name="products"]'), function(x){ return x.value === v; });
+      if (c) c.checked = true;
+    });
+  }
+  backBtn.addEventListener('click', function(){ show(current - 1); });
+  nextBtn.addEventListener('click', function(){
+    if (!validate(current)) {
+      var bad = steps[current].querySelector('.f-invalid input, input.f-invalid, .pills.f-invalid input');
+      if (bad) { try { bad.focus({preventScroll:true}); } catch(e) {} }
+      return;
+    }
+    if (current === steps.length - 2) {
+      document.getElementById('l-sheet').innerHTML = rows();
+      var r = record();
+      r.consent = {given: true, given_at: new Date().toISOString(), mode: 'test'};
+      document.getElementById('l-json').textContent = JSON.stringify(r, null, 2);
+      saveDraft();
+      show(steps.length - 1);
+      setTimeout(function(){ document.getElementById('l-done-h').focus({preventScroll:true}); }, 60);
+      return;
+    }
+    saveDraft();
+    show(current + 1);
+  });
+  form.addEventListener('input', function(e){
+    if (e.target.classList && e.target.classList.contains('money-in')) {
+      var c = moneyRaw(e.target.value);
+      var parts = c.split('.');
+      var i = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      e.target.value = parts.length > 1 ? i + '.' + parts.slice(1).join('').slice(0, 2) : i;
+    }
+    clearInvalid(e);
+    saveDraft();
+  });
+  form.addEventListener('change', function(e){ clearInvalid(e); saveDraft(); });
+  form.addEventListener('submit', function(e){ e.preventDefault(); });
+  form.addEventListener('keydown', function(e){
+    if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+    e.preventDefault();
+    nextBtn.click();
+  });
+  document.getElementById('l-copy').addEventListener('click', function(){
+    var t = document.getElementById('l-json').textContent;
+    if (navigator.clipboard) navigator.clipboard.writeText(t);
+    this.textContent = 'Copied';
+    var b = this;
+    setTimeout(function(){ b.textContent = 'Copy'; }, 1600);
+  });
+  document.getElementById('l-print').addEventListener('click', function(){ window.print(); });
+  document.getElementById('l-restart').addEventListener('click', function(){
+    form.reset();
+    try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
+    show(0);
+  });
+  restoreDraft();
+  show(0);
+})();
+</script>
+</body>
+</html>
