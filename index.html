@@ -435,6 +435,7 @@
       <textarea id="json-in" rows="6" aria-label="Paste your scenario JSON" placeholder='Paste scenario.json here. Contact details and consent are never loaded from a file; you fill those yourself.' spellcheck="false"></textarea>
       <div class="load-row">
         <button type="button" class="btn sm" id="json-load">Load</button>
+
         <span id="json-status"></span>
       </div>
     </details>
@@ -1529,6 +1530,7 @@
         var j = null, ref = '';
         try { j = JSON.parse(t); ref = j.reference || ''; } catch(e) {}
         if (!j || j.ok !== true) throw new Error('bad response');
+        currentSubmissionId = ''; // delivered: a later edit and resend is a new scenario, not a retry
         clearDraft();
         var refLine = document.getElementById('f-ref-line');
         if (ref) { document.getElementById('f-ref').textContent = ref; refLine.style.display = ''; }
@@ -1776,6 +1778,13 @@
       el.classList.remove('reveal', 'on');
       el.style.transitionDelay = '';
     }
+  });
+  // The "loader" link in the agents section opens the loader as it jumps to the intake.
+  document.querySelectorAll('#agents a[href="#intake"]').forEach(function(a){
+    a.addEventListener('click', function(){
+      var d = document.querySelector('#intake details.load-json');
+      if (d) d.open = true;
+    });
   });
   show(0);
 })();
