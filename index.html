@@ -227,6 +227,8 @@
   .load-json summary::after{content:"\203A";font-size:15px;color:var(--muted);transition:transform .16s ease}
   .load-json[open] summary::after{transform:rotate(90deg)}
   .load-json summary:hover{color:var(--ink)}
+  .linklike{background:none;border:none;padding:0;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  .linklike:hover{color:var(--ink)}
   .load-json textarea{width:100%;margin-top:12px;background:var(--card);border:1px solid var(--field);border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:12px 14px;color:var(--ink)}
   .load-row{display:flex;gap:12px;align-items:center;margin-top:10px}
   #json-status{font-size:13px;color:var(--muted)}
@@ -462,6 +464,7 @@
         <span id="json-status"></span>
       </div>
     </details>
+    <p id="draft-clear-line" hidden><button type="button" id="draft-clear" class="linklike">Clear saved progress</button></p>
     <form class="form-card" id="ilx-form" novalidate>
       <div class="f-progress"><div class="f-bar" id="f-bar"></div></div>
       <div class="f-meta" aria-live="polite"><span id="f-stepname">The deal</span><span id="f-stepno">Step 1 of 4</span></div>
@@ -1506,7 +1509,7 @@
       else if (el.type === 'checkbox') { d[el.name] = el.checked; }
       else d[el.name] = el.value;
     });
-    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch(e) {}
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify({savedAt: Date.now(), data: d})); } catch(e) {}
   }
   function restoreDraft(){
     var raw;
@@ -1514,6 +1517,10 @@
     if (!raw) return;
     var d;
     try { d = JSON.parse(raw); } catch(e) { return; }
+    if (d && d.data) {
+      if (!d.savedAt || Date.now() - d.savedAt > 30*24*60*60*1000) { clearDraft(); return; }
+      d = d.data;
+    }
     Object.keys(d).forEach(function(n){
       form.querySelectorAll('[name="' + n + '"]').forEach(function(el){
         if (el.type === 'radio') { el.checked = (el.value === d[n]); }
@@ -1582,6 +1589,20 @@
     form.querySelectorAll('[aria-describedby]').forEach(function(r){ r.removeAttribute('aria-describedby'); });
     show(0);
   });
+  // Clear saved progress: same reset as Start a new scenario, from step 1.
+  var draftClearLine = document.getElementById('draft-clear-line');
+  function syncDraftClear(){
+    var has = false;
+    try { has = !!localStorage.getItem(DRAFT_KEY); } catch(e) {}
+    if (draftClearLine) draftClearLine.hidden = !has;
+  }
+  document.getElementById('draft-clear').addEventListener('click', function(){
+    document.getElementById('f-restart').click();
+    syncDraftClear();
+  });
+  var origSaveDraft = saveDraft;
+  saveDraft = function(){ origSaveDraft(); syncDraftClear(); };
+  syncDraftClear();
   var currentSubmissionId = '';
   function finish(){
     // Mint once per scenario: a retry after a failed send comes back through finish(), so only fill when empty. Cleared by Start a new scenario.
