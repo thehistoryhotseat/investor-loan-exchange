@@ -476,9 +476,16 @@
             <label for="value">Est. value / purchase price <span class="req">*</span></label>
             <input type="number" id="value" name="est_value_usd" min="1000" step="1000" placeholder="450000" required>
           </div>
+          <div class="f-field">
+            <label for="amount">Loan amount <span class="req">*</span></label>
+            <input type="number" id="amount" name="loan_amount_usd" min="1000" step="1000" placeholder="337500" required>
+          </div>
           <div class="f-field" id="units-wrap">
             <label for="units">Units</label>
             <input type="number" id="units" name="units" min="1" max="40" placeholder="1">
+          </div>
+          <div class="f-field full">
+            <span class="f-label" id="ltv-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass-ink)">LTV: enter value and loan amount</span>
           </div>
         </div>
       </fieldset>
@@ -487,10 +494,6 @@
         <h3>The numbers</h3>
         <p class="sub">Rough figures are fine; lenders price the range.</p>
         <div class="f-grid">
-          <div class="f-field">
-            <label for="amount">Loan amount <span class="req">*</span></label>
-            <input type="number" id="amount" name="loan_amount_usd" min="1000" step="1000" placeholder="337500" required>
-          </div>
           <div class="f-field">
             <label for="fico">Credit (FICO band) <span class="req">*</span></label>
             <select id="fico" name="credit_band" required>
@@ -518,9 +521,6 @@
             <input type="date" id="close" name="target_close">
           </div>
           <div class="f-field full">
-            <span class="f-label" id="ltv-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass-ink)">LTV: enter value and loan amount</span>
-          </div>
-          <div class="f-field full">
             <span class="f-label">Citizenship <span class="req">*</span> <span style="font-weight:400;color:var(--muted)">(foreign nationals price differently)</span></span>
             <div class="pills" data-group="citizenship">
               <input type="radio" name="citizenship" id="c-us" value="us_person"><label for="c-us">US citizen / resident</label>
@@ -541,10 +541,9 @@
             <label for="liq">Liquidity / reserves</label>
             <select id="liq" name="liquidity_band">
               <option value="">Select...</option>
-              <option>Under $25k</option>
-              <option>$25k-$100k</option>
-              <option>$100k-$250k</option>
-              <option>$250k+</option>
+              <option value="3_months">3 months</option>
+              <option value="6_months">6 months</option>
+              <option value="12_plus_months">12+ months</option>
             </select>
           </div>
         </div>
@@ -765,7 +764,7 @@
     <div class="lender-sample">
       <h3>What a rate request looks like</h3>
       <pre class="pre-light">{
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "product": "dscr_rental",
   "purpose": "purchase",
   "property": {
@@ -1008,7 +1007,7 @@
     row('Location', (val('state') || '') + (val('zip') ? ' ' + val('zip') : ''), 'Property');
     row('Value / price', money(val('est_value_usd')), 'Property');
     if (val('units')) row('Units', val('units'), 'Property');
-    row('Loan amount', money(val('loan_amount_usd')), 'Numbers');
+    row('Loan amount', money(val('loan_amount_usd')), 'Property');
     var _v = num('est_value_usd'), _a = num('loan_amount_usd');
     if (product() === 'fix_flip') {
       var _fl = document.getElementById('ltc-line');
@@ -1018,7 +1017,7 @@
     if (val('condition')) row('Condition', val('condition'), 'Property');
     row('Citizenship', val('citizenship') === 'us_person' ? 'US citizen / resident' : (val('citizenship') === 'foreign_national' ? 'Foreign national' : ''), 'Numbers');
     if (val('experience')) row('Experience', val('experience'), 'Numbers');
-    if (val('liquidity_band')) row('Liquidity', val('liquidity_band'), 'Numbers');
+    if (val('liquidity_band')) row('Liquidity', label({'3_months':'3 months','6_months':'6 months','12_plus_months':'12+ months'}, val('liquidity_band')), 'Numbers');
     row('Credit band', val('credit_band'), 'Numbers');
     if (val('vesting')) row('Vesting', val('vesting'), 'Numbers');
     if (val('target_close')) row('Target close', val('target_close'), 'Numbers');
@@ -1064,7 +1063,7 @@
   function snake(x){ return (x || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }
   function buildJson(){
     var obj = {
-      schema_version: '1.1',
+      schema_version: '1.2',
       prepared_by: 'ilx-intake',
       product: val('product'),
       purpose: val('purpose'),
@@ -1248,6 +1247,10 @@
     els.forEach(function(el){
       if (el.type === 'radio') { el.checked = (String(el.value) === String(v)); }
       else if (el.tagName === 'SELECT') {
+        var sv = String(v);
+        for (var oi = 0; oi < el.options.length; oi++) {
+          if (el.options[oi].value === sv) { el.value = sv; return; }
+        }
         var nv = String(v).toLowerCase().replace(/[^a-z0-9]/g, '');
         Array.prototype.forEach.call(el.options, function(o){
           var no = o.text.toLowerCase().replace(/[^a-z0-9]/g, '');

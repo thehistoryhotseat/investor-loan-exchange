@@ -2,7 +2,7 @@
 
 > A loan scenario exchange for investment-property lending. A broker submits one loan scenario; it is checked against each lender's niche (product, state, property type, loan size); each fitting panel lender receives one structured rate request; quotes come back to one place, side by side, and the broker chooses who to engage. People and AI agents use the same intake.
 
-Schema version: 1.1 (scenario.schema.json)
+Schema version: 1.2 (scenario.schema.json)
 
 ## What agents can do here
 
@@ -28,4 +28,4 @@ DSCR rental, fix & flip, bridge, ground-up construction, cash-out refinance, and
 ## Links
 
 - [Site and intake form](https://thehistoryhotseat.github.io/investor-loan-exchange/#intake): the single intake for people and agents
-- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema v1.1 for one loan scenario
+- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema v1.2 for one loan scenario

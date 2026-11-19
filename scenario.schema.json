@@ -17,7 +17,7 @@
   "properties": {
     "schema_version": {
       "type": "string",
-      "const": "1.1"
+      "const": "1.2"
     },
     "prepared_by": {
       "type": "string",
@@ -131,7 +131,12 @@
       "type": "string"
     },
     "liquidity_band": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "3_months",
+        "6_months",
+        "12_plus_months"
+      ]
     },
     "vesting": {
       "type": "string",
