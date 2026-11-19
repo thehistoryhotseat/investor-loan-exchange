@@ -48,7 +48,7 @@
   .skip-link{position:absolute;left:-999px;top:0;background:var(--btn);color:var(--paper);padding:10px 16px;z-index:100;font-size:14px;text-decoration:none;border-radius:0 0 4px 0}
   .skip-link:focus{left:0}
   h3[tabindex="-1"]:focus{outline:none}
-  .pills input:focus-visible + label{outline:2px solid var(--btn);outline-offset:2px}
+  .pills input:focus + label{outline:2px solid var(--btn);outline-offset:2px}
   .pills input:focus + label{border-color:var(--ink)}
   a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
   [id]{scroll-margin-top:76px}
@@ -1485,6 +1485,12 @@
     setField('rehab_budget_usd', d.rehab_budget_usd);
     setField('exit_strategy', d.exit_strategy);
     setField('flip_experience', d.flip_experience);
+    setField('bridge_exit_strategy', d.bridge_exit_strategy);
+    setField('bridge_term', d.bridge_term);
+    setField('project_budget_usd', d.project_budget_usd);
+    setField('build_timeline', d.build_timeline);
+    setField('land_status', d.land_status);
+    setField('guc_exit_strategy', d.guc_exit_strategy);
     var pf = d.preferences || {};
     setField('structure', pf.structure);
     setField('rate_type', pf.rate_type);
@@ -1499,7 +1505,24 @@
     if (d && d.property && d.property.occupancy === 'owner_occupied') {
         status.textContent = 'Loaded, but this scenario is owner-occupied. This draft takes investment properties only - change Occupancy to continue.';
       } else {
-        status.textContent = 'Loaded. Review each screen; contact and consent stay yours to fill.';
+        var laneMissing = [];
+        if (d.product === 'bridge') {
+          if (!d.bridge_exit_strategy) laneMissing.push('exit strategy');
+          if (!d.bridge_term) laneMissing.push('term needed');
+        }
+        if (d.product === 'ground_up_construction') {
+          if (!d.project_budget_usd) laneMissing.push('project budget');
+          if (!d.build_timeline) laneMissing.push('build timeline');
+          if (!d.guc_exit_strategy) laneMissing.push('exit strategy');
+        }
+        if (d.product === 'fix_flip') {
+          if (!d.arv_usd) laneMissing.push('ARV');
+          if (!d.rehab_budget_usd) laneMissing.push('rehab budget');
+        }
+        if (d.product === 'dscr_rental' && !d.monthly_rent_usd) laneMissing.push('monthly rent');
+        status.textContent = laneMissing.length
+          ? 'Loaded, but the file has no ' + laneMissing.join(' or ') + ' - the lane screen will ask for ' + (laneMissing.length > 1 ? 'them' : 'it') + '.'
+          : 'Loaded. Review each screen; contact and consent stay yours to fill.';
       }
   });
   document.getElementById('f-download').addEventListener('click', function(){
