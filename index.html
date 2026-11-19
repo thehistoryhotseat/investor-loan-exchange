@@ -178,7 +178,7 @@
   .r-edit:hover{color:var(--brass)}
   .f-review .r-row .k{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
   .f-err{color:#b3432e;font-size:13.5px;font-weight:500;margin-top:16px;display:none}
-  .f-done{display:none;padding:8px 30px 30px}
+  .f-done{display:none;padding:8px 0 30px}
   .f-done.on{display:block}
   .f-done h3{font-weight:600;font-size:22px;letter-spacing:-.015em;margin:10px 0 8px}
   .f-done p{font-size:14.5px;color:var(--muted);max-width:56ch}
@@ -589,7 +589,7 @@
 
       <fieldset class="f-step" data-step="4" data-name="DSCR" data-show-if="dscr_rental">
         <h3>Rental cash flow</h3>
-        <p class="sub">Only for DSCR rental deals.</p>
+        <p class="sub">The rent side of the deal.</p>
         <div class="f-grid">
           <div class="f-field">
             <label for="rent">Monthly rent <span class="req">*</span></label>
@@ -615,7 +615,7 @@
 
       <fieldset class="f-step" data-step="5" data-name="Rehab" data-show-if="fix_flip">
         <h3>The rehab</h3>
-        <p class="sub">Only for fix &amp; flip deals.</p>
+        <p class="sub">The rehab numbers and the exit.</p>
         <div class="f-grid">
           <div class="f-field">
             <label for="arv">After-repair value (ARV) <span class="req">*</span></label>
@@ -652,7 +652,7 @@
 
       <fieldset class="f-step" data-step="5b" data-name="Transition" data-show-if="bridge">
         <h3>The transition</h3>
-        <p class="sub">Only for bridge deals.</p>
+        <p class="sub">How you'll exit the loan.</p>
         <div class="f-grid">
           <div class="f-field">
             <label for="b-exit">Exit strategy <span class="req">*</span></label>
@@ -678,7 +678,7 @@
 
       <fieldset class="f-step" data-step="5c" data-name="The build" data-show-if="ground_up_construction">
         <h3>The build</h3>
-        <p class="sub">Only for ground-up construction.</p>
+        <p class="sub">The budget, the timeline and the exit.</p>
         <div class="f-grid">
           <div class="f-field">
             <label for="guc-budget">Total project budget <span class="req">*</span></label>
@@ -717,7 +717,7 @@
 
       <fieldset class="f-step" data-step="6" data-name="Conforming" data-show-if="conforming_agency">
         <h3>Conforming check</h3>
-        <p class="sub">Only for conforming (agency) deals.</p>
+        <p class="sub">The agency-loan details.</p>
         <div class="f-grid">
           <div class="f-field">
             <span class="f-label" id="lbl-under_limit">Under the county conforming limit? <span class="req">*</span></span>
@@ -740,7 +740,7 @@
           <div class="f-field">
             <span class="f-label" id="lbl-structure">Structure</span>
             <div class="pills" role="radiogroup" aria-labelledby="lbl-structure" data-group="structure" data-optional="1">
-              <input type="radio" name="structure" id="s-am" value="amortizing"><label for="s-am">Amortizing</label>
+              <input type="radio" name="structure" id="s-am" value="amortizing" data-long><label for="s-am" data-long>Amortizing</label>
               <input type="radio" name="structure" id="s-io" value="interest_only"><label for="s-io">Interest-only</label>
               <input type="radio" name="structure" id="s-either" value="either"><label for="s-either">Either</label>
             </div>
@@ -750,8 +750,10 @@
             <select id="ratetype" name="rate_type">
               <option value="">Select...</option>
               <option data-long>30-yr fixed</option>
-              <option>ARM</option>
-              <option>Interest-only ARM</option>
+              <option data-long>ARM</option>
+              <option data-long>Interest-only ARM</option>
+              <option data-short>Fixed</option>
+              <option data-short>Floating</option>
               <option>No preference</option>
             </select>
           </div>
@@ -759,8 +761,10 @@
             <span class="f-label" id="lbl-prepay">Prepayment penalty tolerance</span>
             <div class="pills" role="radiogroup" aria-labelledby="lbl-prepay" data-group="prepay" data-optional="1">
               <input type="radio" name="prepay" id="pp-none" value="none"><label for="pp-none">None</label>
-              <input type="radio" name="prepay" id="pp-3" value="up_to_3yr"><label for="pp-3">Up to 3 yr</label>
-              <input type="radio" name="prepay" id="pp-5" value="up_to_5yr"><label for="pp-5">Up to 5 yr</label>
+              <input type="radio" name="prepay" id="pp-6mo" value="up_to_6mo" data-short><label for="pp-6mo" data-short>Up to 6 mo</label>
+              <input type="radio" name="prepay" id="pp-12mo" value="up_to_12mo" data-short><label for="pp-12mo" data-short>Up to 12 mo</label>
+              <input type="radio" name="prepay" id="pp-3" value="up_to_3yr" data-long><label for="pp-3" data-long>Up to 3 yr</label>
+              <input type="radio" name="prepay" id="pp-5" value="up_to_5yr" data-long><label for="pp-5" data-long>Up to 5 yr</label>
               <input type="radio" name="prepay" id="pp-any" value="flexible"><label for="pp-any">Flexible if pricing is better</label>
             </div>
           </div>
@@ -979,6 +983,18 @@
     if (review) renderReview();
     form.scrollIntoView({behavior:'smooth', block:'start'});
   }
+  function fieldMsg(f, text){
+    var box = f.closest('.f-field');
+    if (!box) return;
+    var m = box.querySelector('.f-msg');
+    if (!m) {
+      m = document.createElement('p');
+      m.className = 'f-msg pills-msg';
+      box.appendChild(m);
+    }
+    m.textContent = text;
+    m.style.display = text ? 'block' : 'none';
+  }
   function validate(step){
     var ok = true;
     var name = step.getAttribute('data-name');
@@ -1015,13 +1031,14 @@
       var raw = (f.value || '').replace(/,/g, '');
       var bad = !f.value || ((f.type === 'number' || f.classList.contains('money-in')) && isNaN(parseFloat(raw)));
       f.classList.toggle('f-invalid', bad);
+      fieldMsg(f, bad ? (f.tagName === 'SELECT' ? 'Pick one to continue.' : 'Needed to continue.') : '');
       if (bad) ok = false;
     });
     if (ok) {
       var st = step.querySelector('#state');
-      if (st && st.value && !/^(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])$/.test(st.value.toUpperCase())) ok = false;
+      if (st && st.value && !/^(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])$/.test(st.value.toUpperCase())) { st.classList.add('f-invalid'); fieldMsg(st, 'Use the 2-letter state code.'); ok = false; }
       var ct = step.querySelector('#contact');
-      if (ct && ct.value && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ct.value) || /^[+()\-.\s\d]{7,}$/.test(ct.value))) ok = false;
+      if (ct && ct.value && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ct.value) || /^[+()\-.\s\d]{7,}$/.test(ct.value))) { ct.classList.add('f-invalid'); fieldMsg(ct, 'Enter an email or a phone number.'); ok = false; }
       var occ = step.querySelector('#occ');
       if (occ && occ.value === 'owner_occupied') { occ.classList.add('f-invalid'); ok = false; }
     }
@@ -1075,13 +1092,21 @@
     w.style.display = show ? '' : 'none';
   }
   function updateRateType(){
-    var rt = document.getElementById('ratetype');
-    if (!rt) return;
     var shortLane = product() === 'bridge' || product() === 'ground_up_construction';
-    Array.prototype.forEach.call(rt.options, function(o){
-      if (o.hasAttribute('data-long')) o.hidden = shortLane;
+    var rt = document.getElementById('ratetype');
+    if (rt) {
+      Array.prototype.forEach.call(rt.options, function(o){
+        if (o.hasAttribute('data-long')) o.hidden = shortLane;
+        if (o.hasAttribute('data-short')) o.hidden = !shortLane;
+      });
+      if (rt.selectedOptions[0] && rt.selectedOptions[0].hidden) rt.value = '';
+    }
+    form.querySelectorAll('.pills input[data-long], .pills input[data-short]').forEach(function(inp){
+      var hide = inp.hasAttribute('data-long') ? shortLane : !shortLane;
+      var lbl = document.querySelector('label[for="' + inp.id + '"]');
+      if (lbl) lbl.style.display = hide ? 'none' : '';
+      if (hide && inp.checked) inp.checked = false;
     });
-    if (shortLane && rt.selectedOptions[0] && rt.selectedOptions[0].hasAttribute('data-long')) rt.value = '';
   }
   function piMonthly(principal, annualRate, years){
     var r = annualRate / 12, n = years * 12;
@@ -1122,7 +1147,7 @@
         + (target ? '<button type="button" class="r-edit" data-target="' + target + '">Edit</button>' : '') + '</div>');
     }
     row('Product', label(productLabels, val('product')), 'Product');
-    row('Purpose', val('purpose').replace('_', ' '), 'Product');
+    row('Purpose', label({purchase:'Purchase', refinance:'Refinance', rate_term_refi:'Rate-term refi', cash_out:'Cash-out refinance'}, val('purpose')), 'Product');
     row('Property', [val('property_type'), val('occupancy') === 'investment' ? 'investment' : (val('occupancy') === 'owner_occupied' ? 'owner-occupied' : '')].filter(Boolean).join(' - '), 'Property');
     row('Location', (val('state') || '') + (val('zip') ? ' ' + val('zip') : ''), 'Property');
     row('Value / price', money(val('est_value_usd')), 'Property');
@@ -1167,7 +1192,7 @@
     }
     if (val('structure')) row('Structure', val('structure').replace('_', ' '), 'Preferences');
     if (val('rate_type')) row('Rate type', val('rate_type'), 'Preferences');
-    if (val('prepay')) row('Prepay tolerance', label({none:'None', up_to_3yr:'Up to 3 yr', up_to_5yr:'Up to 5 yr', flexible:'Flexible'}, val('prepay')), 'Preferences');
+    if (val('prepay')) row('Prepay tolerance', label({none:'None', up_to_6mo:'Up to 6 mo', up_to_12mo:'Up to 12 mo', up_to_3yr:'Up to 3 yr', up_to_5yr:'Up to 5 yr', flexible:'Flexible'}, val('prepay')), 'Preferences');
     if (product() === 'conforming_agency') {
       row('Under county limit', val('under_limit'), 'Conforming');
     }
@@ -1303,6 +1328,9 @@
       var pm = p.parentNode.querySelector('.pills-msg');
       if (pm) pm.style.display = 'none';
     }
+    var fb = el.closest ? el.closest('.f-field') : null;
+    var fm = fb && fb.querySelector('.f-msg');
+    if (fm) fm.style.display = 'none';
   });
   form.addEventListener('change', saveDraft);
   restoreDraft();
@@ -1323,13 +1351,17 @@
     updateLtv(); updateDscr(); updateFlip(); updateOoWarn(); updateRateType();
     form.querySelectorAll('.f-invalid, .f-invalid-label').forEach(function(e){ e.classList.remove('f-invalid', 'f-invalid-label'); });
     form.querySelectorAll('.pills[aria-invalid]').forEach(function(p){ p.setAttribute('aria-invalid', 'false'); });
-    form.querySelectorAll('.pills-msg').forEach(function(p){ p.style.display = 'none'; });
+    form.querySelectorAll('.pills-msg, .f-msg').forEach(function(p){ p.style.display = 'none'; });
     form.querySelectorAll('[aria-describedby]').forEach(function(r){ r.removeAttribute('aria-describedby'); });
     show(0);
   });
   function finish(){
     var json = buildJson();
     document.getElementById('f-json').textContent = json;
+    var lj = document.querySelector('.load-json');
+    if (lj) lj.removeAttribute('open');
+    var jst = document.getElementById('json-status');
+    if (jst) jst.textContent = '';
     var testBlock = document.getElementById('f-done-test');
     var liveBlock = document.getElementById('f-done-live');
     var doneEl = document.getElementById('f-done');

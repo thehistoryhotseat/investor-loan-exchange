@@ -210,6 +210,8 @@
           "type": "string",
           "enum": [
             "none",
+            "up_to_6mo",
+            "up_to_12mo",
             "up_to_3yr",
             "up_to_5yr",
             "flexible"
