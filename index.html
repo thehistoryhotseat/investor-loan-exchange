@@ -1091,6 +1091,13 @@
     if (e.target.name === 'product') { updateLtv(); updateFlip(); }
   });
   form.addEventListener('submit', function(e){ e.preventDefault(); });
+  form.addEventListener('keydown', function(e){
+    if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+    e.preventDefault();
+    nextBtn.click();
+  });
+  var stEl = document.getElementById('state');
+  stEl.addEventListener('input', function(){ stEl.value = stEl.value.toUpperCase(); });
 
   function setField(n, v){
     if (v === undefined || v === null || v === '') return;
