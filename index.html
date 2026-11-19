@@ -189,8 +189,8 @@
   .copy-btn-light:hover{background:var(--btn);border-color:var(--btn);color:var(--paper)}
 
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:28px 26px;display:flex;flex-direction:column;gap:12px;transition:border-color .16s ease}
-  .card:hover{border-color:#a8a091}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:28px 26px;display:flex;flex-direction:column;gap:12px;transition:border-color .16s ease,transform .18s ease,box-shadow .18s ease}
+  .card:hover{border-color:#a8a091;transform:translateY(-3px);box-shadow:var(--e2)}
   .card h3{font-weight:600;font-size:19px;letter-spacing:-.01em}
   .card p{font-size:14.5px;color:var(--muted);flex:1}
   .pre-light{background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:22px 24px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.6px;line-height:1.7;color:var(--ink-2)}
