@@ -2,13 +2,22 @@
 
 > A loan scenario exchange for investment-property lending. A broker submits one loan scenario; it is checked against each lender's niche (product, state, property type, loan size); each fitting panel lender receives one structured rate request; quotes come back to one place, side by side, and the broker chooses who to engage. People and AI agents use the same intake.
 
+Schema version: 1.1 (scenario.schema.json)
+
 ## What agents can do here
 
-- Read the scenario format and submit a loan scenario on a broker's behalf, field for field, through the same intake form people use.
-- One submission per deal. Scenarios only - never personal documents.
-- The contact fields carry the broker's or borrower's details, not the agent's. Name the preparing agent in the notes field.
+- Read the scenario format and prepare a loan scenario on a broker's behalf, field for field, validating against scenario.schema.json.
+- Intake is the multi-step form at the site (anchor #intake). It currently runs in test mode: it validates the entry and shows the exact JSON record, but does not transmit it. When live intake is switched on, submissions will go to an endpoint named on this page.
+- The scenario record is lender-facing. The submitter's contact details are collected separately in the form and withheld from lenders until the submitter chooses to engage.
+- Name the preparing agent in prepared_by. Never put the borrower's or broker's name in notes.
 - Quotes and questions always go back to the person on the scenario. The agent prepares; the broker decides.
-- Every submission is covered by the same consent: scenarios are shared with lenders only, and only with the submitter's consent.
+
+## Never include in a scenario
+
+- SSNs, dates of birth, or other government identifiers
+- Bank account numbers or statements
+- Borrower or guarantor names (in notes or anywhere lender-facing)
+- Documents of any kind - scenarios only
 
 ## Lanes routed
 
@@ -16,6 +25,5 @@ DSCR rental, fix & flip, bridge, ground-up construction, cash-out refinance, and
 
 ## Links
 
-- [Submit a scenario (intake form)](https://docs.google.com/forms/d/e/1FAIpQLSf4aSnVUgbuLZBY7al9B7nZREiuUOY6RG76RujXuQgLqkVZVQ/viewform?usp=header): the single intake for people and agents
-- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema for one loan scenario
-- [Site](https://thehistoryhotseat.github.io/investor-loan-exchange/): full overview, lanes, lender onboarding, agent ground rules
+- [Site and intake form](https://thehistoryhotseat.github.io/investor-loan-exchange/#intake): the single intake for people and agents
+- [scenario.schema.json](https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json): JSON Schema v1.1 for one loan scenario

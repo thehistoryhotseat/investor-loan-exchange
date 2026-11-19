@@ -363,6 +363,7 @@
           <div class="pills" data-group="purpose">
             <input type="radio" name="purpose" id="u-purchase" value="purchase"><label for="u-purchase">Purchase</label>
             <input type="radio" name="purpose" id="u-refi" value="refinance"><label for="u-refi">Refinance</label>
+            <input type="radio" name="purpose" id="u-rateterm" value="rate_term_refi"><label for="u-rateterm">Rate-term refi</label>
             <input type="radio" name="purpose" id="u-cashout" value="cash_out"><label for="u-cashout">Cash-out refinance</label>
           </div>
         </div>
@@ -391,6 +392,16 @@
               <option value="">Select...</option>
               <option value="investment">Investment (non-owner-occupied)</option>
               <option value="owner_occupied">Owner-occupied</option>
+            </select>
+          </div>
+          <div class="f-field">
+            <label for="cond">Condition</label>
+            <select id="cond" name="condition">
+              <option value="">Select...</option>
+              <option>Turnkey</option>
+              <option>Light rehab</option>
+              <option>Heavy rehab</option>
+              <option>Shell</option>
             </select>
           </div>
           <div class="f-field">
@@ -446,6 +457,36 @@
             <label for="close">Target close</label>
             <input type="date" id="close" name="target_close">
           </div>
+          <div class="f-field full">
+            <span class="f-label" id="ltv-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass)">LTV: enter value and loan amount</span>
+          </div>
+          <div class="f-field full">
+            <span class="f-label">Citizenship <span class="req">*</span> <span style="font-weight:400;color:var(--muted)">(foreign nationals price differently)</span></span>
+            <div class="pills" data-group="citizenship">
+              <input type="radio" name="citizenship" id="c-us" value="us_person"><label for="c-us">US citizen / resident</label>
+              <input type="radio" name="citizenship" id="c-fn" value="foreign_national"><label for="c-fn">Foreign national</label>
+            </div>
+          </div>
+          <div class="f-field">
+            <label for="exp">Investor experience</label>
+            <select id="exp" name="experience">
+              <option value="">Select...</option>
+              <option>First deal</option>
+              <option>1-3 properties</option>
+              <option>4-10 properties</option>
+              <option>10+ properties</option>
+            </select>
+          </div>
+          <div class="f-field">
+            <label for="liq">Liquidity / reserves</label>
+            <select id="liq" name="liquidity_band">
+              <option value="">Select...</option>
+              <option>Under $25k</option>
+              <option>$25k-$100k</option>
+              <option>$100k-$250k</option>
+              <option>$250k+</option>
+            </select>
+          </div>
         </div>
       </fieldset>
 
@@ -458,13 +499,58 @@
             <input type="number" id="rent" name="monthly_rent_usd" min="0" step="50" placeholder="3200">
           </div>
           <div class="f-field">
-            <label for="dscr">Known DSCR</label>
-            <input type="text" id="dscr" name="known_dscr" placeholder="Optional, e.g. 1.25">
+            <label for="taxes">Monthly taxes</label>
+            <input type="number" id="taxes" name="monthly_taxes_usd" min="0" step="10" placeholder="600">
+          </div>
+          <div class="f-field">
+            <label for="ins">Monthly insurance</label>
+            <input type="number" id="ins" name="monthly_insurance_usd" min="0" step="10" placeholder="150">
+          </div>
+          <div class="f-field">
+            <label for="hoa">Monthly HOA</label>
+            <input type="number" id="hoa" name="monthly_hoa_usd" min="0" step="10" placeholder="0">
+          </div>
+          <div class="f-field full">
+            <span class="f-label" id="dscr-line" style="font-family:'IBM Plex Mono',monospace;font-weight:500;color:var(--brass)">Estimated DSCR appears here once rent and loan are in</span>
           </div>
         </div>
       </fieldset>
 
-      <fieldset class="f-step" data-step="5" data-name="Conforming" data-show-if="conforming_agency">
+      <fieldset class="f-step" data-step="5" data-name="Rehab" data-show-if="fix_flip">
+        <h3>The rehab</h3>
+        <p class="sub">Only for fix &amp; flip deals.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <label for="arv">After-repair value (ARV) <span class="req">*</span></label>
+            <input type="number" id="arv" name="arv_usd" min="1000" step="1000" placeholder="575000" required>
+          </div>
+          <div class="f-field">
+            <label for="rehab">Rehab budget <span class="req">*</span></label>
+            <input type="number" id="rehab" name="rehab_budget_usd" min="0" step="1000" placeholder="85000" required>
+          </div>
+          <div class="f-field">
+            <label for="exit">Exit strategy</label>
+            <select id="exit" name="exit_strategy">
+              <option value="">Select...</option>
+              <option>Sell</option>
+              <option>Refinance into DSCR</option>
+              <option>Undecided</option>
+            </select>
+          </div>
+          <div class="f-field">
+            <label for="flips">Completed flips</label>
+            <select id="flips" name="flip_experience">
+              <option value="">Select...</option>
+              <option>0</option>
+              <option>1-2</option>
+              <option>3-5</option>
+              <option>6+</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="6" data-name="Conforming" data-show-if="conforming_agency">
         <h3>Conforming check</h3>
         <p class="sub">Only for conforming (agency) deals.</p>
         <div class="f-grid">
@@ -489,7 +575,41 @@
         </div>
       </fieldset>
 
-      <fieldset class="f-step" data-step="6" data-name="About you">
+      <fieldset class="f-step" data-step="7" data-name="Preferences">
+        <h3>Preferences</h3>
+        <p class="sub">Optional. Helps lenders lead with the right quote.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <span class="f-label">Structure</span>
+            <div class="pills" data-group="structure" data-optional="1">
+              <input type="radio" name="structure" id="s-am" value="amortizing"><label for="s-am">Amortizing</label>
+              <input type="radio" name="structure" id="s-io" value="interest_only"><label for="s-io">Interest-only</label>
+              <input type="radio" name="structure" id="s-either" value="either"><label for="s-either">Either</label>
+            </div>
+          </div>
+          <div class="f-field">
+            <label for="ratetype">Rate type</label>
+            <select id="ratetype" name="rate_type">
+              <option value="">Select...</option>
+              <option>30-yr fixed</option>
+              <option>ARM</option>
+              <option>Interest-only ARM</option>
+              <option>No preference</option>
+            </select>
+          </div>
+          <div class="f-field full">
+            <span class="f-label">Prepayment penalty tolerance</span>
+            <div class="pills" data-group="prepay" data-optional="1">
+              <input type="radio" name="prepay" id="pp-none" value="none"><label for="pp-none">None</label>
+              <input type="radio" name="prepay" id="pp-3" value="up_to_3yr"><label for="pp-3">Up to 3 yr</label>
+              <input type="radio" name="prepay" id="pp-5" value="up_to_5yr"><label for="pp-5">Up to 5 yr</label>
+              <input type="radio" name="prepay" id="pp-any" value="flexible"><label for="pp-any">Flexible if pricing is better</label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="8" data-name="About you">
         <h3>About you</h3>
         <p class="sub">This stays back from lenders until you choose to engage.</p>
         <div class="f-grid">
@@ -671,6 +791,9 @@
     var radios = {};
     step.querySelectorAll('input[type=radio]').forEach(function(r){ radios[r.name] = true; });
     Object.keys(radios).forEach(function(n){
+      var first = step.querySelector('input[name="' + n + '"]');
+      var pills = first && first.closest('.pills');
+      if (pills && pills.getAttribute('data-optional')) return;
       if (!step.querySelector('input[name="' + n + '"]:checked')) ok = false;
     });
     step.querySelectorAll('[required]').forEach(function(f){
@@ -694,6 +817,35 @@
   }
   function label(map, v){ return map[v] || v || '-'; }
   var productLabels = {dscr_rental:'DSCR rental', fix_flip:'Fix & flip', bridge:'Bridge', ground_up_construction:'Ground-up construction', cash_out_refi:'Cash-out refi', conforming_agency:'Conforming (agency)'};
+  function num(n){ var v = parseFloat(val(n)); return isNaN(v) ? 0 : v; }
+  function updateLtv(){
+    var v = num('est_value_usd'), a = num('loan_amount_usd');
+    var el = document.getElementById('ltv-line');
+    el.textContent = (v > 0 && a > 0) ? 'LTV: ' + (a / v * 100).toFixed(1) + '%' : 'LTV: enter value and loan amount';
+  }
+  function piMonthly(principal, annualRate, years){
+    var r = annualRate / 12, n = years * 12;
+    return principal * r / (1 - Math.pow(1 + r, -n));
+  }
+  function updateDscr(){
+    var rent = num('monthly_rent_usd'), loan = num('loan_amount_usd');
+    var el = document.getElementById('dscr-line');
+    if (!el) return;
+    var pitia = num('monthly_taxes_usd') + num('monthly_insurance_usd') + num('monthly_hoa_usd');
+    if (rent > 0 && loan > 0) {
+      var d = rent / (piMonthly(loan, 0.07, 30) + pitia);
+      el.textContent = 'Estimated DSCR ~' + d.toFixed(2) + '  (rent / PITIA at an illustrative 7% 30-yr)';
+      el.setAttribute('data-dscr', d.toFixed(2));
+    } else {
+      el.textContent = 'Estimated DSCR appears here once rent and loan are in';
+      el.removeAttribute('data-dscr');
+    }
+  }
+  form.addEventListener('input', function(e){
+    var n = e.target.name || '';
+    if (['est_value_usd','loan_amount_usd'].indexOf(n) >= 0) updateLtv();
+    if (['monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','loan_amount_usd'].indexOf(n) >= 0) updateDscr();
+  });
   function money(n){
     var v = parseFloat(n);
     if (isNaN(v)) return n || '-';
@@ -709,10 +861,29 @@
     row('Value / price', money(val('est_value_usd')));
     if (val('units')) row('Units', val('units'));
     row('Loan amount', money(val('loan_amount_usd')));
+    var _v = num('est_value_usd'), _a = num('loan_amount_usd');
+    if (_v > 0 && _a > 0) row('LTV', (_a / _v * 100).toFixed(1) + '%');
+    if (val('condition')) row('Condition', val('condition'));
+    row('Citizenship', val('citizenship') === 'us_person' ? 'US citizen / resident' : (val('citizenship') === 'foreign_national' ? 'Foreign national' : ''));
+    if (val('experience')) row('Experience', val('experience'));
+    if (val('liquidity_band')) row('Liquidity', val('liquidity_band'));
     row('Credit band', val('credit_band'));
     if (val('vesting')) row('Vesting', val('vesting'));
     if (val('target_close')) row('Target close', val('target_close'));
-    if (product() === 'dscr_rental' && val('monthly_rent_usd')) row('Monthly rent', money(val('monthly_rent_usd')));
+    if (product() === 'dscr_rental' && val('monthly_rent_usd')) {
+      row('Monthly rent', money(val('monthly_rent_usd')));
+      var _de = document.getElementById('dscr-line');
+      if (_de && _de.getAttribute('data-dscr')) row('Estimated DSCR', '~' + _de.getAttribute('data-dscr') + ' (illustrative)');
+    }
+    if (product() === 'fix_flip') {
+      row('ARV', money(val('arv_usd')));
+      row('Rehab budget', money(val('rehab_budget_usd')));
+      if (val('exit_strategy')) row('Exit strategy', val('exit_strategy'));
+      if (val('flip_experience')) row('Completed flips', val('flip_experience'));
+    }
+    if (val('structure')) row('Structure', val('structure').replace('_', ' '));
+    if (val('rate_type')) row('Rate type', val('rate_type'));
+    if (val('prepay')) row('Prepay tolerance', label({none:'None', up_to_3yr:'Up to 3 yr', up_to_5yr:'Up to 5 yr', flexible:'Flexible'}, val('prepay')));
     if (product() === 'conforming_agency') {
       row('Under county limit', val('under_limit'));
       row('Owner-occupied', val('owner_occ'));
@@ -736,13 +907,38 @@
       },
       loan_amount_usd: parseFloat(val('loan_amount_usd')) || null,
       credit_band: val('credit_band'),
+      role: val('role'),
       consent: { share_with_lenders: true, contact_withheld_until_engaged: true }
     };
     if (val('zip')) obj.property.zip = val('zip');
     if (val('units')) obj.property.units = parseInt(val('units'), 10);
+    if (val('condition')) obj.property.condition = val('condition');
+    var _lv = parseFloat(val('est_value_usd')), _la = parseFloat(val('loan_amount_usd'));
+    if (_lv > 0 && _la > 0) obj.ltv = Math.round(_la / _lv * 1000) / 1000;
+    obj.citizenship = val('citizenship');
+    if (val('experience')) obj.experience = val('experience');
+    if (val('liquidity_band')) obj.liquidity_band = val('liquidity_band');
     if (val('vesting')) obj.vesting = val('vesting');
     if (val('target_close')) obj.target_close = val('target_close');
-    if (product() === 'dscr_rental' && val('monthly_rent_usd')) obj.monthly_rent_usd = parseFloat(val('monthly_rent_usd'));
+    if (product() === 'dscr_rental' && val('monthly_rent_usd')) {
+      obj.monthly_rent_usd = parseFloat(val('monthly_rent_usd'));
+      if (val('monthly_taxes_usd')) obj.monthly_taxes_usd = parseFloat(val('monthly_taxes_usd'));
+      if (val('monthly_insurance_usd')) obj.monthly_insurance_usd = parseFloat(val('monthly_insurance_usd'));
+      if (val('monthly_hoa_usd')) obj.monthly_hoa_usd = parseFloat(val('monthly_hoa_usd'));
+      var _dl = document.getElementById('dscr-line');
+      if (_dl && _dl.getAttribute('data-dscr')) obj.estimated_dscr = parseFloat(_dl.getAttribute('data-dscr'));
+    }
+    if (product() === 'fix_flip') {
+      obj.arv_usd = parseFloat(val('arv_usd')) || null;
+      obj.rehab_budget_usd = parseFloat(val('rehab_budget_usd')) || null;
+      if (val('exit_strategy')) obj.exit_strategy = val('exit_strategy');
+      if (val('flip_experience')) obj.flip_experience = val('flip_experience');
+    }
+    var prefs = {};
+    if (val('structure')) prefs.structure = val('structure');
+    if (val('rate_type')) prefs.rate_type = val('rate_type');
+    if (val('prepay')) prefs.prepay_tolerance = val('prepay');
+    if (Object.keys(prefs).length) obj.preferences = prefs;
     if (product() === 'conforming_agency') {
       obj.conforming = { under_county_limit: val('under_limit'), owner_occupied: val('owner_occ') };
     }

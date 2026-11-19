@@ -2,71 +2,87 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://thehistoryhotseat.github.io/investor-loan-exchange/scenario.schema.json",
   "title": "Investor Loan Exchange scenario",
-  "description": "One loan scenario as submitted to the Investor Loan Exchange intake. Scenarios only, never personal documents.",
+  "description": "One loan scenario as submitted to the Investor Loan Exchange intake. Scenarios only, never personal documents. All money figures in USD. This is the lender-facing record: the submitter's contact details are collected separately and withheld until they choose to engage.",
   "type": "object",
-  "required": ["contact", "loan", "property", "borrower"],
+  "additionalProperties": false,
+  "required": ["schema_version", "product", "purpose", "property", "loan_amount_usd", "credit_band", "citizenship", "consent"],
   "properties": {
-    "contact": {
-      "type": "object",
-      "required": ["name", "email", "role"],
-      "properties": {
-        "name": { "type": "string", "description": "Broker or borrower name - the person quotes go back to" },
-        "company": { "type": "string" },
-        "phone": { "type": "string" },
-        "email": { "type": "string", "format": "email" },
-        "role": { "type": "string", "enum": ["borrower", "broker", "agent"] }
-      }
-    },
-    "loan": {
-      "type": "object",
-      "required": ["purpose", "product", "amount"],
-      "properties": {
-        "purpose": { "type": "string", "enum": ["purchase", "refinance"] },
-        "product": { "type": "string", "enum": ["DSCR rental", "fix & flip", "bridge", "ground-up construction", "cash-out refi", "conforming", "other"] },
-        "amount": { "type": "number", "exclusiveMinimum": 0 },
-        "target_close": { "type": "string", "format": "date" }
-      }
-    },
+    "schema_version": { "type": "string", "const": "1.1" },
+    "prepared_by": { "type": "string", "description": "Name of the person or agent that prepared this file, e.g. your-agent. Never the borrower's name." },
+    "product": { "type": "string", "enum": ["dscr_rental", "fix_flip", "bridge", "ground_up_construction", "cash_out_refi", "conforming_agency"] },
+    "purpose": { "type": "string", "enum": ["purchase", "refinance", "rate_term_refi", "cash_out"] },
     "property": {
       "type": "object",
-      "required": ["address", "type"],
+      "additionalProperties": false,
+      "required": ["type", "occupancy", "state", "est_value_usd"],
       "properties": {
-        "address": { "type": "string" },
-        "type": { "type": "string", "enum": ["SFR", "2-4 units", "condo", "multifamily 5+", "mixed use"] },
+        "type": { "type": "string", "description": "e.g. single_family, 2-4 unit, condo, townhome, small multifamily, mixed use" },
+        "occupancy": { "type": "string", "enum": ["investment", "owner_occupied"] },
+        "state": { "type": "string", "pattern": "^[A-Z]{2}$" },
+        "zip": { "type": "string" },
+        "est_value_usd": { "type": "number", "exclusiveMinimum": 0 },
         "units": { "type": "integer", "minimum": 1 },
-        "price_or_value": { "type": "number" },
-        "rehab_budget": { "type": "number" },
-        "arv": { "type": "number", "description": "After-repair value" }
+        "condition": { "type": "string", "enum": ["Turnkey", "Light rehab", "Heavy rehab", "Shell"] }
       }
     },
-    "borrower": {
+    "loan_amount_usd": { "type": "number", "exclusiveMinimum": 0 },
+    "ltv": { "type": "number", "exclusiveMinimum": 0, "maximum": 1.5, "description": "loan_amount_usd / est_value_usd" },
+    "role": { "type": "string", "enum": ["broker", "borrower"] },
+    "credit_band": { "type": "string", "enum": ["780+", "740-779", "700-739", "660-699", "620-659", "Below 620"] },
+    "citizenship": { "type": "string", "enum": ["us_person", "foreign_national"], "description": "Foreign nationals price differently on most panels" },
+    "experience": { "type": "string" },
+    "liquidity_band": { "type": "string" },
+    "vesting": { "type": "string", "enum": ["LLC", "Personal name", "Trust", "Other entity"] },
+    "target_close": { "type": "string", "format": "date" },
+    "monthly_rent_usd": { "type": "number", "minimum": 0 },
+    "monthly_taxes_usd": { "type": "number", "minimum": 0 },
+    "monthly_insurance_usd": { "type": "number", "minimum": 0 },
+    "monthly_hoa_usd": { "type": "number", "minimum": 0 },
+    "estimated_dscr": { "type": "number", "description": "Illustrative estimate, not a lender figure" },
+    "arv_usd": { "type": "number", "exclusiveMinimum": 0, "description": "After-repair value, fix & flip" },
+    "rehab_budget_usd": { "type": "number", "minimum": 0 },
+    "exit_strategy": { "type": "string", "enum": ["Sell", "Refinance into DSCR", "Undecided"] },
+    "flip_experience": { "type": "string" },
+    "preferences": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
-        "entity": { "type": "string", "enum": ["LLC", "personal"] },
-        "credit_band": { "type": "string" },
-        "experience": { "type": "string", "enum": ["0", "1-3", "4+"] },
-        "liquidity": { "type": "number" }
-      }
-    },
-    "dscr": {
-      "type": "object",
-      "description": "DSCR rental deals only",
-      "properties": {
-        "rent": { "type": "number" },
-        "taxes": { "type": "number" },
-        "insurance": { "type": "number" },
-        "hoa": { "type": "number" }
+        "structure": { "type": "string", "enum": ["amortizing", "interest_only", "either"] },
+        "rate_type": { "type": "string" },
+        "prepay_tolerance": { "type": "string", "enum": ["none", "up_to_3yr", "up_to_5yr", "flexible"] }
       }
     },
     "conforming": {
       "type": "object",
-      "description": "Conforming (agency) deals only",
+      "additionalProperties": false,
       "properties": {
-        "occupancy": { "type": "string", "enum": ["investment", "second home", "primary"] },
-        "at_or_under_county_limit": { "type": "boolean" }
+        "under_county_limit": { "type": "string", "enum": ["yes", "no"] },
+        "owner_occupied": { "type": "string", "enum": ["yes", "no"] }
       }
     },
-    "exit_strategy": { "type": "string", "enum": ["sell", "refinance", "hold"] },
-    "notes": { "type": "string", "description": "Anything else worth knowing. Preparing agents name themselves here." }
-  }
+    "notes": { "type": "string", "description": "Free text for lenders. Never names, SSNs, dates of birth, account numbers, or documents." },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["share_with_lenders", "contact_withheld_until_engaged"],
+      "properties": {
+        "share_with_lenders": { "type": "boolean", "const": true },
+        "contact_withheld_until_engaged": { "type": "boolean", "const": true }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "product": { "const": "dscr_rental" } }, "required": ["product"] },
+      "then": { "required": ["monthly_rent_usd"] }
+    },
+    {
+      "if": { "properties": { "product": { "const": "fix_flip" } }, "required": ["product"] },
+      "then": { "required": ["arv_usd", "rehab_budget_usd"] }
+    },
+    {
+      "if": { "properties": { "product": { "const": "conforming_agency" } }, "required": ["product"] },
+      "then": { "required": ["conforming"] }
+    }
+  ]
 }
