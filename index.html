@@ -413,7 +413,7 @@
       <div class="lane"><h3>Cash-out refinance</h3><p>Pull equity out of an existing investment property. Priced on LTV, credit and cash flow.</p></div>
       <div class="lane"><h3>Conforming (agency)</h3><p>Conventional Fannie / Freddie pricing, under the county limit. Priced on credit, LTV and DTI.</p></div>
     </div>
-    <div class="callout"><strong>A note on conforming.</strong> Owner-occupied conforming loans are consumer-purpose mortgages with their own rules; those scenarios are reviewed before any lender sees them. Investment-property conforming deals flow like every other lane.</div>
+    <div class="callout"><strong>A note on conforming.</strong> The conforming lane covers investment properties only. Owner-occupied homes are consumer-purpose mortgages and aren't accepted in this draft.</div>
   </div>
 </section>
 <section id="intake">
@@ -507,7 +507,7 @@
             <input type="text" id="state" name="state" maxlength="2" placeholder="e.g. NJ" required>
           </div>
           <div class="f-field full" id="oo-warn" style="display:none">
-            <span class="f-label" style="color:#b3432e">Owner-occupied deals are consumer-purpose mortgages. Only the conforming lane routes those today; an owner-occupied DSCR or bridge deal will not price.</span>
+            <span class="f-label" style="color:#b3432e">Owner-occupied homes are consumer-purpose mortgages and can't be submitted in this draft. Investment properties only.</span>
           </div>
           <div class="f-field">
             <label for="zip">ZIP</label>
@@ -645,6 +645,62 @@
               <option>1-2</option>
               <option>3-5</option>
               <option>6+</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="5b" data-name="Transition" data-show-if="bridge">
+        <h3>The transition</h3>
+        <p class="sub">Only for bridge deals.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <label for="b-exit">Exit strategy <span class="req">*</span></label>
+            <select id="b-exit" name="bridge_exit_strategy" required>
+              <option value="">Select...</option>
+              <option>Sell</option>
+              <option>Refinance into DSCR</option>
+              <option>Refinance into conventional</option>
+              <option>Undecided</option>
+            </select>
+          </div>
+          <div class="f-field">
+            <label for="b-term">Term needed <span class="req">*</span></label>
+            <select id="b-term" name="bridge_term" required>
+              <option value="">Select...</option>
+              <option>Up to 6 months</option>
+              <option>6-12 months</option>
+              <option>12-24 months</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="f-step" data-step="5c" data-name="The build" data-show-if="ground_up_construction">
+        <h3>The build</h3>
+        <p class="sub">Only for ground-up construction.</p>
+        <div class="f-grid">
+          <div class="f-field">
+            <label for="guc-budget">Total project budget <span class="req">*</span></label>
+            <div class="money"><span>$</span><input type="text" inputmode="decimal" class="money-in" id="guc-budget" name="project_budget_usd" placeholder="e.g. 850,000" required></div>
+          </div>
+          <div class="f-field">
+            <label for="guc-time">Build timeline <span class="req">*</span></label>
+            <select id="guc-time" name="build_timeline" required>
+              <option value="">Select...</option>
+              <option>Under 9 months</option>
+              <option>9-12 months</option>
+              <option>12-18 months</option>
+              <option>Over 18 months</option>
+            </select>
+          </div>
+          <div class="f-field">
+            <label for="guc-land">Land status</label>
+            <select id="guc-land" name="land_status">
+              <option value="">Select...</option>
+              <option>Owned</option>
+              <option>Under contract</option>
+              <option>Not yet</option>
             </select>
           </div>
         </div>
@@ -799,7 +855,7 @@
     <div class="lender-sample">
       <h3>What a rate request looks like</h3>
       <pre class="pre-light">{
-  "schema_version": "1.2",
+  "schema_version": "1.3",
   "product": "dscr_rental",
   "purpose": "purchase",
   "property": {
@@ -854,6 +910,7 @@
       <a href="#agents">For agents</a>
     </div>
     <p class="small">Sample figures on this page are illustrative, not rates or offers.</p>
+    <p class="small">Draft in test mode. Entries stay in your browser; nothing is collected or shared.</p>
   </div>
 </footer>
 
@@ -957,6 +1014,8 @@
       if (st && st.value && !/^(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY])$/.test(st.value.toUpperCase())) ok = false;
       var ct = step.querySelector('#contact');
       if (ct && ct.value && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ct.value) || /^[+()\-.\s\d]{7,}$/.test(ct.value))) ok = false;
+      var occ = step.querySelector('#occ');
+      if (occ && occ.value === 'owner_occupied') { occ.classList.add('f-invalid'); ok = false; }
     }
     if (name === 'Review' && !document.getElementById('consent').checked) ok = false;
     return ok;
@@ -1004,7 +1063,7 @@
   function updateOoWarn(){
     var w = document.getElementById('oo-warn');
     if (!w) return;
-    var show = val('occupancy') === 'owner_occupied' && product() !== 'conforming_agency' && product() !== '';
+    var show = val('occupancy') === 'owner_occupied' && product() !== '';
     w.style.display = show ? '' : 'none';
   }
   function piMonthly(principal, annualRate, years){
@@ -1079,6 +1138,15 @@
       if (val('exit_strategy')) row('Exit strategy', val('exit_strategy'), 'Rehab');
       if (val('flip_experience')) row('Completed flips', val('flip_experience'), 'Rehab');
     }
+    if (product() === 'bridge') {
+      row('Exit strategy', val('bridge_exit_strategy'), 'Transition');
+      row('Term needed', val('bridge_term'), 'Transition');
+    }
+    if (product() === 'ground_up_construction') {
+      row('Project budget', money(val('project_budget_usd')), 'The build');
+      row('Build timeline', val('build_timeline'), 'The build');
+      if (val('land_status')) row('Land status', val('land_status'), 'The build');
+    }
     if (val('structure')) row('Structure', val('structure').replace('_', ' '), 'Preferences');
     if (val('rate_type')) row('Rate type', val('rate_type'), 'Preferences');
     if (val('prepay')) row('Prepay tolerance', label({none:'None', up_to_3yr:'Up to 3 yr', up_to_5yr:'Up to 5 yr', flexible:'Flexible'}, val('prepay')), 'Preferences');
@@ -1107,7 +1175,7 @@
   function snake(x){ return (x || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }
   function buildJson(){
     var obj = {
-      schema_version: '1.2',
+      schema_version: '1.3',
       prepared_by: 'ilx-intake',
       product: val('product'),
       purpose: val('purpose'),
@@ -1154,6 +1222,15 @@
     if (val('rate_type')) prefs.rate_type = val('rate_type');
     if (val('prepay')) prefs.prepay_tolerance = val('prepay');
     if (Object.keys(prefs).length) obj.preferences = prefs;
+    if (product() === 'bridge') {
+      obj.bridge_exit_strategy = snake(val('bridge_exit_strategy'));
+      obj.bridge_term = snake(val('bridge_term'));
+    }
+    if (product() === 'ground_up_construction') {
+      obj.project_budget_usd = parseFloat(val('project_budget_usd')) || null;
+      obj.build_timeline = snake(val('build_timeline'));
+      if (val('land_status')) obj.land_status = snake(val('land_status'));
+    }
     if (product() === 'conforming_agency') {
       obj.conforming = { under_county_limit: val('under_limit'), owner_occupied: val('owner_occ') };
     }
