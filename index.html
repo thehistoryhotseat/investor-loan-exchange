@@ -143,6 +143,7 @@
   .f-consent{display:flex;gap:12px;align-items:flex-start;background:#fbf8f1;border:1px solid var(--line);border-radius:6px;padding:16px 18px;font-size:13.5px;color:var(--ink-2);margin-top:22px;cursor:pointer}
   .f-consent input{margin-top:3px;flex:none}
   .f-nav{display:flex;justify-content:space-between;gap:12px;padding:22px 30px 28px;border-top:1px solid var(--line);margin-top:20px}
+  .f-error{margin:16px 30px 0;padding:12px 16px;border:1px solid rgba(178,58,44,.35);background:#fbeeec;color:#8a2b21;border-radius:6px;font-size:14px}
   .f-nav .btn{white-space:nowrap}
   #f-toreview{margin-left:auto}
   .f-review .r-row{display:grid;grid-template-columns:170px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
@@ -703,9 +704,19 @@
 
       <fieldset class="f-step" data-step="8" data-name="Done">
         <div class="f-done" id="f-done">
-          <span class="f-badge">Test mode - not sent</span>
-          <h3 tabindex="-1" id="f-done-h">Checked. Here is your record.</h3>
-          <p>This is the structured scenario a lender or an agent would work from. Copy it, or submit it again once live intake is switched on.</p>
+          <div id="f-done-test">
+            <span class="f-badge">Test mode - not sent</span>
+            <h3 tabindex="-1" id="f-done-h">Checked. Here is your record.</h3>
+            <p>This is the structured scenario a lender or an agent would work from. Copy it, or submit it again once live intake is switched on.</p>
+          </div>
+          <div id="f-done-live" style="display:none">
+            <h3 tabindex="-1" id="f-done-live-h">Sent.</h3>
+            <p id="f-send-state">Sending your scenario...</p>
+            <div id="f-done-ok" style="display:none">
+              <p>Reference <strong id="f-ref"></strong>. Save it; it is how we find your request.</p>
+              <p>What happens next: the panel lenders whose box this fits get one rate request. Quotes come back side by side. Your name stays back until you choose to reply.</p>
+            </div>
+          </div>
           <div class="pre-head" style="margin-top:18px"><span>scenario.json</span><button class="copy-btn-light" id="f-copy" type="button">Copy</button></div>
           <pre id="f-json"></pre>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -715,6 +726,7 @@
         </div>
       </fieldset>
 
+      <div class="f-error" id="f-send-err" role="alert" style="display:none">Could not send. Nothing is lost; your entries are still on this page. Try again.</div>
       <div class="f-nav">
         <button type="button" class="btn ghost" id="f-back">Back</button>
         <button type="button" class="btn ghost" id="f-toreview" style="display:none">Back to review</button>
@@ -1099,6 +1111,9 @@
     if (val('notes')) obj.notes = val('notes');
     return JSON.stringify(obj, null, 2);
   }
+  // Live intake endpoint. Empty keeps the form in test mode: nothing leaves the browser.
+  // On go-live, set this to the chosen intake URL; the record is POSTed as JSON and an optional {"reference": "..."} in the response is shown to the broker.
+  var SUBMIT_ENDPOINT = '';
   var DRAFT_KEY = 'ilx-draft';
   function saveDraft(){
     var d = {};
@@ -1137,10 +1152,46 @@
     show(0);
   });
   function finish(){
-    clearDraft();
-    document.getElementById('f-json').textContent = buildJson();
-    document.getElementById('f-done').classList.add('on');
-    setTimeout(function(){ document.getElementById('f-done-h').focus(); }, 60);
+    var json = buildJson();
+    document.getElementById('f-json').textContent = json;
+    var testBlock = document.getElementById('f-done-test');
+    var liveBlock = document.getElementById('f-done-live');
+    var doneEl = document.getElementById('f-done');
+    if (!SUBMIT_ENDPOINT) {
+      clearDraft();
+      testBlock.style.display = '';
+      liveBlock.style.display = 'none';
+      doneEl.classList.add('on');
+      setTimeout(function(){ document.getElementById('f-done-h').focus(); }, 60);
+      return;
+    }
+    testBlock.style.display = 'none';
+    liveBlock.style.display = '';
+    document.getElementById('f-send-state').style.display = '';
+    document.getElementById('f-done-ok').style.display = 'none';
+    document.getElementById('f-send-err').style.display = 'none';
+    doneEl.classList.add('on');
+    setTimeout(function(){ document.getElementById('f-done-live-h').focus(); }, 60);
+    fetch(SUBMIT_ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body: json})
+      .then(function(r){ if (!r.ok) throw new Error('send failed'); return r.text(); })
+      .then(function(t){
+        var ref = '';
+        try { var j = JSON.parse(t); ref = j.reference || j.id || ''; } catch(e) {}
+        if (!ref) ref = 'ILX-' + Date.now().toString(36).toUpperCase();
+        clearDraft();
+        document.getElementById('f-ref').textContent = ref;
+        document.getElementById('f-send-state').style.display = 'none';
+        document.getElementById('f-done-ok').style.display = '';
+        setTimeout(function(){ document.getElementById('f-done-live-h').focus(); }, 60);
+      })
+      .catch(function(){
+        doneEl.classList.remove('on');
+        var err = document.getElementById('f-send-err');
+        err.style.display = '';
+        var scr = screensFor(product());
+        show(scr.length - 2);
+        err.scrollIntoView({block:'center'});
+      });
   }
   nextBtn.addEventListener('click', function(){
     var scr = screensFor(product());
