@@ -1376,6 +1376,7 @@
   })();
   document.getElementById('f-restart').addEventListener('click', function(){
     form.reset();
+    document.getElementById('prepared-by').value = '';
     clearDraft();
     document.getElementById('f-done').classList.remove('on');
     document.getElementById('f-json').textContent = '';
