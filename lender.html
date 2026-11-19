@@ -169,12 +169,14 @@
   .pills-msg{font-size:13px;color:#b4432e;margin-top:8px}
   .f-nav .btn{white-space:nowrap}
   #f-toreview{margin-left:auto}
-  .f-review .r-row{display:grid;grid-template-columns:170px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .f-review .r-row{display:grid;grid-template-columns:170px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
   .r-edit{background:none;border:none;padding:0;font:inherit;font-size:12.5px;color:var(--brass-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;align-self:start}
   .r-edit:hover{color:var(--brass)}
   .f-review .r-row .k{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
-  .r-edit{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:none;border:0;padding:2px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;justify-self:end}
-  .r-edit:hover{color:var(--ink)}
+  .r-sec{margin-top:20px}
+  .r-sec:first-child{margin-top:0}
+  .r-sec-head{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:4px;border-bottom:2px solid var(--ink)}
+  .r-sec-head .k{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink)}
   .f-err{color:#b3432e;font-size:13.5px;font-weight:500;margin-top:16px;display:none}
   .f-done{display:none;padding:8px 0 30px}
   .f-done.on{display:block}
@@ -276,9 +278,8 @@
     .qc-row .rate{font-size:17px}
     .qc-row .num{font-size:12px}
     .fullw{display:none}
-    .f-step,.f-meta,.f-nav,.f-done{padding-left:20px;padding-right:20px}
+    .f-step,.f-meta,.f-nav{padding-left:20px;padding-right:20px}
     .f-review .r-row{grid-template-columns:1fr;gap:2px}
-    .r-edit{justify-self:start}
     .r-edit{justify-self:start;margin-bottom:6px}
     .f-nav{flex-wrap:wrap}
     #f-toreview{order:4;flex-basis:100%;margin-left:0}
@@ -364,11 +365,11 @@
     </div>
 
     <form class="form-card" id="ilx-lender-form" novalidate>
-      <div class="f-meta" aria-live="polite"><span id="l-stepname">Your company</span><span id="l-stepno"></span></div>
+      <div class="f-meta" aria-live="polite"><span id="l-stepname">The box you price in</span><span id="l-stepno"></span></div>
 
       <fieldset class="f-step on" data-name="The box you price in">
-        <h3>The box you price in</h3>
-        <p class="sub">Scenarios outside it never reach your desk. Rough ranges are fine.</p>
+        <h3 tabindex="-1">The box you price in</h3>
+        <p class="sub">Rough ranges are fine.</p>
         <div class="f-field full">
           <span class="f-label" id="lbl-products">Products you price <span class="req">*</span> <span style="font-weight:400;color:var(--muted)">(select all that apply)</span></span>
           <div class="pills" role="group" aria-labelledby="lbl-products" data-group="products">
@@ -431,7 +432,7 @@
       </fieldset>
 
       <fieldset class="f-step" data-name="Your company">
-        <h3>Your company</h3>
+        <h3 tabindex="-1">Your company</h3>
         <p class="sub">Who we would be routing deals to.</p>
         <div class="f-grid">
           <div class="f-field">
@@ -491,11 +492,6 @@
           <p>Nothing was sent; this stayed in your browser. In live mode an entry like this is stored, and stored entries get the first invitation when lender onboarding opens.</p>
           <p>Guideline documents come later: the invite leads to the lender portal, where you sign in and upload or replace your guideline sheets anytime.</p>
           <div class="f-review f-sheet" id="l-sheet" style="margin-top:8px"></div>
-          <details class="load-json" style="margin-top:22px">
-            <summary>For agents: the raw record</summary>
-            <div class="pre-head" style="margin-top:14px"><span>lender-interest.json</span><button class="copy-btn-light" id="l-copy" type="button">Copy</button></div>
-            <pre id="l-json"></pre>
-          </details>
           <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
             <button type="button" class="btn ghost" id="l-print">Print or save as PDF</button>
             <button type="button" class="btn ghost" id="l-restart">Start over</button>
@@ -506,6 +502,7 @@
       <div class="f-nav no-print">
         <button type="button" class="btn ghost" id="l-back" disabled>Back</button>
         <button type="button" class="btn" id="l-next">Continue</button>
+        <button type="button" class="btn ghost" id="f-toreview" style="display:none">Back to review</button>
       </div>
     </form>
   </div>
@@ -674,29 +671,39 @@
   function label(map, v){ return map[v] || v || '-'; }
   function rows(withEdit){
     var r = record();
-    var out = [
-      ['Company', r.company, 'Your company'],
-      ['Contact', r.contact_name, 'Your company'],
-      ['Email', r.email, 'Your company'],
-      ['Phone', r.phone || '', 'Your company'],
-      ['Lender type', r.lender_type ? label(ltypeLabels, r.lender_type) : '', 'Your company'],
-      ['NMLS ID', r.nmls_id || '', 'Your company'],
-      ['Products', r.products.map(function(p){ return label(productLabels, p); }).join(', '), 'The box you price in'],
-      ['Property types', r.property_types.map(function(p){ return label(ptypeLabels, p); }).join(', '), 'The box you price in'],
-      ['States', r.states.join(', '), 'The box you price in'],
-      ['Max LTV', r.max_ltv_pct !== null ? r.max_ltv_pct + '%' : '', 'The box you price in'],
-      ['Loan size', (r.min_loan_usd !== null || r.max_loan_usd !== null) ? (moneyFmt(r.min_loan_usd) || 'No min') + ' to ' + (moneyFmt(r.max_loan_usd) || 'no max') : '', 'The box you price in'],
-      ['Min FICO', r.min_fico !== null ? String(r.min_fico) : '', 'The box you price in'],
-      ['Notes', r.notes || '', 'The box you price in']
+    var secs = [
+      ['Your company', [
+        ['Company', r.company],
+        ['Contact', r.contact_name],
+        ['Email', r.email],
+        ['Phone', r.phone || ''],
+        ['Lender type', r.lender_type ? label(ltypeLabels, r.lender_type) : ''],
+        ['NMLS ID', r.nmls_id || '']
+      ]],
+      ['The box you price in', [
+        ['Products', r.products.map(function(p){ return label(productLabels, p); }).join(', ')],
+        ['Property types', r.property_types.map(function(p){ return label(ptypeLabels, p); }).join(', ')],
+        ['States', r.states.join(', ')],
+        ['Max LTV', r.max_ltv_pct !== null ? r.max_ltv_pct + '%' : ''],
+        ['Loan size', (r.min_loan_usd !== null || r.max_loan_usd !== null) ? (moneyFmt(r.min_loan_usd) || 'No min') + ' to ' + (moneyFmt(r.max_loan_usd) || 'no max') : ''],
+        ['Min FICO', r.min_fico !== null ? String(r.min_fico) : ''],
+        ['Notes', r.notes || '']
+      ]]
     ];
-    return out.filter(function(pair){ return pair[1] !== ''; }).map(function(pair){
-      var edit = '';
+    return secs.map(function(sec){
+      var visible = sec[1].filter(function(pair){ return pair[1] !== ''; });
+      if (!visible.length) return '';
+      var head = '';
       if (withEdit) {
         var idx = -1;
-        steps.forEach(function(st, j){ if (st.getAttribute('data-name') === pair[2]) idx = j; });
-        if (idx > -1) edit = '<button type="button" class="r-edit" data-step="' + idx + '">Edit</button>';
+        steps.forEach(function(st, j){ if (st.getAttribute('data-name') === sec[0]) idx = j; });
+        head = '<div class="r-sec-head"><span class="k">' + esc(sec[0]) + '</span>'
+          + (idx > -1 ? '<button type="button" class="r-edit" data-step="' + idx + '">Edit</button>' : '') + '</div>';
       }
-      return '<div class="r-row"><span class="k">' + esc(pair[0]) + '</span><span>' + esc(pair[1]) + '</span>' + edit + '</div>';
+      var body = visible.map(function(pair){
+        return '<div class="r-row"><span class="k">' + esc(pair[0]) + '</span><span>' + esc(pair[1]) + '</span></div>';
+      }).join('');
+      return '<div class="r-sec">' + head + body + '</div>';
     }).join('');
   }
   function show(i){
@@ -713,6 +720,9 @@
     stepName.textContent = s.getAttribute('data-name');
     stepNo.textContent = (i >= steps.length - 1) ? '' : ('Step ' + (i + 1) + ' of ' + (steps.length - 1));
     var last = (i === steps.length - 1);
+    var isReview = (i === steps.length - 2);
+    if (isReview) returnToReview = false;
+    toreviewBtn.style.display = (returnToReview && !last && !isReview) ? '' : 'none';
     backBtn.disabled = (i === 0);
     backBtn.style.display = last ? 'none' : '';
     var review = (i === steps.length - 2);
@@ -753,9 +763,25 @@
     if (d.rec_id) recId = d.rec_id;
   }
   backBtn.addEventListener('click', function(){ show(current - 1); });
+  var returnToReview = false;
+  var toreviewBtn = document.getElementById('f-toreview');
   document.getElementById('l-review').addEventListener('click', function(e){
     var b = e.target.closest('.r-edit');
-    if (b) show(parseInt(b.getAttribute('data-step'), 10));
+    if (!b) return;
+    returnToReview = true;
+    var idx = parseInt(b.getAttribute('data-step'), 10);
+    show(idx);
+    var head = steps[idx].querySelector('h3');
+    if (head) { try { head.focus({preventScroll:true}); } catch(e) {} }
+  });
+  toreviewBtn.addEventListener('click', function(){
+    if (!validate(current)) {
+      var bad = steps[current].querySelector('.f-invalid input, input.f-invalid, .pills.f-invalid input');
+      if (bad) { try { bad.focus({preventScroll:true}); } catch(e) {} }
+      return;
+    }
+    saveDraft();
+    show(steps.length - 2);
   });
   nextBtn.addEventListener('click', function(){
     if (!validate(current)) {
@@ -769,7 +795,6 @@
       var r = record();
       r.id = recId;
       r.consent = {given: true, given_at: new Date().toISOString(), mode: 'test'};
-      document.getElementById('l-json').textContent = JSON.stringify(r, null, 2);
       saveDraft();
       show(steps.length - 1);
       setTimeout(function(){ document.getElementById('l-done-h').focus({preventScroll:true}); }, 60);
@@ -799,17 +824,11 @@
     e.preventDefault();
     nextBtn.click();
   });
-  document.getElementById('l-copy').addEventListener('click', function(){
-    var t = document.getElementById('l-json').textContent;
-    if (navigator.clipboard) navigator.clipboard.writeText(t);
-    this.textContent = 'Copied';
-    var b = this;
-    setTimeout(function(){ b.textContent = 'Copy'; }, 1600);
-  });
   document.getElementById('l-print').addEventListener('click', function(){ window.print(); });
   document.getElementById('l-restart').addEventListener('click', function(){
     form.reset();
     recId = '';
+    returnToReview = false;
     try { localStorage.removeItem(DRAFT_KEY); } catch(e) {}
     show(0);
   });
