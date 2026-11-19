@@ -870,10 +870,14 @@
     var el = document.getElementById('ltv-line');
     var flip = product() === 'fix_flip';
     if (v > 0 && a > 0) {
+      var pct = (a / v * 100).toFixed(1);
+      var over = a > v;
+      el.style.color = over ? '#b3432e' : '';
       el.textContent = flip
-        ? 'Loan-to-price: ' + (a / v * 100).toFixed(1) + '%  (loan-to-cost and loan-to-ARV come with the rehab numbers)'
-        : 'LTV: ' + (a / v * 100).toFixed(1) + '%';
+        ? 'Loan-to-price: ' + pct + '%' + (over ? '  (over 100% - check the numbers)' : '  (loan-to-cost and loan-to-ARV come with the rehab numbers)')
+        : 'LTV: ' + pct + '%' + (over ? '  (over 100% - check the numbers)' : '');
     } else {
+      el.style.color = '';
       el.textContent = flip ? 'Loan-to-price: enter price and loan amount' : 'LTV: enter value and loan amount';
     }
   }
@@ -1098,6 +1102,8 @@
   });
   var stEl = document.getElementById('state');
   stEl.addEventListener('input', function(){ stEl.value = stEl.value.toUpperCase(); });
+  var closeEl = document.getElementById('close');
+  closeEl.min = new Date().toISOString().slice(0, 10);
 
   function setField(n, v){
     if (v === undefined || v === null || v === '') return;
