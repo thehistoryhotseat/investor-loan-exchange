@@ -128,6 +128,14 @@
   .card h3{font-family:'Fraunces',serif;font-weight:560;font-size:21px}
   .card p{font-size:14.5px;color:var(--muted);flex:1}
 
+  /* after submit */
+  .after{margin-top:48px;border:1px solid var(--line);border-radius:6px;background:var(--card);display:grid;grid-template-columns:auto 1fr 1fr 1fr}
+  .after .lab{padding:24px 22px;border-right:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);font-weight:500;display:flex;align-items:center}
+  .after .ph{padding:24px 22px;border-right:1px solid var(--line)}
+  .after .ph:last-child{border-right:none}
+  .after .ph h4{font-family:'Fraunces',serif;font-weight:560;font-size:16px;margin-bottom:6px}
+  .after .ph p{font-size:13.5px;color:var(--muted)}
+
   /* faq */
   .faq-list{border-top:1px solid var(--ink)}
   .faq{border-bottom:1px solid var(--line)}
@@ -175,6 +183,10 @@
     .agent-grid{grid-template-columns:1fr}
     .fit{grid-template-columns:1fr}
     .hero-grid{grid-template-columns:1fr;gap:44px}
+    .after{grid-template-columns:1fr}
+    .after .lab{border-right:none;border-bottom:1px solid var(--line);padding:16px 22px}
+    .after .ph{border-right:none;border-bottom:1px solid var(--line)}
+    .after .ph:last-child{border-bottom:none}
     .nav-links > a:not(.btn){display:none}
     .menu{display:block}
     .menu-links a.cta{display:block}
@@ -357,6 +369,23 @@
       <li>Conforming deals: occupancy and loan size vs. the county limit</li>
       <li>Exit strategy and anything else worth knowing</li>
     </ul>
+  </div>
+  <div class="wrap">
+    <div class="after">
+      <div class="lab">After you submit</div>
+      <div class="ph">
+        <h4>Fit check</h4>
+        <p>The scenario is checked against every lender's niche and current overlays. Lenders outside the box never see it.</p>
+      </div>
+      <div class="ph">
+        <h4>Rate requests out</h4>
+        <p>Each fitting lender gets one structured request. The borrower's identity stays back.</p>
+      </div>
+      <div class="ph">
+        <h4>Quotes, side by side</h4>
+        <p>Rate, points, prepay and exceptions in one comparison. The broker chooses who to engage.</p>
+      </div>
+    </div>
   </div>
 </section>
 
