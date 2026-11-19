@@ -116,7 +116,7 @@
         "700-739",
         "660-699",
         "620-659",
-        "Below 620"
+        "below_620"
       ]
     },
     "citizenship": {
@@ -136,10 +136,10 @@
     "vesting": {
       "type": "string",
       "enum": [
-        "LLC",
-        "Personal name",
-        "Trust",
-        "Other entity"
+        "llc",
+        "personal_name",
+        "trust",
+        "other_entity"
       ]
     },
     "target_close": {
@@ -178,9 +178,9 @@
     "exit_strategy": {
       "type": "string",
       "enum": [
-        "Sell",
-        "Refinance into DSCR",
-        "Undecided"
+        "sell",
+        "refinance_into_dscr",
+        "undecided"
       ]
     },
     "flip_experience": {
