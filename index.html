@@ -177,6 +177,9 @@
   #f-toreview{margin-left:auto}
   .f-review .r-row{display:grid;grid-template-columns:170px 1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
   .r-edit{background:none;border:none;padding:0;font:inherit;font-size:12.5px;color:var(--brass-ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;align-self:start}
+  .r-sec-head{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:4px;border-bottom:2px solid var(--ink);margin-top:20px}
+  .f-review .r-sec-head:first-child{margin-top:0}
+  .r-sec-head .k{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink)}
   .r-edit:hover{color:var(--brass)}
   .f-review .r-row .k{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
   .f-err{color:#b3432e;font-size:13.5px;font-weight:500;margin-top:16px;display:none}
@@ -1281,8 +1284,10 @@
     if (!el) return;
     var pitia = num('monthly_taxes_usd') + num('monthly_insurance_usd') + num('monthly_hoa_usd');
     if (rent > 0 && loan > 0) {
-      var d = rent / (piMonthly(loan, 0.07, 30) + pitia);
-      el.textContent = 'Estimated DSCR ~' + d.toFixed(2) + '  (rent / PITIA at an illustrative 7% 30-yr)';
+      var io = val('structure') === 'interest_only';
+      var debt = io ? loan * 0.07 / 12 : piMonthly(loan, 0.07, 30);
+      var d = rent / (debt + pitia);
+      el.textContent = 'Estimated DSCR ~' + d.toFixed(2) + (io ? '  (rent / interest-only payment + taxes, ins, HOA at an illustrative 7%)' : '  (rent / PITIA at an illustrative 7% 30-yr)');
       el.setAttribute('data-dscr', d.toFixed(2));
     } else {
       el.textContent = 'Estimated DSCR appears here once rent and loan are in';
@@ -1292,7 +1297,7 @@
   form.addEventListener('input', function(e){
     var n = e.target.name || '';
     if (['est_value_usd','loan_amount_usd','first_mortgage_balance'].indexOf(n) >= 0) { updateLtv(); updateFlip(); updateCltv(); }
-    if (['monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','loan_amount_usd'].indexOf(n) >= 0) updateDscr();
+    if (['monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','loan_amount_usd','structure'].indexOf(n) >= 0) updateDscr();
     if (['arv_usd','rehab_budget_usd'].indexOf(n) >= 0) updateFlip();
     if (n === 'occupancy' || n === 'product') updateOoWarn(); updateRateType(); updatePurpose(); if (typeof updateLtv === 'function') updateLtv();
     var scr0 = screensFor(product());
@@ -1303,12 +1308,17 @@
     if (isNaN(v)) return n || '-';
     return '$' + v.toLocaleString('en-US');
   }
+  function fmtDate(s){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+    if (!m) return s;
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return months[parseInt(m[2], 10) - 1] + ' ' + parseInt(m[3], 10) + ', ' + m[1];
+  }
   function renderReview(){
     var rows = [];
     function esc(x){ return String(x == null ? '' : x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
     function row(k, v, target){
-      rows.push('<div class="r-row"><span class="k">' + esc(k) + '</span><span>' + esc(v || '-') + '</span>'
-        + (target ? '<button type="button" class="r-edit" data-target="' + target + '">Edit</button>' : '') + '</div>');
+      rows.push({k: k, v: v || '-', target: target || ''});
     }
     row('Product', label(productLabels, val('product')), 'Product');
     row('Purpose', label({purchase:'Purchase', refinance:'Refinance', rate_term_refi:'Rate-term refi', cash_out:'Cash-out refinance', equity_draw:'Equity draw'}, val('purpose')), 'Product');
@@ -1329,7 +1339,7 @@
     if (val('liquidity_band')) row('Liquidity', label({'3_months':'3 months','6_months':'6 months','12_plus_months':'12+ months'}, val('liquidity_band')), 'Numbers');
     row('Credit band', val('credit_band'), 'Numbers');
     if (val('vesting')) row('Vesting', val('vesting'), 'Numbers');
-    if (val('target_close')) row('Target close', val('target_close'), 'Numbers');
+    if (val('target_close')) row('Target close', fmtDate(val('target_close')), 'Numbers');
     if (product() === 'dscr_rental' && val('monthly_rent_usd')) {
       row('Monthly rent', money(val('monthly_rent_usd')), 'DSCR');
       if (val('monthly_taxes_usd')) row('Taxes / mo', money(val('monthly_taxes_usd')), 'DSCR');
@@ -1354,8 +1364,8 @@
       row('Exit strategy', val('guc_exit_strategy'), 'The build');
       if (val('land_status')) row('Land status', val('land_status'), 'The build');
     }
-    if (val('structure')) row('Structure', label({amortizing:'P&I', interest_only:'IO', either:'Either'}, val('structure')), 'Preferences');
-    if (val('rate_type')) row('Rate type', val('rate_type'), 'Preferences');
+    if (val('structure') && val('structure') !== 'either') row('Structure', label({amortizing:'P&I', interest_only:'IO'}, val('structure')), 'Preferences');
+    if (val('rate_type') && val('rate_type') !== 'No preference') row('Rate type', val('rate_type'), 'Preferences');
     if (val('prepay')) row('Prepay tolerance', label({none:'None', up_to_6mo:'Up to 6 mo', up_to_12mo:'Up to 12 mo', up_to_3yr:'Up to 3 yr', up_to_5yr:'Up to 5 yr', flexible:'Flexible'}, val('prepay')), 'Preferences');
     if (product() === 'conforming_agency') {
       row('Under county limit', label({yes:'Yes', no:'No', not_sure:'Not sure'}, val('under_limit')), 'Conforming');
@@ -1368,8 +1378,24 @@
       var _fb2 = num('first_mortgage_balance'), _la2 = num('loan_amount_usd'), _ev2 = num('est_value_usd');
       if (_fb2 > 0 && _la2 > 0 && _ev2 > 0) row('CLTV', ((_fb2 + _la2) / _ev2 * 100).toFixed(1) + '%', 'Home equity');
     }
-    if (val('notes')) row('Notes', val('notes'), 'About you');
-    document.getElementById('f-review').innerHTML = rows.join('');
+    if (val('notes')) row('Notes', val('notes'));
+    var GROUPS = [
+      {name: 'The deal', targets: ['Product', 'Property']},
+      {name: 'Numbers', targets: ['Numbers']},
+      {name: 'Details', targets: ['DSCR', 'Rehab', 'Transition', 'The build', 'Conforming', 'Home equity', 'Preferences']}
+    ];
+    var html = '', currentGroup = null;
+    rows.forEach(function(rw){
+      var g = null;
+      GROUPS.forEach(function(G){ if (G.targets.indexOf(rw.target) >= 0) g = G; });
+      if (g && g.name !== currentGroup) {
+        currentGroup = g.name;
+        html += '<div class="r-sec-head"><span class="k">' + g.name + '</span>'
+          + '<button type="button" class="r-edit" data-target="' + rw.target + '">Edit</button></div>';
+      }
+      html += '<div class="r-row"><span class="k">' + esc(rw.k) + '</span><span>' + esc(rw.v) + '</span></div>';
+    });
+    document.getElementById('f-review').innerHTML = html;
     document.querySelectorAll('.r-edit').forEach(function(btn){
       btn.addEventListener('click', function(){
         var t = btn.getAttribute('data-target');
@@ -1822,7 +1848,7 @@
         var dropNote = droppedPrefs.length ? ' Preferences that do not fit this lane were dropped: ' + droppedPrefs.join(', ') + '.' : '';
         if (changeNotes.length) dropNote += ' Changes on load: ' + changeNotes.join('; ') + '.';
         status.textContent = (laneMissing.length
-          ? 'Loaded, but the file has no ' + laneMissing.join(' or ') + ' - the lane screen will ask for ' + (laneMissing.length > 1 ? 'them' : 'it') + '.'
+          ? 'Loaded, but the file has no ' + laneMissing.join(' or ') + ', the lane screen will ask for ' + (laneMissing.length > 1 ? 'them' : 'it') + '.'
           : 'Loaded. Review each screen; contact and consent stay yours to fill.') + dropNote;
     updateRateType(); updatePurpose(); updateLtv(); updateFlip(); updateDscr(); updateCltv();
       }
