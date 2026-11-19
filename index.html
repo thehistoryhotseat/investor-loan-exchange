@@ -726,7 +726,8 @@
             <span class="f-label" id="lbl-under_limit">Under the county conforming limit? <span class="req">*</span></span>
             <div class="pills" role="radiogroup" aria-labelledby="lbl-under_limit" data-group="under_limit">
               <input type="radio" name="under_limit" id="cl-yes" value="yes"><label for="cl-yes">Yes</label>
-              <input type="radio" name="under_limit" id="cl-no" value="no"><label for="cl-no">No / not sure</label>
+              <input type="radio" name="under_limit" id="cl-no" value="no"><label for="cl-no">No</label>
+              <input type="radio" name="under_limit" id="cl-ns" value="not_sure"><label for="cl-ns">Not sure</label>
             </div>
           </div>
           <div class="f-field">
@@ -754,6 +755,9 @@
           <div class="f-field">
             <label for="first-bal">First mortgage balance <span class="opt">(second liens price on combined LTV)</span></label>
             <div class="money"><span>$</span><input type="text" inputmode="numeric" class="money-in" id="first-bal" name="first_mortgage_balance" placeholder="e.g. 240,000"></div>
+          </div>
+          <div class="f-field full">
+            <p class="ltv-line" id="cltv-line"><span class="ltv-note">Combined LTV shows once first balance, loan and value are in</span></p>
           </div>
           <div class="f-field">
             <span class="f-label" id="lbl-hetype">Product type <span class="req">*</span></span>
@@ -834,6 +838,7 @@
           <input type="checkbox" id="consent" name="consent">
           <span>Share this scenario with fitting panel lenders for pricing. My contact details stay back until I choose to engage with a lender. <span class="req">*</span></span>
         </label>
+        <span class="f-msg" id="consent-msg" style="display:none">Tick the consent box to continue.</span>
       </fieldset>
 
       <fieldset class="f-step" data-step="8" data-name="Done">
@@ -847,7 +852,7 @@
             <h3 tabindex="-1" id="f-done-live-h">Sent.</h3>
             <p id="f-send-state">Sending your scenario...</p>
             <div id="f-done-ok" style="display:none">
-              <p>Reference <strong id="f-ref"></strong>. Save it; it is how we find your request.</p>
+              <p id="f-ref-line">Reference <strong id="f-ref"></strong>. Save it; it is how we find your request.</p>
               <p>What happens next: the panel lenders whose box this fits get one rate request. Quotes come back side by side. Your name stays back until you choose to reply.</p>
             </div>
           </div>
@@ -1094,7 +1099,7 @@
       var occ = step.querySelector('#occ');
       if (occ && occ.value === 'owner_occupied' && product() !== 'home_equity') { occ.classList.add('f-invalid'); ok = false; }
     }
-    if (name === 'Review' && !document.getElementById('consent').checked) ok = false;
+    if (name === 'Review' && !document.getElementById('consent').checked) { ok = false; document.getElementById('consent-msg').style.display = ''; }
     return ok;
   }
   function val(n){
@@ -1145,11 +1150,13 @@
   }
   function updateRateType(){
     var shortLane = product() === 'bridge' || product() === 'ground_up_construction' || product() === 'fix_flip';
+    var isHE = product() === 'home_equity';
+    var rtShort = shortLane || isHE;
     var rt = document.getElementById('ratetype');
     if (rt) {
       Array.prototype.forEach.call(rt.options, function(o){
-        if (o.hasAttribute('data-long')) o.hidden = shortLane;
-        if (o.hasAttribute('data-short')) o.hidden = !shortLane;
+        if (o.hasAttribute('data-long')) o.hidden = rtShort;
+        if (o.hasAttribute('data-short')) o.hidden = !rtShort;
       });
       if (rt.selectedOptions[0] && rt.selectedOptions[0].hidden) rt.value = '';
     }
@@ -1160,10 +1167,11 @@
       if (hide && inp.checked) inp.checked = false;
     });
     var isConf = product() === 'conforming_agency';
+    var noPrepay = isConf || isHE;
     var prepayField = document.getElementById('pp-none').closest('.f-field');
     if (prepayField) {
-      prepayField.style.display = isConf ? 'none' : '';
-      if (isConf) form.querySelectorAll('input[name="prepay"]:checked').forEach(function(r){ r.checked = false; });
+      prepayField.style.display = noPrepay ? 'none' : '';
+      if (noPrepay) form.querySelectorAll('input[name="prepay"]:checked').forEach(function(r){ r.checked = false; });
     }
     form.querySelectorAll('[data-io]').forEach(function(el){
       if (el.tagName === 'OPTION') {
@@ -1175,6 +1183,17 @@
         if (isConf && el.checked) el.checked = false;
       }
     });
+  }
+  function updateCltv(){
+    var el = document.getElementById('cltv-line');
+    if (!el) return;
+    var fb = num('first_mortgage_balance'), la = num('loan_amount_usd'), ev = num('est_value_usd');
+    if (fb > 0 && la > 0 && ev > 0) {
+      var c = (fb + la) / ev * 100;
+      el.innerHTML = '<span class="ltv-k">CLTV</span><span class="ltv-v">' + c.toFixed(1) + '%</span>';
+    } else {
+      el.innerHTML = '<span class="ltv-note">Combined LTV shows once first balance, loan and value are in</span>';
+    }
   }
   function piMonthly(principal, annualRate, years){
     var r = annualRate / 12, n = years * 12;
@@ -1196,7 +1215,7 @@
   }
   form.addEventListener('input', function(e){
     var n = e.target.name || '';
-    if (['est_value_usd','loan_amount_usd'].indexOf(n) >= 0) { updateLtv(); updateFlip(); }
+    if (['est_value_usd','loan_amount_usd','first_mortgage_balance'].indexOf(n) >= 0) { updateLtv(); updateFlip(); updateCltv(); }
     if (['monthly_rent_usd','monthly_taxes_usd','monthly_insurance_usd','monthly_hoa_usd','loan_amount_usd'].indexOf(n) >= 0) updateDscr();
     if (['arv_usd','rehab_budget_usd'].indexOf(n) >= 0) updateFlip();
     if (n === 'occupancy' || n === 'product') updateOoWarn(); updateRateType(); if (typeof updateLtv === 'function') updateLtv();
@@ -1210,8 +1229,9 @@
   }
   function renderReview(){
     var rows = [];
+    function esc(x){ return String(x == null ? '' : x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
     function row(k, v, target){
-      rows.push('<div class="r-row"><span class="k">' + k + '</span><span>' + (v || '-') + '</span>'
+      rows.push('<div class="r-row"><span class="k">' + esc(k) + '</span><span>' + esc(v || '-') + '</span>'
         + (target ? '<button type="button" class="r-edit" data-target="' + target + '">Edit</button>' : '') + '</div>');
     }
     row('Product', label(productLabels, val('product')), 'Product');
@@ -1262,12 +1282,14 @@
     if (val('rate_type')) row('Rate type', val('rate_type'), 'Preferences');
     if (val('prepay')) row('Prepay tolerance', label({none:'None', up_to_6mo:'Up to 6 mo', up_to_12mo:'Up to 12 mo', up_to_3yr:'Up to 3 yr', up_to_5yr:'Up to 5 yr', flexible:'Flexible'}, val('prepay')), 'Preferences');
     if (product() === 'conforming_agency') {
-      row('Under county limit', val('under_limit'), 'Conforming');
+      row('Under county limit', label({yes:'Yes', no:'No', not_sure:'Not sure'}, val('under_limit')), 'Conforming');
       if (val('dti_band')) row('DTI band', label({under_36:'Under 36%', '36_43':'36-43%', '43_50':'43-50%', over_50:'Over 50%', not_sure:'Not sure'}, val('dti_band')), 'Conforming');
     }
     if (product() === 'home_equity') {
       if (val('home_equity_type')) row('Product type', label({heloc:'HELOC (line of credit)', home_equity_loan:'Home equity loan (lump sum)'}, val('home_equity_type')), 'Home equity');
       if (val('first_mortgage_balance')) row('First mortgage balance', money(val('first_mortgage_balance')), 'Home equity');
+      var _fb2 = num('first_mortgage_balance'), _la2 = num('loan_amount_usd'), _ev2 = num('est_value_usd');
+      if (_fb2 > 0 && _la2 > 0 && _ev2 > 0) row('CLTV', ((_fb2 + _la2) / _ev2 * 100).toFixed(1) + '%', 'Home equity');
     }
     if (val('notes')) row('Notes', val('notes'), 'About you');
     document.getElementById('f-review').innerHTML = rows.join('');
@@ -1303,6 +1325,8 @@
       loan_amount_usd: parseFloat(val('loan_amount_usd')) || null,
       credit_band: val('credit_band') === 'Below 620' ? 'below_620' : val('credit_band'),
       role: val('role'),
+      role: val('role'),
+      contact: val('contact'),
       consent: { share_with_lenders: true, contact_withheld_until_engaged: true }
     };
     if (val('zip')) obj.property.zip = val('zip');
@@ -1354,6 +1378,8 @@
     if (product() === 'home_equity') {
       if (val('home_equity_type')) obj.home_equity_type = val('home_equity_type');
       if (val('first_mortgage_balance')) obj.first_mortgage_balance_usd = parseFloat(val('first_mortgage_balance'));
+      var _fb = num('first_mortgage_balance'), _la = num('loan_amount_usd'), _ev = num('est_value_usd');
+      if (_fb > 0 && _la > 0 && _ev > 0) obj.cltv = parseFloat(((_fb + _la) / _ev).toFixed(4));
     }
     if (val('notes')) obj.notes = val('notes');
     return JSON.stringify(obj, null, 2);
@@ -1365,6 +1391,7 @@
   function saveDraft(){
     var d = {};
     form.querySelectorAll('[name]').forEach(function(el){
+      if (el.name === 'contact' || el.name === 'consent') return;
       if (el.type === 'radio') { if (el.checked) d[el.name] = el.value; }
       else if (el.type === 'checkbox') { d[el.name] = el.checked; }
       else d[el.name] = el.value;
@@ -1388,10 +1415,15 @@
     updateDscr();
   }
   function clearDraft(){ try { localStorage.removeItem(DRAFT_KEY); } catch(e) {} }
+  function moneyMask(str){
+    var c = String(str).replace(/[^\d.]/g, '');
+    var parts = c.split('.');
+    var i = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parts.length > 1 ? i + '.' + parts.slice(1).join('').slice(0, 2) : i;
+  }
   form.querySelectorAll('.money-in').forEach(function(el){
     el.addEventListener('input', function(){
-      var d = el.value.replace(/[^\d]/g, '');
-      el.value = d.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      el.value = moneyMask(el.value);
     });
   });
   form.addEventListener('input', function(e){
@@ -1406,6 +1438,7 @@
       var pm = p.parentNode.querySelector('.pills-msg');
       if (pm) pm.style.display = 'none';
     }
+    if (e.target.id === 'consent' && e.target.checked) document.getElementById('consent-msg').style.display = 'none';
     var fb = e.target.closest ? e.target.closest('.f-field') : null;
     var fm = fb && fb.querySelector('.f-msg');
     if (fm) fm.style.display = 'none';
@@ -1413,7 +1446,7 @@
   form.addEventListener('change', saveDraft);
   restoreDraft();
   form.querySelectorAll('.money-in').forEach(function(el){
-    if (el.value) { var d = el.value.replace(/[^\d]/g, ''); el.value = d.replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    if (el.value) { el.value = moneyMask(el.value); }
   });
   (function(){
     var mcta = document.querySelector('.mobile-cta'), band = document.querySelector('.cta-band');
@@ -1464,14 +1497,15 @@
     document.getElementById('f-send-err').style.display = 'none';
     doneEl.classList.add('on');
     setTimeout(function(){ document.getElementById('f-done-live-h').focus(); }, 60);
-    fetch(SUBMIT_ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body: json})
+    fetch(SUBMIT_ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain','Accept':'application/json'}, body: json})
       .then(function(r){ if (!r.ok) throw new Error('send failed'); return r.text(); })
       .then(function(t){
         var ref = '';
         try { var j = JSON.parse(t); ref = j.reference || j.id || ''; } catch(e) {}
-        if (!ref) ref = 'ILX-' + Date.now().toString(36).toUpperCase();
         clearDraft();
-        document.getElementById('f-ref').textContent = ref;
+        var refLine = document.getElementById('f-ref-line');
+        if (ref) { document.getElementById('f-ref').textContent = ref; refLine.style.display = ''; }
+        else { refLine.style.display = 'none'; }
         document.getElementById('f-send-state').style.display = 'none';
         document.getElementById('f-done-ok').style.display = '';
         setTimeout(function(){ document.getElementById('f-done-live-h').focus(); }, 60);
@@ -1555,8 +1589,7 @@
       else {
         el.value = v;
         if (el.classList && el.classList.contains('money-in')) {
-          var dv = String(el.value).replace(/[^\d]/g, '');
-          el.value = dv.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+          el.value = moneyMask(el.value);
         }
       }
     });

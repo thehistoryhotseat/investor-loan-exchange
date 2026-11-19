@@ -229,7 +229,8 @@
           "type": "string",
           "enum": [
             "yes",
-            "no"
+            "no",
+            "not_sure"
           ]
         },
         "dti_band": {
@@ -343,6 +344,14 @@
     "first_mortgage_balance_usd": {
       "type": "number",
       "description": "Home equity lane: current balance of the first mortgage. Second liens price on combined LTV (CLTV = (first balance + new loan) / value)."
+    },
+    "contact": {
+      "type": "string",
+      "description": "Email or phone of the person submitting. Filled by the submitter on the page, never loaded from a file."
+    },
+    "cltv": {
+      "type": "number",
+      "description": "Home equity lane: combined LTV, (first_mortgage_balance_usd + loan_amount_usd) / est_value_usd."
     }
   },
   "allOf": [
