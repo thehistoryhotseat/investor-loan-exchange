@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Investor Loan Exchange - Lender portal</title>
+<meta name="description" content="Lender portal: keep your box and guidelines current. Test mode - sample data only.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,420;9..144,560&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#101820; --ink-2:#2a3542; --paper:#f6f4ee; --card:#fffdf8;
+    --line:#ddd6c8; --brass:#9a7b3f; --brass-ink:#7d6230; --muted:#66707c;
+    --btn:#0f1b2d; --btn-hover:#1b2c44; --field:#d9d3c7;
+    --e2:0 4px 12px -2px rgba(17,24,39,.08),0 2px 4px -2px rgba(17,24,39,.05);
+    --e3:0 24px 48px -12px rgba(17,24,39,.18),0 0 0 1px rgba(17,24,39,.06);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(246,244,238,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1060px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+  .mark-img{display:block;border-radius:7px}
+  .brand-name{font-weight:600;font-size:15px;letter-spacing:.01em;white-space:nowrap}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-links a{color:var(--ink-2);text-decoration:none;font-size:14px;font-weight:500;transition:color .15s ease}
+  .nav-links a:hover{color:var(--brass)}
+
+  main{padding:56px 0 96px}
+  .badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:5px 12px}
+  .badge.warn{color:#8a5a12;border-color:rgba(154,123,63,.5);background:#faf3e3}
+  .badge.stale{color:#8a2b21;border-color:rgba(178,58,44,.4);background:#fbeeec}
+  .badge.cur{color:#1e5b3a;border-color:rgba(30,91,58,.35);background:#eaf4ee}
+  h1{font-family:'Fraunces',serif;font-weight:420;font-size:clamp(34px,4vw,46px);line-height:1.05;letter-spacing:-.02em;margin:16px 0 10px}
+  .lede{max-width:56ch;color:var(--ink-2);font-size:16px;margin-bottom:34px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:30px;box-shadow:var(--e2);margin-bottom:26px}
+  .card h2{font-weight:600;font-size:20px;letter-spacing:-.01em;margin-bottom:6px}
+  .card .sub{font-size:14px;color:var(--muted);margin-bottom:22px}
+  .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .f-field{display:flex;flex-direction:column;gap:7px}
+  .f-field.full{grid-column:1/-1}
+  .f-field > label,.f-label{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .f-field input[type=text],.f-field input[type=email],.f-field input[type=tel],.f-field input[type=number],.f-field textarea{font:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--field);border-radius:8px;padding:0 14px;height:48px;outline:none;width:100%;transition:border-color .16s ease,box-shadow .16s ease}
+  .f-field input[readonly]{background:#f4f0e6;color:var(--muted)}
+  .f-field textarea{height:auto;min-height:80px;padding:12px 14px;resize:vertical}
+  .f-field input:focus,.f-field textarea:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(154,123,63,.28)}
+  .pills{display:flex;flex-wrap:wrap;gap:8px}
+  .pills input{position:absolute;opacity:0;pointer-events:none}
+  .pills label{font-size:13.5px;font-weight:500;padding:10px 16px;border:1px solid var(--field);border-radius:99px;cursor:pointer;color:var(--ink-2);background:#fff;transition:border-color .16s ease,background .16s ease,color .16s ease}
+  .pills label:hover{border-color:#a8a091}
+  .pills input:checked + label{border-color:var(--ink);background:var(--ink);color:#fff;font-weight:600}
+  .pills input:focus-visible + label{outline:2px solid var(--brass);outline-offset:2px}
+
+  .btn{display:inline-block;background:var(--btn);color:var(--paper);text-decoration:none;font-weight:600;font-size:14.5px;padding:13px 24px;border-radius:6px;letter-spacing:.01em;transition:background .16s ease,transform .16s ease;border:none;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--btn-hover);transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+  .btn.ghost:hover{background:var(--btn);color:var(--paper)}
+  .btn.sm{padding:9px 16px;font-size:13.5px}
+  .btn[disabled]{opacity:.4;pointer-events:none}
+
+  .msg{margin:0 0 18px;padding:12px 16px;border-radius:6px;font-size:14px;display:none}
+  .msg.on{display:block}
+  .msg.err{border:1px solid rgba(178,58,44,.35);background:#fbeeec;color:#8a2b21}
+  .msg.ok{border:1px solid rgba(30,91,58,.3);background:#eaf4ee;color:#1e5b3a}
+
+  .app-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+  .app-head .who{font-weight:600;font-size:18px;letter-spacing:-.01em}
+  .app-head .meta{font-size:13.5px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+  .v-row{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .v-row:last-child{border-bottom:none}
+  .v-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted)}
+  .v-main b{font-weight:600}
+  .v-main .v-sub{font-size:13px;color:var(--muted);margin-top:2px}
+  .v-empty{font-size:14.5px;color:var(--muted);padding:8px 0}
+
+  .file-line{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .file-line input[type=file]{font-size:13.5px;color:var(--muted)}
+  .hint{font-size:13px;color:var(--muted);margin-top:6px}
+  .foot{padding:34px 0 46px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  @media (max-width:640px){
+    .f-grid{grid-template-columns:1fr}
+    .card{padding:22px}
+    .v-row{grid-template-columns:52px 1fr;gap:10px}
+    .v-row .v-dl{grid-column:2}
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="./">
+      <img class="mark-img" src="assets/logo-mark.svg" alt="" width="30" height="30">
+      <span class="brand-name">Investor Loan Exchange</span>
+    </a>
+    <div class="nav-links">
+      <a href="./lender.html">For lenders</a>
+      <a href="./">Site</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <span class="badge warn">Test mode - sample data only</span>
+  <h1>Lender portal</h1>
+  <p class="lede">Keep your box and your guideline sheet current. Every change is saved as a dated version; your last-updated date is what brokers see.</p>
+
+  <div class="msg err" id="msg-err" role="alert"></div>
+  <div class="msg ok" id="msg-ok" role="status"></div>
+
+  <section class="card" id="view-signin">
+    <h2>Sign in</h2>
+    <p class="sub">Invite-only while the panel is being built. Enter the email you joined with and we send you a sign-in link.</p>
+    <div class="f-grid">
+      <div class="f-field full">
+        <label for="si-email">Work email</label>
+        <input type="email" id="si-email" autocomplete="email" placeholder="you@yourcompany.com">
+      </div>
+    </div>
+    <div style="margin-top:22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <button class="btn" id="si-send">Email me a sign-in link</button>
+      <span class="hint" id="si-hint"></span>
+    </div>
+  </section>
+
+  <div id="view-app" hidden>
+    <div class="app-head">
+      <div>
+        <div class="who" id="app-company">-</div>
+        <div class="meta">
+          <span id="app-updated">No guidelines on file</span>
+          <span class="badge stale" id="app-stale" hidden>Stale - over 90 days</span>
+        </div>
+      </div>
+      <button class="btn ghost sm" id="app-signout">Sign out</button>
+    </div>
+
+    <section class="card" id="card-profile">
+      <h2>Your contact</h2>
+      <p class="sub">Brokers reach this person once a deal fits. Company, email and lender type change through us.</p>
+      <div class="f-grid">
+        <div class="f-field">
+          <label for="p-company">Company</label>
+          <input type="text" id="p-company" readonly>
+        </div>
+        <div class="f-field">
+          <label for="p-type">Lender type</label>
+          <input type="text" id="p-type" readonly>
+        </div>
+        <div class="f-field">
+          <label for="p-email">Email</label>
+          <input type="email" id="p-email" readonly>
+        </div>
+        <div class="f-field">
+          <label for="p-contact">Contact name</label>
+          <input type="text" id="p-contact" autocomplete="name">
+        </div>
+        <div class="f-field">
+          <label for="p-phone">Phone</label>
+          <input type="tel" id="p-phone" autocomplete="tel">
+        </div>
+      </div>
+      <div style="margin-top:22px"><button class="btn" id="p-save">Save contact</button></div>
+    </section>
+
+    <section class="card" id="card-new">
+      <h2>Publish a new guideline version</h2>
+      <p class="sub">This becomes your current box. Older versions stay on file, dated.</p>
+      <div class="f-field full" style="margin-bottom:18px">
+        <span class="f-label">Products you price</span>
+        <div class="pills" id="g-products"></div>
+      </div>
+      <div class="f-field full" style="margin-bottom:18px">
+        <span class="f-label">Property types</span>
+        <div class="pills" id="g-props"></div>
+      </div>
+      <div class="f-grid">
+        <div class="f-field">
+          <label for="g-states">States (2-letter codes, or Nationwide)</label>
+          <input type="text" id="g-states" placeholder="NY, NJ, CT">
+        </div>
+        <div class="f-field">
+          <label for="g-ltv">Max LTV %</label>
+          <input type="number" id="g-ltv" min="0" max="100" step="0.5" placeholder="75">
+        </div>
+        <div class="f-field">
+          <label for="g-min">Min loan $</label>
+          <input type="number" id="g-min" min="0" step="1000" placeholder="250000">
+        </div>
+        <div class="f-field">
+          <label for="g-max">Max loan $</label>
+          <input type="number" id="g-max" min="0" step="1000" placeholder="5000000">
+        </div>
+        <div class="f-field">
+          <label for="g-fico">Min FICO</label>
+          <input type="number" id="g-fico" min="300" max="850" step="1" placeholder="680">
+        </div>
+        <div class="f-field full">
+          <label for="g-notes">Notes</label>
+          <textarea id="g-notes" placeholder="Anything a broker should know about how you price."></textarea>
+        </div>
+        <div class="f-field full">
+          <span class="f-label">Guideline sheet (PDF, optional)</span>
+          <div class="file-line">
+            <input type="file" id="g-pdf" accept="application/pdf">
+          </div>
+          <div class="hint">Stored as a new file with this version. Old versions keep their own files.</div>
+        </div>
+      </div>
+      <div style="margin-top:22px"><button class="btn" id="g-publish">Publish version</button></div>
+    </section>
+
+    <section class="card" id="card-versions">
+      <h2>Version history</h2>
+      <p class="sub">Your current version is what matching uses. Anything older than 90 days reads as stale.</p>
+      <div id="v-list"><p class="v-empty">No versions yet.</p></div>
+    </section>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">Investor Loan Exchange - lender portal. Test mode: sample data only, nothing here is live.</div>
+</footer>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SB_URL = 'https://kknpnhpmgkghuerpnlyz.supabase.co';
+const SB_KEY = 'sb_publishable_gWJFQNaGgeIAXZ2JUDj_Sw_E-elPQAF';
+const sb = createClient(SB_URL, SB_KEY);
+window.__sb = sb; // test-mode handle for smoke tests
+
+const PRODUCTS = [
+  ['bridge','Bridge'],['ground_up_construction','Ground-up construction'],['fix_flip','Fix & flip'],
+  ['dscr_rental','DSCR rental'],['cash_out_refi','Cash-out refi'],['conforming_agency','Conforming / agency'],
+  ['home_equity','Home equity']
+];
+const PROPS = [
+  ['single_family','Single-family'],['2_4_unit','2-4 unit'],['condo','Condo'],['townhome','Townhome'],
+  ['small_multifamily_5','Small multifamily (5+)'],['mixed_use','Mixed-use'],['other','Other']
+];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate = iso => new Date(iso).toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
+
+function showMsg(kind, text){
+  const el = $(kind === 'err' ? 'msg-err' : 'msg-ok');
+  el.textContent = text; el.classList.add('on');
+  setTimeout(() => el.classList.remove('on'), 6000);
+}
+
+function buildPills(el, pairs){
+  el.innerHTML = pairs.map(([v, label], i) =>
+    `<input type="checkbox" id="${el.id}-${i}" value="${esc(v)}"><label for="${el.id}-${i}">${esc(label)}</label>`
+  ).join('');
+}
+const pillValues = el => [...el.querySelectorAll('input:checked')].map(i => i.value);
+const setPills = (el, vals) => { [...el.querySelectorAll('input')].forEach(i => { i.checked = vals.includes(i.value); }); };
+
+buildPills($('g-products'), PRODUCTS);
+buildPills($('g-props'), PROPS);
+
+let lender = null;
+let versions = [];
+
+function parseStates(raw){
+  const t = raw.trim();
+  if (!t) return [];
+  if (/^nationwide$/i.test(t)) return ['NW'];
+  return t.split(/[,\s]+/).filter(Boolean).map(s => s.toUpperCase());
+}
+
+async function loadApp(){
+  const { data: mapRows, error: mapErr } = await sb.from('lender_users').select('lender_id');
+  if (mapErr) throw mapErr;
+  if (!mapRows || !mapRows.length) { showMsg('err', 'This sign-in is not linked to a lender yet.'); return; }
+  const lenderId = mapRows[0].lender_id;
+
+  const [{ data: lrow, error: lerr }, { data: vrows, error: verr }] = await Promise.all([
+    sb.from('lenders').select('*').eq('id', lenderId).single(),
+    sb.from('lender_guidelines').select('*').eq('lender_id', lenderId).order('version', { ascending: false })
+  ]);
+  if (lerr) throw lerr;
+  if (verr) throw verr;
+  lender = lrow; versions = vrows || [];
+
+  $('app-company').textContent = lender.company || 'Your company';
+  $('p-company').value = lender.company || '';
+  $('p-type').value = lender.lender_type || '';
+  $('p-email').value = lender.email || '';
+  $('p-contact').value = lender.contact_name || '';
+  $('p-phone').value = lender.phone || '';
+
+  renderVersions();
+  $('view-signin').hidden = true;
+  $('view-app').hidden = false;
+}
+
+function renderVersions(){
+  const newest = versions[0];
+  if (newest) {
+    $('app-updated').textContent = 'Guidelines last updated ' + fmtDate(newest.created_at);
+    const age = Date.now() - new Date(newest.created_at).getTime();
+    $('app-stale').hidden = age < 90 * 24 * 3600 * 1000;
+  } else {
+    $('app-updated').textContent = 'No guidelines on file';
+    $('app-stale').hidden = true;
+  }
+  if (!versions.length) { $('v-list').innerHTML = '<p class="v-empty">No versions yet.</p>'; return; }
+  $('v-list').innerHTML = versions.map((v, i) => {
+    const bits = [];
+    if (v.products && v.products.length) bits.push(v.products.length + ' products');
+    if (v.states && v.states.length) bits.push(v.states.join(', '));
+    if (v.max_ltv_pct != null) bits.push('up to ' + v.max_ltv_pct + '% LTV');
+    const sub = bits.join(' - ');
+    return `<div class="v-row">
+      <span class="v-num">v${esc(v.version)}</span>
+      <div class="v-main"><b>${esc(fmtDate(v.created_at))}</b> ${i === 0 ? '<span class="badge cur">Current</span>' : ''}
+        ${sub ? `<div class="v-sub">${esc(sub)}</div>` : ''}</div>
+      ${v.pdf_path ? `<button class="btn ghost sm v-dl" data-path="${esc(v.pdf_path)}">PDF</button>` : '<span></span>'}
+    </div>`;
+  }).join('');
+  [...document.querySelectorAll('.v-dl')].forEach(b => b.addEventListener('click', async () => {
+    const { data, error } = await sb.storage.from('guidelines').createSignedUrl(b.dataset.path, 60);
+    if (error) { showMsg('err', 'Could not open that file: ' + error.message); return; }
+    window.open(data.signedUrl, '_blank', 'noopener');
+  }));
+}
+
+$('si-send').addEventListener('click', async () => {
+  const email = $('si-email').value.trim();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showMsg('err', 'Enter a valid email.'); return; }
+  $('si-send').disabled = true;
+  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname } });
+  $('si-send').disabled = false;
+  if (error) { showMsg('err', error.message); return; }
+  $('si-hint').textContent = 'Link sent - check your inbox. It opens this page signed in.';
+});
+
+$('app-signout').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
+
+$('p-save').addEventListener('click', async () => {
+  if (!lender) return;
+  $('p-save').disabled = true;
+  const { error } = await sb.from('lenders').update({
+    contact_name: $('p-contact').value.trim() || null,
+    phone: $('p-phone').value.trim() || null
+  }).eq('id', lender.id);
+  $('p-save').disabled = false;
+  if (error) { showMsg('err', 'Save failed: ' + error.message); return; }
+  showMsg('ok', 'Contact saved.');
+});
+
+$('g-publish').addEventListener('click', async () => {
+  if (!lender) return;
+  const products = pillValues($('g-products'));
+  const props = pillValues($('g-props'));
+  const states = parseStates($('g-states').value);
+  const ltv = $('g-ltv').value === '' ? null : Number($('g-ltv').value);
+  const min = $('g-min').value === '' ? null : Number($('g-min').value);
+  const max = $('g-max').value === '' ? null : Number($('g-max').value);
+  const fico = $('g-fico').value === '' ? null : Number($('g-fico').value);
+  const notes = $('g-notes').value.trim() || null;
+  const file = $('g-pdf').files[0] || null;
+
+  if (!products.length) { showMsg('err', 'Pick at least one product.'); return; }
+  if (!props.length) { showMsg('err', 'Pick at least one property type.'); return; }
+  if (states.some(s => !/^[A-Z]{2}$/.test(s))) { showMsg('err', 'States must be 2-letter codes (or Nationwide).'); return; }
+  if (ltv != null && (ltv < 0 || ltv > 100)) { showMsg('err', 'Max LTV must be 0-100.'); return; }
+  if (fico != null && (fico < 300 || fico > 850)) { showMsg('err', 'FICO must be 300-850.'); return; }
+  if (min != null && max != null && min > max) { showMsg('err', 'Min loan is above max loan.'); return; }
+  if (file && file.type !== 'application/pdf') { showMsg('err', 'Guideline sheet must be a PDF.'); return; }
+  if (file && file.size > 10 * 1024 * 1024) { showMsg('err', 'PDF is over 10 MB.'); return; }
+
+  $('g-publish').disabled = true;
+  try {
+    let pdfPath = null;
+    const nextVersion = (versions.length ? versions[0].version : 0) + 1;
+    if (file) {
+      pdfPath = lender.id + '/v' + nextVersion + '-' + Date.now() + '.pdf';
+      const { error: uerr } = await sb.storage.from('guidelines').upload(pdfPath, file, { contentType: 'application/pdf', upsert: false });
+      if (uerr) throw uerr;
+    }
+    const { error: ierr } = await sb.from('lender_guidelines').insert({
+      lender_id: lender.id,
+      version: nextVersion,
+      products, property_types: props, states,
+      max_ltv_pct: ltv, min_loan_usd: min, max_loan_usd: max, min_fico: fico,
+      notes, pdf_path: pdfPath
+    });
+    if (ierr) throw ierr;
+    showMsg('ok', 'Version ' + nextVersion + ' published.');
+    $('g-notes').value = ''; $('g-pdf').value = '';
+    const { data: vrows } = await sb.from('lender_guidelines').select('*').eq('lender_id', lender.id).order('version', { ascending: false });
+    versions = vrows || [];
+    renderVersions();
+  } catch (e) {
+    showMsg('err', 'Publish failed: ' + (e.message || e));
+  } finally {
+    $('g-publish').disabled = false;
+  }
+});
+
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) { try { await loadApp(); } catch (e) { showMsg('err', 'Load failed: ' + (e.message || e)); } }
+  sb.auth.onAuthStateChange(async (event, sess) => {
+    if (event === 'SIGNED_IN' && sess && $('view-app').hidden) {
+      try { await loadApp(); } catch (e) { showMsg('err', 'Load failed: ' + (e.message || e)); }
+    }
+  });
+})();
+</script>
+</body>
+</html>
